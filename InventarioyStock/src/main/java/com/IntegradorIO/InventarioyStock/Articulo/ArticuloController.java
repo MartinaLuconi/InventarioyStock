@@ -1,4 +1,4 @@
-package com.IntegradorIO.InventarioyStock;
+package com.IntegradorIO.InventarioyStock.Articulo;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
