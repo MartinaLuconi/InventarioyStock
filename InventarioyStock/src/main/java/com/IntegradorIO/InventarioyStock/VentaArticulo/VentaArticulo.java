@@ -10,4 +10,6 @@ public class VentaArticulo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int codVentaArticulo;
+    private  int cantidadVA;
+
 }

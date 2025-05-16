@@ -19,11 +19,7 @@ public class InventarioyStockApplication {
 		@Bean
 		public CommandLineRunner init(ArticuloRepository repo) {
 			return args -> {
-				Articulo articulo = new Articulo();
-				articulo.setNombre("Chocolate");
-				repo.save(articulo);
 
-				System.out.println("Artículo guardado: " + articulo.getNombre());
 			};
 		}
 
