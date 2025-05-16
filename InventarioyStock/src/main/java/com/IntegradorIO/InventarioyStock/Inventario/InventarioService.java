@@ -1,4 +1,4 @@
 package com.IntegradorIO.InventarioyStock.Inventario;
 
-public class InventarioControlador {
+public class InventarioService {
 }

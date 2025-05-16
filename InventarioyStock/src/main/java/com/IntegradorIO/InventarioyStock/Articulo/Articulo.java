@@ -8,7 +8,6 @@ public class Articulo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int codigoArticulo;
-
     private String nombreArticulo;
     private String descripcion;
     private Timestamp fechaHoraBajaArticulo;
