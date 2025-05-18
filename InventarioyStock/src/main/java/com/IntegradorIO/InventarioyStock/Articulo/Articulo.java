@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
+@Table(name = "articulo")
 public class Articulo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

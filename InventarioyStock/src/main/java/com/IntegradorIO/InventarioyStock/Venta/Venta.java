@@ -1,15 +1,13 @@
 package com.IntegradorIO.InventarioyStock.Venta;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
 
 @Entity
+@Table(name = "venta")
 @Getter
 @Setter
 public class Venta {
