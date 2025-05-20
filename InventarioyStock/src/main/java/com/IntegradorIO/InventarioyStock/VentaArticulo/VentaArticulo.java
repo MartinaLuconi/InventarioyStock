@@ -1,9 +1,8 @@
 package com.IntegradorIO.InventarioyStock.VentaArticulo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
+import com.IntegradorIO.InventarioyStock.Venta.Venta;
+import jakarta.persistence.*;
 
 @Entity
 public class VentaArticulo {
@@ -11,5 +10,13 @@ public class VentaArticulo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int codVentaArticulo;
     private  int cantidadVA;
+
+    @ManyToOne
+    @JoinColumn(name = "articulo_id")
+    private Articulo articulo;
+
+    @ManyToOne
+    @JoinColumn(name = "venta_id")
+    private Venta venta;
 
 }

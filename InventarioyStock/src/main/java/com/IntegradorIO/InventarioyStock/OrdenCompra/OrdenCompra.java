@@ -1,9 +1,8 @@
 package com.IntegradorIO.InventarioyStock.OrdenCompra;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompra;
+import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,4 +15,13 @@ public class OrdenCompra {
     private int numeroOrdenCompra;
     private String nombreOrdenCompra;
     private int cantidadOrdenCompra;
+
+    @ManyToOne
+    @JoinColumn(name = "proveedor_id")
+    private Proveedor proveedor;
+
+    @ManyToOne
+    @JoinColumn(name = "estado_orden_compra_id")
+    private EstadoOrdenCompra estadoOrdenCompra;
+
 }

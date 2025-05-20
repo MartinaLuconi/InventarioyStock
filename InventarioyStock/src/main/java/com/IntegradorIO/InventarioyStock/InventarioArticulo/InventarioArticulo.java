@@ -1,9 +1,8 @@
 package com.IntegradorIO.InventarioyStock.InventarioArticulo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
+import com.IntegradorIO.InventarioyStock.Inventario.Inventario;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,4 +18,12 @@ public class InventarioArticulo {
     private int inventarioMaximo;
     private  float precioInventarioArticulo;
     private int stockSeguridad;
+
+    @ManyToOne
+    @JoinColumn(name = "articulo_id")
+    private Articulo articulo;
+
+    @ManyToOne
+    @JoinColumn(name = "inventario_id")
+    private Inventario inventario;
 }
