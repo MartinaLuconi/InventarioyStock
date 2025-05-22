@@ -2,23 +2,50 @@ package com.IntegradorIO.InventarioyStock.Articulo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/articulos")
+@RequestMapping("/api/articulos")
+
 public class ArticuloController {
-
     @Autowired
-    private ArticuloRepository articuloRepository;
-
+    private ArticuloService articuloService;
     @GetMapping
-    public List<Articulo> listar() {
-        return articuloRepository.findAll();
+    public ResponseEntity<List<Articulo>> obtenerTodosLosArticulos() {
+        List<Articulo> articulos = articuloService.obtenerArticulos();
+        return new ResponseEntity<>(articulos, HttpStatus.OK);
+    }
+    @GetMapping("/{codigoArticulo}")
+    public ResponseEntity<Articulo> obtenerArticuloPorCodigo(@PathVariable int codigoArticulo) {
+        return articuloService.obtenerArticulo(codigoArticulo)
+                .map(articulo -> new ResponseEntity<>(articulo, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+    //crear articulo
+    @PostMapping
+    public ResponseEntity<Articulo> guardarArticulo(@RequestBody Articulo articulo) {
+        Articulo nuevoArticulo = articuloService.guardarArticulo(articulo);
+        return new ResponseEntity<>(nuevoArticulo, HttpStatus.CREATED);
+    }
+    // modificar articulo existente
+    @PutMapping("/{codigoArticulo}")
+    public ResponseEntity<Articulo> modificarArticulo(@PathVariable int codigoArticulo, @RequestBody Articulo articuloModificado) {
+        Articulo articuloActualizado = articuloService.modificarArticulo(codigoArticulo, articuloModificado);
+        if (articuloActualizado != null) {
+            return new ResponseEntity<>(articuloActualizado, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping
-    public Articulo guardar(@RequestBody Articulo articulo) {
-        return articuloRepository.save(articulo);
+    //borrar el articulo
+    @DeleteMapping("/{codigoArticulo}")
+    public ResponseEntity<Void> eliminarArticulo(@PathVariable int codigoArticulo) {
+        articuloService.eliminarArticulo(codigoArticulo);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }

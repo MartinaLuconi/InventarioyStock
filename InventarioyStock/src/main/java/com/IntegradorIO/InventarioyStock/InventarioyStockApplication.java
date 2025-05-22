@@ -1,11 +1,10 @@
 package com.IntegradorIO.InventarioyStock;
 
-import com.IntegradorIO.InventarioyStock.Articulo.ArticuloRepository;
+import com.IntegradorIO.InventarioyStock.Articulo.ArticuloService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.boot.CommandLineRunner;
-import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
 
 
 @SpringBootApplication
@@ -17,7 +16,7 @@ public class InventarioyStockApplication {
 		SpringApplication.run(InventarioyStockApplication.class, args);
 	}
 		@Bean
-		public CommandLineRunner init(ArticuloRepository repo) {
+		public CommandLineRunner init(ArticuloService repo) {
 			return args -> {
 
 			};
