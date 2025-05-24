@@ -13,6 +13,7 @@ public class Articulo {
     private Timestamp fechaHoraBajaArticulo;
     private int stockActualArticulo;
     private int stockSeguridadArticulo;
+    private EstadoArticulo estadoArticulo;
 
     public Articulo() {
     }

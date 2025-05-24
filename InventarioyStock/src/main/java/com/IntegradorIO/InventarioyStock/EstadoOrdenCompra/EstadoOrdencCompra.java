@@ -1,6 +1,6 @@
 package com.IntegradorIO.InventarioyStock.EstadoOrdenCompra;
 
-public enum EstadoOrden {
+public enum EstadoOrdencCompra {
     PENDIENTE,
     CONFIRMADO,
     CANCELADO,
