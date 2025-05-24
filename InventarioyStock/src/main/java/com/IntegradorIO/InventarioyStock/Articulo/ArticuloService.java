@@ -55,10 +55,19 @@ public class ArticuloService  {
         }
     }
 
+
+
     //para la baja (este deberia ser un boolean para saber si se borro o no)
-    public void eliminarArticulo(int codigoArticulo) throws Exception{
+    public boolean eliminarArticulo(int codigoArticulo) throws Exception{
         try {
-            articuloRepository.deleteById(codigoArticulo);
+            if (articuloRepository.existsById(codigoArticulo)) {
+                articuloRepository.deleteById(codigoArticulo);
+                return true; // Se eliminó correctamente
+            } else {
+              throw new Exception("El artículo con el código " + codigoArticulo + " no existe.");
+            }
+
+
         }catch (Exception e){
             throw new Exception(e.getMessage());
         }
