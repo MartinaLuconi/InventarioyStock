@@ -20,10 +20,13 @@ public class ArticuloController {
         return new ResponseEntity<>(articulos, HttpStatus.OK);
     }
     @GetMapping("/{codigoArticulo}")
-    public ResponseEntity<Articulo> obtenerArticuloPorCodigo(@PathVariable int codigoArticulo)  throws Exception{
-        return articuloService.obtenerArticulo(codigoArticulo)
-                .map(articulo -> new ResponseEntity<>(articulo, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<Articulo> obtenerArticuloPorCodigo(@PathVariable int codigoArticulo) throws Exception {
+        Articulo articulo = articuloService.obtenerArticulo(codigoArticulo);
+        if (articulo != null) {
+            return new ResponseEntity<>(articulo, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
     //crear articulo
     @PostMapping

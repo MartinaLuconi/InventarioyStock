@@ -23,10 +23,10 @@ public class ArticuloService  {
     }
 
     //busca un articulo en particular
-    public Optional<Articulo> obtenerArticulo(int codigoArticulo) throws Exception{
+    public Articulo obtenerArticulo(int codigoArticulo) throws Exception{
         try {
-            Optional<Articulo> art = articuloRepository.findById(codigoArticulo);
-            return art; //lo pone como art.get();
+            Optional<Articulo> articuloOptional = articuloRepository.findById(codigoArticulo);
+            return articuloOptional.get(); //lo pone como art.get();
         }catch (Exception e){
             throw new Exception(e.getMessage()); //No se encontro un articulo con ese codigo
         }
