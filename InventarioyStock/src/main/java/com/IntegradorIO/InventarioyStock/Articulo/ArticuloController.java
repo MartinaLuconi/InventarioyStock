@@ -17,7 +17,7 @@ public class ArticuloController {
     @Autowired
     private ArticuloService articuloService;
     @GetMapping
-    public ResponseEntity<List<Articulo>> obtenerTodosLosArticulos() throws Exception {
+    public ResponseEntity<List<Articulo>> obtenerArticulos() throws Exception {
         List<Articulo> articulos = articuloService.obtenerArticulos();
         return new ResponseEntity<>(articulos, HttpStatus.OK);
     }
