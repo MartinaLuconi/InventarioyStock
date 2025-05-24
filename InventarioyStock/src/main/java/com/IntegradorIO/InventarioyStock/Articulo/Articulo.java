@@ -15,6 +15,7 @@ public class Articulo {
     private int stockSeguridadArticulo;
     private EstadoArticulo estadoArticulo;
 
+
     public Articulo() {
     }
 

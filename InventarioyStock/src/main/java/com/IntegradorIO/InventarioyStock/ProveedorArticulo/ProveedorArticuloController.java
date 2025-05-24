@@ -1,6 +1,8 @@
 package com.IntegradorIO.InventarioyStock.ProveedorArticulo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,15 +12,16 @@ import java.util.List;
 public class ProveedorArticuloController {
 
     @Autowired
-    private ProveedorArticuloRepository proveedorArticuloRepository;
+    private ProveedorArticuloService proveedorArticuloService;
 
-    @GetMapping
-    public List<ProveedorArticulo> listar() {
-        return proveedorArticuloRepository.findAll();
-    }
+    @GetMapping("/articulo/{codigoArticulo}")
+    public ResponseEntity<List<ProveedorArticulo>> obtenerProveedoresPorArticulo(@PathVariable int codigoArticulo) {
+        try {
+            List<ProveedorArticulo> relaciones = proveedorArticuloService.obtenerRelacionesPorArticulo(codigoArticulo);
+            return ResponseEntity.ok(relaciones);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
 
-    @PostMapping
-    public ProveedorArticulo guardar(@RequestBody ProveedorArticulo proveedorArticulo) {
-        return proveedorArticuloRepository.save(proveedorArticulo);
     }
 }
