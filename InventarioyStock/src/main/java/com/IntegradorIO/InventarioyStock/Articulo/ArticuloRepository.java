@@ -17,6 +17,5 @@ public interface ArticuloRepository extends JpaRepository<Articulo, Integer> {
     @Query("SELECT a FROM Articulo a WHERE a.codigoArticulo= :id")
     Articulo modificarArticulo(@Param("id") Integer id);
 
-//ARREGLAR, SOLO PARA QUE NO TIRE ERROR
-    Articulo guardarArticulo(Articulo articulo);
+
 }

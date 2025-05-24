@@ -48,14 +48,14 @@ public class ArticuloService  {
 
         try {
             Articulo articulo = articuloRepository.obtenerArticulo(codigoArticulo);
-            articulo=articuloRepository.guardarArticulo(articulo);
+            articulo=articuloRepository.save(articulo);
             return articulo;
         }catch (Exception e){
             throw new Exception(e.getMessage());
         }
     }
 
-    //para la baja
+    //para la baja (este deberia ser un boolean para saber si se borro o no)
     public void eliminarArticulo(int codigoArticulo) throws Exception{
         try {
             articuloRepository.deleteById(codigoArticulo);
