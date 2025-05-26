@@ -1,5 +1,6 @@
 package com.IntegradorIO.InventarioyStock.Articulo;
 
+import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +58,39 @@ public class ArticuloService  {
 
 
 
+/*
+    public boolean eliminarArticulo(int codigoArticulo) throws Exception {
+        try {
+            Optional<Articulo> articuloOptional = articuloRepository.findById(codigoArticulo);
+            if (articuloOptional.isPresent()) {
+                Articulo articulo = articuloOptional.get();
+
+                // Verificar órdenes de compra pendientes o enviadas
+                boolean tieneOrdenPendienteOEnviada = ordenCompraRepository
+                        .existsByArticuloAndEstadoIn(articulo, List.of(EstadoOrdencCompra.PENDIENTE, EstadoOrdencCompra.ENVIADA));
+                if (tieneOrdenPendienteOEnviada) {
+                    throw new Exception("No se puede dar de baja el artículo porque tiene órdenes de compra pendientes o enviadas.");
+                }
+
+                // Verificar stock
+                if (articulo.getStock() > 0) {
+                    throw new Exception("No se puede dar de baja el artículo porque tiene stock disponible.");
+                }
+
+                // Realizar baja lógica
+                articulo.setEstadoArticulo(EstadoArticulo.NO_DISPONIBLE);
+                articulo.setFechaHoraBajaArticulo(new java.sql.Timestamp(System.currentTimeMillis()));
+                articuloRepository.save(articulo);
+                return true;
+            } else {
+                throw new Exception("El artículo con el código " + codigoArticulo + " no existe.");
+            }
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+*/
+
     //para la baja (este deberia ser un boolean para saber si se borro o no)
     public boolean eliminarArticulo(int codigoArticulo) throws Exception{
         try {
@@ -72,4 +106,5 @@ public class ArticuloService  {
             throw new Exception(e.getMessage());
         }
     }
+
 }
