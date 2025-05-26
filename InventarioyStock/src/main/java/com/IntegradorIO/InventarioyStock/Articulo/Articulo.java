@@ -14,7 +14,7 @@ public class Articulo {
     private int stockActualArticulo;
     private int stockSeguridadArticulo;
     private EstadoArticulo estadoArticulo;
-
+    private ModeloInventario modeloInventario;
 
     public Articulo() {
     }
@@ -65,6 +65,12 @@ public class Articulo {
 
     public void setStockSeguridadArticulo(int stockSeguridadArticulo) {
         this.stockSeguridadArticulo = stockSeguridadArticulo;
+    }
+
+    public void setEstadoArticulo(EstadoArticulo estadoArticulo) {
+    }
+    public int getStock() {
+        return stockActualArticulo;
     }
 }
 
