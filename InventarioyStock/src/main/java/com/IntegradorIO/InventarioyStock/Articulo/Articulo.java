@@ -18,6 +18,12 @@ public class Articulo {
 
     public Articulo() {
     }
+    public EstadoArticulo getEstadoArticulo() {
+        return estadoArticulo;
+    }
+    public void setEstadoArticulo(EstadoArticulo estadoArticulo) {
+        this.estadoArticulo = estadoArticulo;
+    }
 
     public int getCodigoArticulo() {
         return codigoArticulo;
@@ -67,8 +73,7 @@ public class Articulo {
         this.stockSeguridadArticulo = stockSeguridadArticulo;
     }
 
-    public void setEstadoArticulo(EstadoArticulo estadoArticulo) {
-    }
+
     public int getStock() {
         return stockActualArticulo;
     }

@@ -12,6 +12,10 @@ import java.util.Optional;
 public class ArticuloService  {
     @Autowired
     private ArticuloRepository articuloRepository;
+
+    @Autowired
+    private EstadoOrdenCompraRepository estadoOrdenCompraRepository;
+
     //lista los articulos
     public List<Articulo> obtenerArticulos() throws Exception {
         try {
@@ -73,8 +77,8 @@ public class ArticuloService  {
                 Articulo articulo = articuloOptional.get();
 
                 // Verificar órdenes de compra pendientes o enviadas
-                boolean tieneOrdenPendienteOEnviada = EstadoOrdenCompraRepository
-                        .existsByArticuloAndEstadoIn(articulo, List.of(EstadoOrdencCompra.PENDIENTE, EstadoOrdencCompra.ENVIADA));
+                boolean tieneOrdenPendienteOEnviada = estadoOrdenCompraRepository
+                        .existsByArticuloAndNombreEstadoIn(articulo, List.of(EstadoOrdencCompra.PENDIENTE, EstadoOrdencCompra.ENVIADA));
                 if (tieneOrdenPendienteOEnviada) {
                     throw new Exception("No se puede dar de baja el artículo porque tiene órdenes de compra pendientes o enviadas.");
                 }
@@ -97,21 +101,4 @@ public class ArticuloService  {
         }
     }
 
-/*
-    //para la baja (este deberia ser un boolean para saber si se borro o no)
-    public boolean eliminarArticulo(int codigoArticulo) throws Exception{
-        try {
-            if (articuloRepository.existsById(codigoArticulo)) {
-                articuloRepository.deleteById(codigoArticulo);
-                return true; // Se eliminó correctamente
-            } else {
-              throw new Exception("El artículo con el código " + codigoArticulo + " no existe.");
-            }
-
-
-        }catch (Exception e){
-            throw new Exception(e.getMessage());
-        }
-    }
-*/
 }
