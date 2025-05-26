@@ -50,6 +50,12 @@ public class ArticuloService  {
 
         try {
             Articulo articulo = articuloRepository.obtenerArticulo(codigoArticulo);
+
+            articulo.setNombreArticulo(articuloModificado.getNombreArticulo());
+            articulo.setDescripcion(articuloModificado.getDescripcion());
+            articulo.setStockActualArticulo(articuloModificado.getStockActualArticulo());
+            articulo.setStockSeguridadArticulo(articuloModificado.getStockSeguridadArticulo());
+
             articulo=articuloRepository.save(articulo);
             return articulo;
         }catch (Exception e){
