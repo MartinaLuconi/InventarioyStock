@@ -18,7 +18,7 @@ public class Articulo {
     private int stockSeguridadArticulo;
     private EstadoArticulo estadoArticulo;
     private ModeloInventario modeloInventario;
-
+    private int demandaAnual;
     private int puntoPedido;
 
     @OneToMany(mappedBy = "articulo",cascade = CascadeType.ALL, orphanRemoval = true)
@@ -108,6 +108,14 @@ public class Articulo {
 
     public void setModeloInventario(ModeloInventario modeloInventario) {
         this.modeloInventario = modeloInventario;
+    }
+
+    public int getDemandaAnual() {
+        return demandaAnual;
+    }
+
+    public void setDemandaAnual(int demandaAnual) {
+        this.demandaAnual = demandaAnual;
     }
 }
 

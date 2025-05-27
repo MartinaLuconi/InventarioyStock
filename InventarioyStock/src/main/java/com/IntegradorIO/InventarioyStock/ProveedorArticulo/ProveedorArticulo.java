@@ -23,7 +23,8 @@ public class ProveedorArticulo {
     private double costoAlmacenamiento;
     private int loteOptimo;
     private int inventarioMaximo;
-
+    private float nivelDeServicio;
+    private float costoUnitario;
     @ManyToOne
     @JoinColumn(name = "articulo_id")
     private Articulo articulo;

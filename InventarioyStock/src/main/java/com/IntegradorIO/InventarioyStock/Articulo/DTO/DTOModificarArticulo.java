@@ -29,4 +29,5 @@ public class DTOModificarArticulo {
     private int loteOptimo;
     private int inventarioMax;
     private ModeloInventario modeloElegido;
+    private int demandaAnual;
 }
