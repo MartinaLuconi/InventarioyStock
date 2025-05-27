@@ -20,4 +20,14 @@ public class Proveedor {
 
     @OneToMany(mappedBy = "proveedor")
     private List<ProveedorArticulo> proveedorArticulos;
+
+    public List<ProveedorArticulo> getProveedorArticulos() {
+        return proveedorArticulos;
+    }
+
+    public void setProveedorArticulos(List<ProveedorArticulo> proveedorArticulos) {
+        this.proveedorArticulos = proveedorArticulos;
+    }
+
+
 }

@@ -2,9 +2,12 @@ package com.IntegradorIO.InventarioyStock.Articulo;
 
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompraRepository;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
+import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
+import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -100,5 +103,27 @@ public class ArticuloService  {
             throw new Exception(e.getMessage());
         }
     }
+
+    //listar proveedores de un articulo
+
+    public List<Proveedor> listarProveedores(int codArticulo){
+        List<Proveedor> listaProveedores = new ArrayList<>();
+
+        //busco el articulo
+        Articulo a = articuloRepository.obtenerArticulo(codArticulo);
+
+        //leo intermedias de ese articulo
+        List< ProveedorArticulo> palist = a.getProveedorArticuloList();
+        for (ProveedorArticulo pa : palist){
+            //meto proveedores en lista
+            listaProveedores.add(pa.getProveedor());
+        }
+
+        return listaProveedores;
+    }
+
+    
+
+
 
 }

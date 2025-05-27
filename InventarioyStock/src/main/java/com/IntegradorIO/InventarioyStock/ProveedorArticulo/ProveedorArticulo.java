@@ -28,4 +28,6 @@ public class ProveedorArticulo {
     @JoinColumn(name = "proveedor_id")
     private Proveedor proveedor;
 
+
+
 }

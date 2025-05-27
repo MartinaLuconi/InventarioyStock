@@ -3,6 +3,7 @@ import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,8 +19,8 @@ public class Articulo {
     private EstadoArticulo estadoArticulo;
     private ModeloInventario modeloInventario;
 
-    @OneToMany(mappedBy = "articulo")
-    private List<ProveedorArticulo> proveedorArticuloList;
+    @OneToMany(mappedBy = "articulo",cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProveedorArticulo> proveedorArticuloList = new ArrayList<>();
 
     public Articulo() {
     }
@@ -78,10 +79,22 @@ public class Articulo {
         this.stockSeguridadArticulo = stockSeguridadArticulo;
     }
 
-
     public int getStock() {
         return stockActualArticulo;
     }
+
+    public List<ProveedorArticulo> getProveedorArticuloList() {
+        return proveedorArticuloList;
+    }
+
+    public void addProveedorArticulo(ProveedorArticulo proveedorArticulo) {
+        proveedorArticuloList.add(proveedorArticulo);
+    }
+
+
+
+
+
 }
 
 
