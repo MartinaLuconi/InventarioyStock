@@ -1,7 +1,9 @@
 package com.IntegradorIO.InventarioyStock.Articulo;
+import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 public class Articulo {
@@ -15,6 +17,9 @@ public class Articulo {
     private int stockSeguridadArticulo;
     private EstadoArticulo estadoArticulo;
     private ModeloInventario modeloInventario;
+
+    @OneToMany(mappedBy = "articulo")
+    private List<ProveedorArticulo> proveedorArticuloList;
 
     public Articulo() {
     }
