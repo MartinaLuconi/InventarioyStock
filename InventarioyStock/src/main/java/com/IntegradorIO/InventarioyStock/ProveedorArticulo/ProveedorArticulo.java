@@ -19,6 +19,10 @@ public class ProveedorArticulo {
     private boolean esPredeterminado;
     private float precioUnitProveedorArticulo;
     private int cargoProveedorPedido;
+    private double costoMantenimiento;
+    private double costoAlmacenamiento;
+    private int loteOptimo;
+    private int inventarioMaximo;
 
     @ManyToOne
     @JoinColumn(name = "articulo_id")

@@ -1,5 +1,6 @@
 package com.IntegradorIO.InventarioyStock.Articulo;
 
+import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTONuevoArticulo;
 import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -37,8 +38,8 @@ public class ArticuloController {
     }
     //crear articulo
     @PostMapping
-    public ResponseEntity<Articulo> guardarArticulo(@RequestBody Articulo articulo)  throws Exception{
-        Articulo nuevoArticulo = articuloService.guardarArticulo(articulo);
+    public ResponseEntity<Articulo> guardarArticulo(@RequestBody DTONuevoArticulo dtoNuevoArticulo)  throws Exception{
+        Articulo nuevoArticulo = articuloService.guardarArticulo(dtoNuevoArticulo);
         return new ResponseEntity<>(nuevoArticulo, HttpStatus.CREATED);
     }
     // modificar articulo existente

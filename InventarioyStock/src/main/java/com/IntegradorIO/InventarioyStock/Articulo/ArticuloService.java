@@ -1,9 +1,11 @@
 package com.IntegradorIO.InventarioyStock.Articulo;
 
+import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTONuevoArticulo;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompraRepository;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
 import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
+import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,9 @@ import java.util.Optional;
 public class ArticuloService  {
     @Autowired
     private ArticuloRepository articuloRepository;
+
+    @Autowired
+    private ProveedorArticuloRepository proveedorArticuloRepository;
 
     @Autowired
     private EstadoOrdenCompraRepository estadoOrdenCompraRepository;
@@ -42,9 +47,41 @@ public class ArticuloService  {
 
     }
     // para todos los cambios
-    public Articulo guardarArticulo(Articulo articulo) throws Exception{
+    public Articulo guardarArticulo(DTONuevoArticulo dtoNuevoArticulo) throws Exception{
         try {
-            articulo = articuloRepository.save(articulo);
+            //paso datos del dto a las entidades
+            Articulo articulo = new Articulo();
+
+                articulo.setDescripcion(dtoNuevoArticulo.getDescripcion());
+                articulo.setNombreArticulo(dtoNuevoArticulo.getNombreArticulo());
+                articulo.setStockActualArticulo(dtoNuevoArticulo.getStockReal());
+                articulo.setFechaHoraBajaArticulo(null);
+                articulo.setStockSeguridadArticulo(dtoNuevoArticulo.getStockSeguridad());
+                articulo.setPuntoPedido(dtoNuevoArticulo.getPuntoPedido());
+                articulo.setModeloInventario(dtoNuevoArticulo.getModeloElegido());
+
+
+
+            ProveedorArticulo pa = new ProveedorArticulo();
+                pa.setArticulo(articulo); //relacion con articulo
+
+                pa.setCostoPedido(dtoNuevoArticulo.getCostoPedido());
+                pa.setPrecioUnitProveedorArticulo(dtoNuevoArticulo.getPrecioUnitario());
+                pa.setDemoraEntrega(dtoNuevoArticulo.getDemoraEntrega());
+                pa.setCostoMantenimiento(dtoNuevoArticulo.getCostoMantener());
+                pa.setCostoAlmacenamiento(dtoNuevoArticulo.getCostoAlmacenamiento());
+                pa.setLoteOptimo(dtoNuevoArticulo.getLoteOptimo());
+                pa.setInventarioMaximo(dtoNuevoArticulo.getInventarioMax());
+
+                //por cada proveedor seleccionado, hacer la relacion
+                List<Proveedor> proveedorList = dtoNuevoArticulo.getProveedoresAsignados();
+                for (Proveedor p:proveedorList){
+                   pa.setProveedor(p);
+                }
+                //guardo instancias
+                proveedorArticuloRepository.save(pa);
+                articuloRepository.save(articulo);
+
             return articulo;
         }catch (Exception e){
             throw new Exception(e.getMessage());

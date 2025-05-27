@@ -19,6 +19,8 @@ public class Articulo {
     private EstadoArticulo estadoArticulo;
     private ModeloInventario modeloInventario;
 
+    private int puntoPedido;
+
     @OneToMany(mappedBy = "articulo",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProveedorArticulo> proveedorArticuloList = new ArrayList<>();
 
@@ -92,9 +94,21 @@ public class Articulo {
     }
 
 
+    public int getPuntoPedido() {
+        return puntoPedido;
+    }
 
+    public void setPuntoPedido(int puntoPedido) {
+        this.puntoPedido = puntoPedido;
+    }
 
+    public ModeloInventario getModeloInventario() {
+        return modeloInventario;
+    }
 
+    public void setModeloInventario(ModeloInventario modeloInventario) {
+        this.modeloInventario = modeloInventario;
+    }
 }
 
 

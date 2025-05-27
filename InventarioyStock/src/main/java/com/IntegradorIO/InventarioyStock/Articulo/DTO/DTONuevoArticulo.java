@@ -13,17 +13,17 @@ import java.util.List;
 @Data
 public class DTONuevoArticulo {
 
-    private int codigoArticulo;
+    
     private String nombreArticulo;
-    private  String descripción;
+    private  String descripcion;
     private int stockReal;
     private int stockSeguridad;
     private int puntoPedido;
     private Timestamp fechaHoraBajaArticulo;
-    private double precioUnitario;
+    private float precioUnitario;
     private List<Proveedor> proveedoresAsignados;
     private int demoraEntrega;
-    private  double costoPedido;
+    private  float costoPedido;
 
     private double   costoMantener;
     private double costoAlmacenamiento;
