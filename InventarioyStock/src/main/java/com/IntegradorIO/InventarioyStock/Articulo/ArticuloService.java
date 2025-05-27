@@ -148,6 +148,27 @@ public class ArticuloService  {
 
     }
 
+    //listar productos a reponer
+
+    public List<Articulo> listarArticulosReponer () throws Exception{
+        List<Articulo> articulosReponerL = new ArrayList<>();
+        //busco todos los articulos
+        List<Articulo> aList =articuloRepository.obtenerArticulos();
+
+        //armo lista de articulos a reponer
+        for (Articulo a: aList) {
+            //leer el stock actual
+            int stockA = a.getStockActualArticulo();
+            //lee el punto de pedido
+            int pp = 2; //a.getPuntoPedido();
+            //si el stock es menor al punto de pedido --> por debajo del PP
+            if (stockA<=pp){
+                articulosReponerL.add(a);
+            }
+        }
+        return articulosReponerL;
+    }
+
 
 
 

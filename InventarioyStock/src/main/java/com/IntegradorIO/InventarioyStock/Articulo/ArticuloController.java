@@ -77,4 +77,15 @@ public class ArticuloController {
 
     }
 
+    //listar articulos a reponer
+    @GetMapping("/articulosReponer")
+    public ResponseEntity<List<Articulo>> listarArticulosReponer () throws Exception{
+        try {
+            articuloService.listarArticulosReponer();
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
 }
