@@ -65,4 +65,16 @@ public class ArticuloController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    //listar articulos faltantes
+    @GetMapping("/articulosFaltantes")
+    public ResponseEntity<List<Articulo>> listarArticulosFaltantes () throws Exception{
+        try {
+            articuloService.listarArticulosFaltantes();
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+    }
+
 }

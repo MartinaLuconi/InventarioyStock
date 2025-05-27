@@ -127,6 +127,27 @@ public class ArticuloService  {
         }
     }
 
+    //listar productos faltantes
+
+    public List<Articulo> listarArticulosFaltantes () throws Exception{
+        List<Articulo> articulosFaltantes = new ArrayList<>();
+        //busco todos los articulos
+        List<Articulo> aList =articuloRepository.obtenerArticulos();
+        for (Articulo a : aList){
+           int stockActual = a.getStockActualArticulo();
+           int stockSerguridad = a.getStockSeguridadArticulo();
+           if (stockActual < stockSerguridad ){
+               articulosFaltantes.add(a);
+           }
+        }
+        //Caso de que no hay articulos faltantes
+        if (articulosFaltantes.isEmpty()){
+            throw new Exception("No hay artículos faltantes");
+        }
+        return articulosFaltantes;
+
+    }
+
 
 
 
