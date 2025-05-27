@@ -217,7 +217,7 @@ public class ArticuloService  {
             //leer el stock actual
             int stockA = a.getStockActualArticulo();
             //lee el punto de pedido
-            int pp = 2; //a.getPuntoPedido();
+            int pp = a.getPuntoPedido();
             //si el stock es menor al punto de pedido --> por debajo del PP
             if (stockA<=pp){
                 articulosReponerL.add(a);
