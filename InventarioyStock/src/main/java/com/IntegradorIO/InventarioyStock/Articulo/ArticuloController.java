@@ -58,10 +58,11 @@ public class ArticuloController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    //listar proveedores
+    //listar proveedores de un articulo
     @GetMapping("/{codigoArticulo}/proveedores")
-    public List<Proveedor> listarProveedores(@PathVariable int codigoArticulo) throws Exception{
-        return articuloService.listarProveedores(codigoArticulo);
+    public ResponseEntity<List<Proveedor>> listarProveedores(@PathVariable int codigoArticulo) throws Exception{
+        articuloService.listarProveedores(codigoArticulo);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
