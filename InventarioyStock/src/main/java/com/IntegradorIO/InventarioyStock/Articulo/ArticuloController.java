@@ -1,5 +1,6 @@
 package com.IntegradorIO.InventarioyStock.Articulo;
 
+import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOModificarArticulo;
 import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTONuevoArticulo;
 import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class ArticuloController {
     }
     // modificar articulo existente
     @PutMapping("/{codigoArticulo}")
-    public ResponseEntity<Articulo> modificarArticulo(@PathVariable int codigoArticulo, @RequestBody Articulo articuloModificado)  throws Exception{
+    public ResponseEntity<Articulo> modificarArticulo(@PathVariable int codigoArticulo, @RequestBody DTOModificarArticulo articuloModificado )  throws Exception{
         Articulo articuloActualizado = articuloService.modificarArticulo(codigoArticulo, articuloModificado);
         if (articuloActualizado != null) {
             return new ResponseEntity<>(articuloActualizado, HttpStatus.OK);

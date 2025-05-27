@@ -1,5 +1,6 @@
 package com.IntegradorIO.InventarioyStock.Articulo;
 
+import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOModificarArticulo;
 import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTONuevoArticulo;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompraRepository;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
@@ -90,17 +91,36 @@ public class ArticuloService  {
     }
 
     // Modificar un artículo existente
-    public Articulo modificarArticulo(int codigoArticulo, Articulo articuloModificado) throws Exception{
+    public Articulo modificarArticulo(int codigoArticulo, DTOModificarArticulo articuloModificado) throws Exception{
 
         try {
             Articulo articulo = articuloRepository.obtenerArticulo(codigoArticulo);
 
             articulo.setNombreArticulo(articuloModificado.getNombreArticulo());
             articulo.setDescripcion(articuloModificado.getDescripcion());
-            articulo.setStockActualArticulo(articuloModificado.getStockActualArticulo());
-            articulo.setStockSeguridadArticulo(articuloModificado.getStockSeguridadArticulo());
+            articulo.setStockActualArticulo(articuloModificado.getStockReal());
+            articulo.setStockSeguridadArticulo(articuloModificado.getStockSeguridad());
+            articulo.setPuntoPedido(articuloModificado.getPuntoPedido());
+            articulo.setModeloInventario(articuloModificado.getModeloElegido());
 
+            ProveedorArticulo pa = new ProveedorArticulo();
+
+            pa.setCostoPedido(articuloModificado.getCostoPedido());
+            pa.setPrecioUnitProveedorArticulo(articuloModificado.getPrecioUnitario());
+            pa.setDemoraEntrega(articuloModificado.getDemoraEntrega());
+            pa.setCostoMantenimiento(articuloModificado.getCostoMantener());
+            pa.setCostoAlmacenamiento(articuloModificado.getCostoAlmacenamiento());
+            pa.setLoteOptimo(articuloModificado.getLoteOptimo());
+            pa.setInventarioMaximo(articuloModificado.getInventarioMax());
+
+            //por cada proveedor seleccionado, hacer la relacion
+            List<Proveedor> proveedorList = articuloModificado.getProveedoresAsignados();
+            for (Proveedor p:proveedorList){
+                pa.setProveedor(p);
+            }
+            proveedorArticuloRepository.save(pa);
             articulo=articuloRepository.save(articulo);
+
             return articulo;
         }catch (Exception e){
             throw new Exception(e.getMessage());

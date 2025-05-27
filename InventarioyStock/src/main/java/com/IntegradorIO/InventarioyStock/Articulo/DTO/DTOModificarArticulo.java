@@ -8,11 +8,11 @@ import lombok.Setter;
 
 import java.sql.Timestamp;
 import java.util.List;
+
+@Data
 @Getter
 @Setter
-@Data
-public class DTONuevoArticulo {
-
+public class DTOModificarArticulo {
 
     private String nombreArticulo;
     private  String descripcion;
