@@ -1,5 +1,6 @@
 package com.IntegradorIO.InventarioyStock.Articulo;
 
+import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -16,11 +17,15 @@ import java.util.List;
 public class ArticuloController {
     @Autowired
     private ArticuloService articuloService;
+
+    //listar TODOS los articulos
     @GetMapping
     public ResponseEntity<List<Articulo>> obtenerArticulos() throws Exception {
         List<Articulo> articulos = articuloService.obtenerArticulos();
         return new ResponseEntity<>(articulos, HttpStatus.OK);
     }
+
+    //busca solo un articulo por codigo
     @GetMapping("/{codigoArticulo}")
     public ResponseEntity<Articulo> obtenerArticuloPorCodigo(@PathVariable int codigoArticulo) throws Exception {
         Articulo articulo = articuloService.obtenerArticulo(codigoArticulo);
@@ -51,6 +56,12 @@ public class ArticuloController {
     public ResponseEntity<Void> eliminarArticulo(@PathVariable int codigoArticulo)  throws Exception{
         articuloService.eliminarArticulo(codigoArticulo);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    //listar proveedores
+    @GetMapping("/{codigoArticulo}/proveedores")
+    public List<Proveedor> listarProveedores(@PathVariable int codigoArticulo) throws Exception{
+        return articuloService.listarProveedores(codigoArticulo);
     }
 
 }

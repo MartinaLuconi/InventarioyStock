@@ -106,23 +106,28 @@ public class ArticuloService  {
 
     //listar proveedores de un articulo
 
-    public List<Proveedor> listarProveedores(int codArticulo){
-        List<Proveedor> listaProveedores = new ArrayList<>();
+    public List<Proveedor> listarProveedores(int codArticulo) throws Exception{
+        try {
 
-        //busco el articulo
-        Articulo a = articuloRepository.obtenerArticulo(codArticulo);
+            List<Proveedor> listaProveedores = new ArrayList<>();
 
-        //leo intermedias de ese articulo
-        List< ProveedorArticulo> palist = a.getProveedorArticuloList();
-        for (ProveedorArticulo pa : palist){
-            //meto proveedores en lista
-            listaProveedores.add(pa.getProveedor());
+            //busco el articulo
+            Articulo a = articuloRepository.obtenerArticulo(codArticulo);
+
+            //leo intermedias de ese articulo
+            List<ProveedorArticulo> palist = a.getProveedorArticuloList();
+            for (ProveedorArticulo pa : palist) {
+                //meto proveedores en lista
+                listaProveedores.add(pa.getProveedor());
+            }
+
+            return listaProveedores;
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
         }
-
-        return listaProveedores;
     }
 
-    
+
 
 
 
