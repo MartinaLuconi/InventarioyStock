@@ -4,6 +4,7 @@ import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOModificarArticulo;
 import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTONuevoArticulo;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompraRepository;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
+import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión.CGIModel;
 import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloRepository;
@@ -226,8 +227,20 @@ public class ArticuloService  {
         return articulosReponerL;
     }
 
+// Para calcular el (CGI) para un artículo y su proveedor Modeelo LOTE_FIJO
 
-
+    public double calcularCGIArticulo(Articulo articulo, ProveedorArticulo proveedorArticulo) {
+        if (articulo.getModeloInventario() != ModeloInventario.LOTE_FIJO) {
+            throw new IllegalArgumentException("El modelo de inventario no es LOTE_FIJO");
+        }
+        CGIModel model = new CGIModel();
+        model.setDemandaAnual(articulo.getDemandaAnual());
+        model.setLoteOptimo(proveedorArticulo.getLoteOptimo());
+        model.setCostoPedido(proveedorArticulo.getCostoPedido());
+        model.setCostoUnitario(proveedorArticulo.getCostoUnitario());
+        model.setCostoMantenimiento(proveedorArticulo.getCostoMantenimiento());
+        return model.getCGI();
+    }
 
 
 }

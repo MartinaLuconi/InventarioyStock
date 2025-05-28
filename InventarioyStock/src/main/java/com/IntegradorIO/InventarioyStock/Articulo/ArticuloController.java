@@ -3,6 +3,8 @@ package com.IntegradorIO.InventarioyStock.Articulo;
 import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOModificarArticulo;
 import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTONuevoArticulo;
 import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
+import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
+import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,12 @@ import java.util.List;
 public class ArticuloController {
     @Autowired
     private ArticuloService articuloService;
+
+    @Autowired
+    private ArticuloRepository articuloRepository;
+
+    @Autowired
+    private ProveedorArticuloRepository proveedorArticuloRepository;
 
     //listar TODOS los articulos
     @GetMapping
@@ -90,4 +98,16 @@ public class ArticuloController {
         }
     }
 
+// Calcular Punto de Pedido (CGI) para un artículo y proveedor específico
+    @GetMapping("/{idArticulo}/proveedor/{idProveedorArticulo}/cgi")
+    public double obtenerCGI(
+            @PathVariable int idArticulo,
+            @PathVariable int idProveedorArticulo
+    ) throws Exception {
+        Articulo articulo = articuloRepository.findById(idArticulo)
+                .orElseThrow(() -> new Exception("Artículo no encontrado"));
+        ProveedorArticulo proveedorArticulo = proveedorArticuloRepository.findById(idProveedorArticulo)
+                .orElseThrow(() -> new Exception("ProveedorArticulo no encontrado"));
+        return articuloService.calcularCGIArticulo(articulo, proveedorArticulo);
+    }
 }
