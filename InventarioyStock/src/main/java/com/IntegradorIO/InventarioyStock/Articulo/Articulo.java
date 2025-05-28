@@ -3,6 +3,9 @@ import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import jakarta.persistence.*;
 
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;

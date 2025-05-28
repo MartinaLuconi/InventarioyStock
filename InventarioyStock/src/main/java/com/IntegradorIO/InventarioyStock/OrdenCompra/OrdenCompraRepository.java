@@ -1,6 +1,6 @@
 package com.IntegradorIO.InventarioyStock.OrdenCompra;
 
-import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrden;
+import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +18,7 @@ public interface OrdenCompraRepository extends JpaRepository<OrdenCompra, Intege
      */
     boolean existsByProveedorCodigoProveedorAndEstadoOrdenCompraIn(
             Integer codigoProveedor,
-            List<EstadoOrden> estados
+            List<EstadoOrdencCompra> estados
     );
 }
 

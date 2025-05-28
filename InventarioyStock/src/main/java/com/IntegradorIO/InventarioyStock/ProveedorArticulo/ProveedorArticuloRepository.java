@@ -16,5 +16,8 @@ public interface ProveedorArticuloRepository
     ProveedorArticulo findByProveedorCodigoProveedorAndEsPredeterminadoTrue(Integer codigoProveedor);
 
     // Opcional: buscar todas las asociaciones de un artículo
-    List<ProveedorArticulo> findByArticuloCodigoArticulo(Integer codigoArticulo);
+    List<ProveedorArticulo> findByArticulo_CodigoArticulo(Integer codigoArticulo);
+
+
 }
+

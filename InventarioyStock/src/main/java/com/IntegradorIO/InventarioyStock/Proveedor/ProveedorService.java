@@ -2,7 +2,7 @@ package com.IntegradorIO.InventarioyStock.Proveedor;
 
 import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
 import com.IntegradorIO.InventarioyStock.Articulo.ArticuloRepository;
-import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrden;
+import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.OrdenCompraRepository;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloRepository;
@@ -85,7 +85,7 @@ public class ProveedorService {
         }
         proveedorArticuloRepository.saveAll(lista);
 
-        guardado.setAsociaciones(lista);
+        guardado.setProveedorArticulos(lista);
         return guardado;
     }
 
@@ -112,7 +112,7 @@ public class ProveedorService {
         boolean tieneOrdenesActivas = ordenCompraRepository
                 .existsByProveedorCodigoProveedorAndEstadoOrdenCompraIn(
                         codigoProveedor,
-                        Arrays.asList(EstadoOrden.PENDIENTE, EstadoOrden.CONFIRMADO)  // <- usa EstadoOrden
+                        Arrays.asList(EstadoOrdencCompra.PENDIENTE, EstadoOrdencCompra.CONFIRMADO)  // <- usa EstadoOrden
                 );
 
         if (tieneOrdenesActivas) {

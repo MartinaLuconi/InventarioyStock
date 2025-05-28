@@ -146,7 +146,7 @@ public class ArticuloService  {
                 }
 
                 // Verificar stock
-                if (articulo.getStock() > 0) {
+                if (articulo.getStockActualArticulo() > 0) {
                     throw new Exception("No se puede dar de baja el artículo porque tiene stock disponible.");
                 }
 
