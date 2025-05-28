@@ -3,7 +3,7 @@
     <option name="ALTERNATIVE_JRE_PATH" value="24" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="MAIN_CLASS_NAME" value="com.IntegradorIO.InventarioyStock.InventarioyStockApplication" />
-    <module name="InventarioyStock.main" />
+    <module name="InventarioyStock.InventarioyStock.main~1" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.IntegradorIO.InventarioyStock.Articulo.*" />

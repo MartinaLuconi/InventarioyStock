@@ -79,8 +79,8 @@ public class ArticuloController {
     @GetMapping("/articulosFaltantes")
     public ResponseEntity<List<Articulo>> listarArticulosFaltantes () throws Exception{
         try {
-            articuloService.listarArticulosFaltantes();
-            return new ResponseEntity<>(HttpStatus.OK);
+            List<Articulo> articulos=articuloService.listarArticulosFaltantes();
+            return new ResponseEntity<>(articulos,HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -91,8 +91,8 @@ public class ArticuloController {
     @GetMapping("/articulosReponer")
     public ResponseEntity<List<Articulo>> listarArticulosReponer () throws Exception{
         try {
-            articuloService.listarArticulosReponer();
-            return new ResponseEntity<>(HttpStatus.OK);
+            List<Articulo> articulos=articuloService.listarArticulosReponer();
+            return new ResponseEntity<>(articulos, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
