@@ -110,4 +110,33 @@ public class ArticuloController {
                 .orElseThrow(() -> new Exception("ProveedorArticulo no encontrado"));
         return articuloService.calcularCGIArticulo(articulo, proveedorArticulo);
     }
+
+
+    // EOQ para un artículo y proveedor
+    @GetMapping("/{idArticulo}/proveedor/{idProveedorArticulo}/eoq")
+    public int getEOQ(@PathVariable int idArticulo, @PathVariable int idProveedorArticulo) throws Exception {
+        Articulo articulo = articuloService.obtenerArticulo(idArticulo);
+        ProveedorArticulo proveedorArticulo = proveedorArticuloRepository.findById(idProveedorArticulo).orElseThrow();
+        return articuloService.calcularEOQArticulo(articulo, proveedorArticulo);
+    }
+
+    // Stock de seguridad (parámetros por query)
+    @GetMapping("/stock-seguridad")
+    public int getStockSeguridad(
+            @RequestParam double z,
+            @RequestParam double desviacionEstandar,
+            @RequestParam int l
+    ) {
+        return articuloService.calcularStockSeguridad(z, desviacionEstandar, l);
+    }
+
+    // Punto de pedido (ROP)
+    @GetMapping("/rop")
+    public int getROP(
+            @RequestParam double demandaPromedio,
+            @RequestParam int stockSeguridad,
+            @RequestParam int l
+    ) {
+        return articuloService.calcularROP(demandaPromedio, stockSeguridad, l);
+    }
 }
