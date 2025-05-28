@@ -5,6 +5,7 @@ import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTONuevoArticulo;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompraRepository;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
 import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión.CGIModel;
+import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión.CalculosEstrRevisionContinua;
 import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloRepository;
@@ -227,7 +228,8 @@ public class ArticuloService  {
         return articulosReponerL;
     }
 
-// Para calcular el (CGI) para un artículo y su proveedor Modeelo LOTE_FIJO
+// Para calcular el (CGI) (ROP) y StockSeguridad para un artículo y su proveedor Modeelo LOTE_FIJO
+
 
     public double calcularCGIArticulo(Articulo articulo, ProveedorArticulo proveedorArticulo) {
         if (articulo.getModeloInventario() != ModeloInventario.LOTE_FIJO) {
@@ -235,11 +237,27 @@ public class ArticuloService  {
         }
         CGIModel model = new CGIModel();
         model.setDemandaAnual(articulo.getDemandaAnual());
-        model.setLoteOptimo(proveedorArticulo.getLoteOptimo());
         model.setCostoPedido(proveedorArticulo.getCostoPedido());
         model.setCostoUnitario(proveedorArticulo.getCostoUnitario());
         model.setCostoMantenimiento(proveedorArticulo.getCostoMantenimiento());
+        model.setCostoAlmacenamiento(proveedorArticulo.getCostoAlmacenamiento());
         return model.getCGI();
+    }
+
+    public int calcularEOQArticulo(Articulo articulo, ProveedorArticulo proveedorArticulo) {
+        return CalculosEstrRevisionContinua.calcularEOQ(
+                articulo.getDemandaAnual(),
+                proveedorArticulo.getCostoPedido(),
+                proveedorArticulo.getCostoAlmacenamiento()
+        );
+    }
+
+    public int calcularStockSeguridad(double Z, double desviacionEstandar, int L) {
+        return CalculosEstrRevisionContinua.calcularStockSeguridad(Z, desviacionEstandar, L);
+    }
+
+    public int calcularROP(double demandaPromedio, int stockSeguridad, int L) {
+        return CalculosEstrRevisionContinua.calcularROP(demandaPromedio, stockSeguridad, L);
     }
 
 
