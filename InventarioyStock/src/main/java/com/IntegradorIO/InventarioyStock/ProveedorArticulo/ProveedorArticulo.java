@@ -9,6 +9,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@jakarta.persistence.EntityListeners(com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión.ProveedorArticuloListener.class)
 public class ProveedorArticulo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

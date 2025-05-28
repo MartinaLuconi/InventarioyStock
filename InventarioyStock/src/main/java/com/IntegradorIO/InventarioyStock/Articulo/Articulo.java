@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@jakarta.persistence.EntityListeners(com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión.ArticuloListener.class)
 public class Articulo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
