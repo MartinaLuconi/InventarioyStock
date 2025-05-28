@@ -62,7 +62,9 @@ public class ArticuloService  {
                 articulo.setStockSeguridadArticulo(dtoNuevoArticulo.getStockSeguridad());
                 articulo.setPuntoPedido(dtoNuevoArticulo.getPuntoPedido());
                 articulo.setModeloInventario(dtoNuevoArticulo.getModeloElegido());
-
+                articulo.setDemandaAnual(dtoNuevoArticulo.getDemandaAnual());
+                
+            articuloRepository.save(articulo);
 
 
             ProveedorArticulo pa = new ProveedorArticulo();
@@ -83,7 +85,7 @@ public class ArticuloService  {
                 }
                 //guardo instancias
                 proveedorArticuloRepository.save(pa);
-                articuloRepository.save(articulo);
+
 
             return articulo;
         }catch (Exception e){
