@@ -85,10 +85,10 @@ public class ArticuloController {
 
     //listar articulos faltantes
     @GetMapping("/articulosFaltantes")
-    public ResponseEntity<List<Articulo>> listarArticulosFaltantes () throws Exception{
+    public ResponseEntity<List<DTOTablaArticulos>> listarArticulosFaltantes () throws Exception{
         try {
-            List<Articulo> articulos=articuloService.listarArticulosFaltantes();
-            return new ResponseEntity<>(articulos,HttpStatus.OK);
+            List<DTOTablaArticulos> articulosFaltantes=articuloService.listarArticulosFaltantes();
+            return new ResponseEntity<>(articulosFaltantes,HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -97,10 +97,10 @@ public class ArticuloController {
 
     //listar articulos a reponer
     @GetMapping("/articulosReponer")
-    public ResponseEntity<List<Articulo>> listarArticulosReponer () throws Exception{
+    public ResponseEntity<List<DTOTablaArticulos>> listarArticulosReponer () throws Exception{
         try {
-            List<Articulo> articulos=articuloService.listarArticulosReponer();
-            return new ResponseEntity<>(articulos, HttpStatus.OK);
+            List<DTOTablaArticulos> articulosReponer=articuloService.listarArticulosReponer();
+            return new ResponseEntity<>(articulosReponer, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

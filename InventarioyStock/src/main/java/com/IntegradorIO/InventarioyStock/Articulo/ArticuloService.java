@@ -236,8 +236,9 @@ public class ArticuloService  {
 
     //listar productos faltantes
 
-    public List<Articulo> listarArticulosFaltantes () throws Exception{
+    public List<DTOTablaArticulos> listarArticulosFaltantes () throws Exception{
         List<Articulo> articulosFaltantes = new ArrayList<>();
+        List<DTOTablaArticulos> articulosFaltantesDTO = new ArrayList<>();
         //busco todos los articulos
         List<Articulo> aList =articuloRepository.obtenerArticulos();
         for (Articulo a : aList){
@@ -250,15 +251,25 @@ public class ArticuloService  {
         //Caso de que no hay articulos faltantes
         if (articulosFaltantes.isEmpty()){
             throw new Exception("No hay artículos faltantes");
+        } else {
+            for (Articulo a : articulosFaltantes) {
+                DTOTablaArticulos dto = new DTOTablaArticulos(a);
+                dto.setCodigoArticulo(a.getCodigoArticulo());
+                dto.setNombreArticulo(a.getNombreArticulo());
+                dto.setDescripcion(a.getDescripcion());
+                dto.setFechaHoraBajaArticulo(a.getFechaHoraBajaArticulo());
+                articulosFaltantesDTO.add(dto);
+            }
         }
-        return articulosFaltantes;
+        return articulosFaltantesDTO;
 
     }
 
     //listar productos a reponer
 
-    public List<Articulo> listarArticulosReponer () throws Exception{
+    public List<DTOTablaArticulos> listarArticulosReponer () throws Exception{
         List<Articulo> articulosReponerL = new ArrayList<>();
+        List<DTOTablaArticulos> articulosReponerDTO = new ArrayList<>();
         //busco todos los articulos
         List<Articulo> aList =articuloRepository.obtenerArticulos();
 
@@ -273,7 +284,18 @@ public class ArticuloService  {
                 articulosReponerL.add(a);
             }
         }
-        return articulosReponerL;
+
+        //armo tabla con lista. Esto tmb pordría ir en el if anterior
+        for (Articulo a : articulosReponerL) {
+            DTOTablaArticulos dto = new DTOTablaArticulos(a);
+            dto.setCodigoArticulo(a.getCodigoArticulo());
+            dto.setNombreArticulo(a.getNombreArticulo());
+            dto.setDescripcion(a.getDescripcion());
+            dto.setFechaHoraBajaArticulo(a.getFechaHoraBajaArticulo());
+            articulosReponerDTO.add(dto);
+        }
+
+        return articulosReponerDTO;
     }
 
 // Para calcular el (CGI) (ROP) y StockSeguridad para un artículo y su proveedor Modeelo LOTE_FIJO
