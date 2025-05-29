@@ -1,5 +1,6 @@
 package com.IntegradorIO.InventarioyStock.Articulo;
 
+import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTODetalleArticulo;
 import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOModificarArticulo;
 import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTONuevoArticulo;
 import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOTablaArticulos;
@@ -49,8 +50,8 @@ public class ArticuloController {
         }
     }
     @GetMapping("/{codigoArticulo}/detalle")
-    public  ResponseEntity<DTONuevoArticulo> mostrarDetalle(@PathVariable int codigoArticulo){
-        DTONuevoArticulo dto = articuloService.mostrarDetalle(codigoArticulo);
+    public  ResponseEntity<DTODetalleArticulo> mostrarDetalle(@PathVariable int codigoArticulo){
+        DTODetalleArticulo dto = articuloService.mostrarDetalle(codigoArticulo);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
     //crear articulo

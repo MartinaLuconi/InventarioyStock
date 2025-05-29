@@ -16,11 +16,18 @@ public class DTOTablaArticulos {
         private String nombreArticulo;
         private String descripcion;
         private Timestamp fechaHoraBajaArticulo;
+        private  int stockSeguridad;
+        private  int stockActual;
+
+
 
         public DTOTablaArticulos(Articulo articulo) {
                 this.codigoArticulo = articulo.getCodigoArticulo();
                 this.nombreArticulo = articulo.getNombreArticulo();
                 this.descripcion = articulo.getDescripcion();
                 this.fechaHoraBajaArticulo = articulo.getFechaHoraBajaArticulo();
+                this.stockActual = articulo.getStockActualArticulo();
+                this.stockSeguridad = articulo.getStockSeguridadArticulo();
+
         }
 }

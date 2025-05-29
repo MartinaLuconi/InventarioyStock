@@ -1,5 +1,6 @@
 package com.IntegradorIO.InventarioyStock.Articulo;
 
+import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTODetalleArticulo;
 import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOModificarArticulo;
 import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTONuevoArticulo;
 import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOTablaArticulos;
@@ -58,12 +59,14 @@ public class ArticuloService  {
     }
 
     //mostrar detalle Articulo
-    public  DTONuevoArticulo mostrarDetalle(int codigoArticulo){
+    public DTODetalleArticulo mostrarDetalle(int codigoArticulo){
         Articulo articuloEncontrado = articuloRepository.obtenerArticulo(codigoArticulo);
         ProveedorArticulo pae = articuloEncontrado.getProveedorArticuloList().get(0);
-        DTONuevoArticulo dtoMostrar = new DTONuevoArticulo();
+        DTODetalleArticulo dtoMostrar = new DTODetalleArticulo();
                 dtoMostrar.setNombreArticulo(articuloEncontrado.getNombreArticulo());
                 dtoMostrar.setDescripcion(articuloEncontrado.getDescripcion());
+                //dtoMostrar.setStockReal(articuloEncontrado.getStockActualArticulo());
+               // dtoMostrar.setStockSeguridad(articuloEncontrado.getStockSeguridadArticulo());
                 dtoMostrar.setCostoMantener(pae.getCostoMantenimiento());
                 dtoMostrar.setDemandaAnual(articuloEncontrado.getDemandaAnual());
                 dtoMostrar.setCostoAlmacenamiento(pae.getCostoAlmacenamiento());
@@ -71,8 +74,6 @@ public class ArticuloService  {
                 dtoMostrar.setLoteOptimo(pae.getLoteOptimo());
                 dtoMostrar.setModeloElegido(articuloEncontrado.getModeloInventario());
                 dtoMostrar.setPrecioUnitario(pae.getPrecioUnitProveedorArticulo());
-                dtoMostrar.setStockReal(articuloEncontrado.getStockActualArticulo());
-                dtoMostrar.setStockSeguridad(articuloEncontrado.getStockSeguridadArticulo());
                 dtoMostrar.setPuntoPedido(articuloEncontrado.getPuntoPedido());
                 dtoMostrar.setDemoraEntrega(pae.getDemoraEntrega());
                 dtoMostrar.setInventarioMax(pae.getInventarioMaximo());
