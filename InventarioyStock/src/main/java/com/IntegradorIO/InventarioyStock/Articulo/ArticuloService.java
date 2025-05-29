@@ -1,7 +1,9 @@
 package com.IntegradorIO.InventarioyStock.Articulo;
 
+import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTODetalleArticulo;
 import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOModificarArticulo;
 import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTONuevoArticulo;
+import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOTablaArticulos;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompraRepository;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
 import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión.CGIModel;
@@ -12,9 +14,12 @@ import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloRepo
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticuloService  {
@@ -28,10 +33,13 @@ public class ArticuloService  {
     private EstadoOrdenCompraRepository estadoOrdenCompraRepository;
 
     //lista los articulos
-    public List<Articulo> obtenerArticulos() throws Exception {
+    public List<DTOTablaArticulos> obtenerArticulos() throws Exception {
         try {
             List<Articulo> articuloStock = articuloRepository.findAll();
-            return articuloStock;
+            return articuloStock.stream()
+                    .map(DTOTablaArticulos::new)
+                    .collect(Collectors.toList());
+
         }catch (Exception e){
            // System.out.println("No se encontraron artículos");
            // return null;
@@ -49,6 +57,28 @@ public class ArticuloService  {
         }
 
     }
+
+    //mostrar detalle Articulo
+    public DTODetalleArticulo mostrarDetalle(int codigoArticulo){
+        Articulo articuloEncontrado = articuloRepository.obtenerArticulo(codigoArticulo);
+        ProveedorArticulo pae = articuloEncontrado.getProveedorArticuloList().get(0);
+        DTODetalleArticulo dtoMostrar = new DTODetalleArticulo();
+                dtoMostrar.setNombreArticulo(articuloEncontrado.getNombreArticulo());
+                dtoMostrar.setDescripcion(articuloEncontrado.getDescripcion());
+                //dtoMostrar.setStockReal(articuloEncontrado.getStockActualArticulo());
+               // dtoMostrar.setStockSeguridad(articuloEncontrado.getStockSeguridadArticulo());
+                dtoMostrar.setCostoMantener(pae.getCostoMantenimiento());
+                dtoMostrar.setDemandaAnual(articuloEncontrado.getDemandaAnual());
+                dtoMostrar.setCostoAlmacenamiento(pae.getCostoAlmacenamiento());
+                dtoMostrar.setCostoPedido(pae.getCostoPedido());
+                dtoMostrar.setLoteOptimo(pae.getLoteOptimo());
+                dtoMostrar.setModeloElegido(articuloEncontrado.getModeloInventario());
+                dtoMostrar.setPrecioUnitario(pae.getPrecioUnitProveedorArticulo());
+                dtoMostrar.setPuntoPedido(articuloEncontrado.getPuntoPedido());
+                dtoMostrar.setDemoraEntrega(pae.getDemoraEntrega());
+                dtoMostrar.setInventarioMax(pae.getInventarioMaximo());
+        return dtoMostrar;
+    }
     // para todos los cambios
     public Articulo guardarArticulo(DTONuevoArticulo dtoNuevoArticulo) throws Exception{
         try {
@@ -62,7 +92,10 @@ public class ArticuloService  {
                 articulo.setStockSeguridadArticulo(dtoNuevoArticulo.getStockSeguridad());
                 articulo.setPuntoPedido(dtoNuevoArticulo.getPuntoPedido());
                 articulo.setModeloInventario(dtoNuevoArticulo.getModeloElegido());
+                articulo.setDemandaAnual(dtoNuevoArticulo.getDemandaAnual());
 
+
+            articuloRepository.save(articulo);
 
 
             ProveedorArticulo pa = new ProveedorArticulo();
@@ -75,6 +108,7 @@ public class ArticuloService  {
                 pa.setCostoAlmacenamiento(dtoNuevoArticulo.getCostoAlmacenamiento());
                 pa.setLoteOptimo(dtoNuevoArticulo.getLoteOptimo());
                 pa.setInventarioMaximo(dtoNuevoArticulo.getInventarioMax());
+                pa.setFechaDesdePA(new Timestamp(System.currentTimeMillis()));
 
                 //por cada proveedor seleccionado, hacer la relacion
                 List<Proveedor> proveedorList = dtoNuevoArticulo.getProveedoresAsignados();
@@ -83,7 +117,7 @@ public class ArticuloService  {
                 }
                 //guardo instancias
                 proveedorArticuloRepository.save(pa);
-                articuloRepository.save(articulo);
+
 
             return articulo;
         }catch (Exception e){
@@ -104,24 +138,39 @@ public class ArticuloService  {
             articulo.setStockSeguridadArticulo(articuloModificado.getStockSeguridad());
             articulo.setPuntoPedido(articuloModificado.getPuntoPedido());
             articulo.setModeloInventario(articuloModificado.getModeloElegido());
+            articulo.setDemandaAnual(articuloModificado.getDemandaAnual());
+            articuloRepository.save(articulo);
 
-            ProveedorArticulo pa = new ProveedorArticulo();
-
-            pa.setCostoPedido(articuloModificado.getCostoPedido());
-            pa.setPrecioUnitProveedorArticulo(articuloModificado.getPrecioUnitario());
-            pa.setDemoraEntrega(articuloModificado.getDemoraEntrega());
-            pa.setCostoMantenimiento(articuloModificado.getCostoMantener());
-            pa.setCostoAlmacenamiento(articuloModificado.getCostoAlmacenamiento());
-            pa.setLoteOptimo(articuloModificado.getLoteOptimo());
-            pa.setInventarioMaximo(articuloModificado.getInventarioMax());
-
-            //por cada proveedor seleccionado, hacer la relacion
-            List<Proveedor> proveedorList = articuloModificado.getProveedoresAsignados();
-            for (Proveedor p:proveedorList){
-                pa.setProveedor(p);
-            }
+            //encuentra la intermedia vigente con ultima instancia con la mayor FD, es la ultima cargada
+            List<ProveedorArticulo> paList = articulo.getProveedorArticuloList();
+            ProveedorArticulo pa = paList.stream()
+                    .max(Comparator.comparing(ProveedorArticulo::getFechaDesdePA))
+                    .orElse(null);
+            //la dejo no vigente
+            pa.setFechaHastaPA(new Timestamp(System.currentTimeMillis()));
+            //guardo el cambio
             proveedorArticuloRepository.save(pa);
-            articulo=articuloRepository.save(articulo);
+
+            //creo nueva intermedia
+            ProveedorArticulo paNueva = new ProveedorArticulo();
+            paNueva.setArticulo(articulo); //relaciono con el articulo q estoy modificando
+            paNueva.setFechaDesdePA(pa.getFechaHastaPA()); //cuando termina la vieja, empieza la nueva
+            paNueva.setCostoPedido(articuloModificado.getCostoPedido());
+            paNueva.setPrecioUnitProveedorArticulo(articuloModificado.getPrecioUnitario());
+            paNueva.setDemoraEntrega(articuloModificado.getDemoraEntrega());
+            paNueva.setCostoMantenimiento(articuloModificado.getCostoMantener());
+            paNueva.setCostoAlmacenamiento(articuloModificado.getCostoAlmacenamiento());
+            paNueva.setLoteOptimo(articuloModificado.getLoteOptimo());
+            paNueva.setInventarioMaximo(articuloModificado.getInventarioMax());
+
+                //SOLO LA COMENTE PORQUE SI NO HAY LISTA DE PROVEEDORES, NO FUNCIONA LA MODIFICACION
+                //por cada proveedor seleccionado, hacer la relacion
+                // List<Proveedor> proveedorList = articuloModificado.getProveedoresAsignados();
+                //for (Proveedor p:proveedorList){
+                //   pa.setProveedor(p);
+                // }
+            //guardo la instancia
+            proveedorArticuloRepository.save(paNueva);
 
             return articulo;
         }catch (Exception e){
@@ -188,8 +237,9 @@ public class ArticuloService  {
 
     //listar productos faltantes
 
-    public List<Articulo> listarArticulosFaltantes () throws Exception{
+    public List<DTOTablaArticulos> listarArticulosFaltantes () throws Exception{
         List<Articulo> articulosFaltantes = new ArrayList<>();
+        List<DTOTablaArticulos> articulosFaltantesDTO = new ArrayList<>();
         //busco todos los articulos
         List<Articulo> aList =articuloRepository.obtenerArticulos();
         for (Articulo a : aList){
@@ -202,15 +252,25 @@ public class ArticuloService  {
         //Caso de que no hay articulos faltantes
         if (articulosFaltantes.isEmpty()){
             throw new Exception("No hay artículos faltantes");
+        } else {
+            for (Articulo a : articulosFaltantes) {
+                DTOTablaArticulos dto = new DTOTablaArticulos(a);
+                dto.setCodigoArticulo(a.getCodigoArticulo());
+                dto.setNombreArticulo(a.getNombreArticulo());
+                dto.setDescripcion(a.getDescripcion());
+                dto.setFechaHoraBajaArticulo(a.getFechaHoraBajaArticulo());
+                articulosFaltantesDTO.add(dto);
+            }
         }
-        return articulosFaltantes;
+        return articulosFaltantesDTO;
 
     }
 
     //listar productos a reponer
 
-    public List<Articulo> listarArticulosReponer () throws Exception{
+    public List<DTOTablaArticulos> listarArticulosReponer () throws Exception{
         List<Articulo> articulosReponerL = new ArrayList<>();
+        List<DTOTablaArticulos> articulosReponerDTO = new ArrayList<>();
         //busco todos los articulos
         List<Articulo> aList =articuloRepository.obtenerArticulos();
 
@@ -225,7 +285,18 @@ public class ArticuloService  {
                 articulosReponerL.add(a);
             }
         }
-        return articulosReponerL;
+
+        //armo tabla con lista. Esto tmb pordría ir en el if anterior
+        for (Articulo a : articulosReponerL) {
+            DTOTablaArticulos dto = new DTOTablaArticulos(a);
+            dto.setCodigoArticulo(a.getCodigoArticulo());
+            dto.setNombreArticulo(a.getNombreArticulo());
+            dto.setDescripcion(a.getDescripcion());
+            dto.setFechaHoraBajaArticulo(a.getFechaHoraBajaArticulo());
+            articulosReponerDTO.add(dto);
+        }
+
+        return articulosReponerDTO;
     }
 
 // Para calcular el (CGI) (ROP) y StockSeguridad para un artículo y su proveedor Modeelo LOTE_FIJO
