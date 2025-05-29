@@ -2,6 +2,7 @@ package com.IntegradorIO.InventarioyStock.Articulo;
 
 import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOModificarArticulo;
 import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTONuevoArticulo;
+import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOTablaArticulos;
 import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloRepository;
@@ -30,9 +31,11 @@ public class ArticuloController {
 
     //listar TODOS los articulos
     @GetMapping
-    public ResponseEntity<List<Articulo>> obtenerArticulos() throws Exception {
-        List<Articulo> articulos = articuloService.obtenerArticulos();
-        return new ResponseEntity<>(articulos, HttpStatus.OK);
+    public ResponseEntity<List<DTOTablaArticulos>> obtenerArticulos() throws Exception {
+       // List<Articulo> articulos = articuloService.obtenerArticulos();
+        //return new ResponseEntity<>(articulos, HttpStatus.OK);
+        List<DTOTablaArticulos> articulos = articuloService.obtenerArticulos();
+        return ResponseEntity.ok(articulos);
     }
 
     //busca solo un articulo por codigo
@@ -44,6 +47,11 @@ public class ArticuloController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+    @GetMapping("/{codigoArticulo}/detalle")
+    public  ResponseEntity<DTONuevoArticulo> mostrarDetalle(@PathVariable int codigoArticulo){
+        DTONuevoArticulo dto = articuloService.mostrarDetalle(codigoArticulo);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
     //crear articulo
     @PostMapping

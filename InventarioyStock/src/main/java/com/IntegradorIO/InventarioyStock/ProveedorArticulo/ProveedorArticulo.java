@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+
 @Entity
 @Getter
 @Setter
@@ -26,6 +28,9 @@ public class ProveedorArticulo {
     private int inventarioMaximo;
     private float nivelDeServicio;
     private float costoUnitario;
+    private Timestamp fechaDesdePA;
+    private Timestamp fechaHastaPA;
+
     @ManyToOne
     @JoinColumn(name = "articulo_id")
     private Articulo articulo;
