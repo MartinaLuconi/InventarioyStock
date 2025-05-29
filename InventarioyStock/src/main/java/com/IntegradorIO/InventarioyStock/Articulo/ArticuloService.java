@@ -65,8 +65,8 @@ public class ArticuloService  {
         DTODetalleArticulo dtoMostrar = new DTODetalleArticulo();
                 dtoMostrar.setNombreArticulo(articuloEncontrado.getNombreArticulo());
                 dtoMostrar.setDescripcion(articuloEncontrado.getDescripcion());
-                //dtoMostrar.setStockReal(articuloEncontrado.getStockActualArticulo());
-               // dtoMostrar.setStockSeguridad(articuloEncontrado.getStockSeguridadArticulo());
+                dtoMostrar.setStockReal(articuloEncontrado.getStockActualArticulo());
+                dtoMostrar.setStockSeguridad(articuloEncontrado.getStockSeguridadArticulo());
                 dtoMostrar.setCostoMantener(pae.getCostoMantenimiento());
                 dtoMostrar.setDemandaAnual(articuloEncontrado.getDemandaAnual());
                 dtoMostrar.setCostoAlmacenamiento(pae.getCostoAlmacenamiento());

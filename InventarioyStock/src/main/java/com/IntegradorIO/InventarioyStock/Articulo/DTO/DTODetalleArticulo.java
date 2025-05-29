@@ -14,6 +14,8 @@ import java.util.List;
 public class DTODetalleArticulo {
     private String nombreArticulo;
     private  String descripcion;
+    private int stockReal;
+    private int stockSeguridad;
     private int puntoPedido;
     private Timestamp fechaHoraBajaArticulo;
     private float precioUnitario;
