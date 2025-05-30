@@ -26,6 +26,14 @@ public class CalculoService {
             );
             pa.setCGIProveedorArticulo((float) cgi);
 
+            double Z = 1.65; // Nivel de servicio 95%
+            int stockSeguridad = CalculosEstrRevisionContinua.calcularStockSeguridad(
+                    Z,
+                    articulo.getDesviacionEstandar(),
+                    pa.getDemoraEntrega()
+            );
+            articulo.setStockSeguridadArticulo(stockSeguridad);
+
             int rop = CalculosEstrRevisionContinua.calcularROP(
                     articulo.getDemandaAnual() / 365.0,
                     articulo.getStockSeguridadArticulo(),
