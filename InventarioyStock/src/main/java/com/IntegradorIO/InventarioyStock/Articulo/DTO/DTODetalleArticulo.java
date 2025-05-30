@@ -28,4 +28,5 @@ public class DTODetalleArticulo {
     private int inventarioMax;
     private ModeloInventario modeloElegido;
     private int demandaAnual;
+    private int desviacionEstandar;
 }
