@@ -13,34 +13,41 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/ordenCompra")
-@CrossOrigin("*")
+@CrossOrigin(origins ="*")
 public class OrdenCompraController {
 
     @Autowired
     private OrdenCompraService ordenCompraService;
-
+    @GetMapping("/{numeroOrdenCompra}")
+    public ResponseEntity<OrdenCompra> obtenerOC(@PathVariable int nroOrden) throws Exception {
+        OrdenCompra oc = ordenCompraService.obtenerOC(nroOrden);
+        return new ResponseEntity<>(oc,HttpStatus.OK);
+    }
     @PostMapping
     public ResponseEntity<OrdenCompra> crearOrdenCompra(@RequestBody DTOOrdenCompra dtoOC) throws Exception{
         OrdenCompra nuevaOC = ordenCompraService.crearOrdenCompra(dtoOC);
         return new ResponseEntity<>(nuevaOC,HttpStatus.CREATED);
     }
 
-    @PutMapping("/{numeroOrdenCompra}")
+    @PutMapping("/{numeroOrdenCompra}/modificar")
     public ResponseEntity<OrdenCompra> modificarOrdenCompra(@PathVariable int nroOrden, @RequestBody DTOOrdenCompra dtoOC) throws Exception{
         OrdenCompra ocActualizada= ordenCompraService.modificarOrdenCompra(nroOrden,dtoOC);
         return new ResponseEntity<>(ocActualizada,HttpStatus.OK);
     }
-    @PutMapping("/{numeroOrdenCompra}")
-    public void cancelarOC(int nroOrden) throws Exception {
+    @PutMapping("/{numeroOrdenCompra}/cancelar")
+    public ResponseEntity<Void> cancelarOC(@PathVariable int nroOrden) throws Exception {
         ordenCompraService.cancelarOC(nroOrden);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @PutMapping("/{numeroOrdenCompra}")
-    public void enviarOC(int nroOrden)throws Exception{
+    @PutMapping("/{numeroOrdenCompra}/enviar")
+    public ResponseEntity<Void> enviarOC( @PathVariable int nroOrden)throws Exception{
         ordenCompraService.enviarOC(nroOrden);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @PutMapping("/{numeroOrdenCompra}")
-    public void finalizarOC(int nroOrden) throws Exception{
+    @PutMapping("/{numeroOrdenCompra}/finalizar")
+    public ResponseEntity<Void> finalizarOC(@PathVariable int nroOrden) throws Exception{
         ordenCompraService.finalizarOC(nroOrden);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 

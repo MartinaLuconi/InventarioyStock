@@ -1,6 +1,5 @@
 package com.IntegradorIO.InventarioyStock.OrdenCompra;
 
-import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompra;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompraRepository;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
@@ -31,7 +30,7 @@ public class OrdenCompraService {
     public OrdenCompra crearOrdenCompra(DTOOrdenCompra dtoOC) throws Exception{
         EstadoOrdenCompra estadoOrdenCompra = new EstadoOrdenCompra();
         estadoOrdenCompra.setFechaHoraBajaEstadoOC(null);
-        estadoOrdenCompra.setNombreEstadoOC(EstadoOrdencCompra.PENDIENTE); //todas empiezan en pendiente
+        estadoOrdenCompra.setNombreEstado(EstadoOrdencCompra.PENDIENTE); //todas empiezan en pendiente
         estadoOrdenCompraRepository.save(estadoOrdenCompra);
 
         OrdenCompra oc = new OrdenCompra();
@@ -51,7 +50,7 @@ public class OrdenCompraService {
             ocModificada.setNombreOrdenCompra(dtoOC.getNombreOC());
             ocModificada.setCantidadOrdenCompra(dtoOC.getCantidad());
             ocModificada.setNumeroOrdenCompra(nroOrden); //esto en realidad no
-        if (ocModificada.getEstadoOrdenCompra().getNombreEstadoOC()==EstadoOrdencCompra.PENDIENTE) { //solo modifica si esta pendiente
+        if (ocModificada.getEstadoOrdenCompra().getNombreEstado()==EstadoOrdencCompra.PENDIENTE) { //solo modifica si esta pendiente
             ordenCompraRepository.save(ocModificada);
         }else{
             throw new Exception("No se puede modificar la orden. Ya no se encuentra  PENDIENTE");
@@ -70,10 +69,10 @@ public class OrdenCompraService {
     public void cancelarOC(int nroOrden) throws Exception {
         OrdenCompra oc = obtenerOC(nroOrden); //buscarla por id
             EstadoOrdenCompra estadoActual = oc.getEstadoOrdenCompra();//buscar el estado actual relacionado
-            EstadoOrdencCompra nombreEstado= estadoActual.getNombreEstadoOC() ;
+            EstadoOrdencCompra nombreEstado= estadoActual.getNombreEstado() ;
 
             if (nombreEstado == EstadoOrdencCompra.PENDIENTE){
-                estadoActual.setNombreEstadoOC(EstadoOrdencCompra.CANCELADO);
+                estadoActual.setNombreEstado(EstadoOrdencCompra.CANCELADO);
             }else {
                 throw new Exception("No se puede cancelar la orden porque está en estado:"+nombreEstado);
             }
@@ -83,9 +82,9 @@ public class OrdenCompraService {
     public void enviarOC(int nroOrden)throws Exception{
         OrdenCompra oc = obtenerOC(nroOrden); //buscarla por id
         EstadoOrdenCompra estadoActual = oc.getEstadoOrdenCompra(); //lee el estado actual
-        if (estadoActual.getNombreEstadoOC() == EstadoOrdencCompra.PENDIENTE){ //mira q sea pendiente
+        if (estadoActual.getNombreEstado() == EstadoOrdencCompra.PENDIENTE){ //mira q sea pendiente
             //cambiar estado a enviada
-            oc.getEstadoOrdenCompra().setNombreEstadoOC(EstadoOrdencCompra.ENVIADA);
+            oc.getEstadoOrdenCompra().setNombreEstado(EstadoOrdencCompra.ENVIADA);
             estadoOrdenCompraRepository.save(estadoActual);
         } else {
             throw new Exception("Solo se puede cambiar a enviada si esta en estado PENDIENTE");
@@ -99,8 +98,8 @@ public class OrdenCompraService {
         EstadoOrdenCompra estadoActual = oc.getEstadoOrdenCompra(); //lee el estado actual
 
         //VERIFICAR QUE SE ENVIO
-        if (estadoActual.getNombreEstadoOC() == EstadoOrdencCompra.ENVIADA) {
-            estadoActual.setNombreEstadoOC(EstadoOrdencCompra.FINALIZADO); //cambio a finalizado
+        if (estadoActual.getNombreEstado() == EstadoOrdencCompra.ENVIADA) {
+            estadoActual.setNombreEstado(EstadoOrdencCompra.FINALIZADO); //cambio a finalizado
             estadoOrdenCompraRepository.save(estadoActual);
         }
         //debería invocar a una funcion de actualizar el inventario

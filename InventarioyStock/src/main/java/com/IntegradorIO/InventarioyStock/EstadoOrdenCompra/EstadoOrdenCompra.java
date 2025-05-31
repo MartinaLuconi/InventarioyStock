@@ -15,7 +15,7 @@ public class EstadoOrdenCompra {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int codigoEstadoOrdenCompra;
 
-    private EstadoOrdencCompra nombreEstadoOC;
+    private EstadoOrdencCompra nombreEstado;
     private Timestamp fechaHoraBajaEstadoOC;
     //private String nombreEstadoOC;
 
