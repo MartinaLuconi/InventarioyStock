@@ -4,13 +4,17 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Data
 @Getter
 @Setter
 public class DTOOrdenCompra {
     private int nroOrden;
-    private int cantidad; //tamaño del lote
+    private float precioTotal; //podría no estar tranquilamente
     private  String nombreOC;
+    private List<DTODetalleOC> detallesOC;
     //falta proveedor y tamaño del lote --> datos sugeridos
-    //tmb faltaría algo que referencie al artículo, que pido
+
+
 }

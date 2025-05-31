@@ -1,12 +1,20 @@
 package com.IntegradorIO.InventarioyStock.OrdenCompra;
 
+import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
+import com.IntegradorIO.InventarioyStock.Articulo.ArticuloRepository;
+import com.IntegradorIO.InventarioyStock.Articulo.ModeloInventario;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompra;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompraRepository;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
+import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTODetalleOC;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOOrdenCompra;
+import com.IntegradorIO.InventarioyStock.OrdenCompraArticulo.OrdenCompraArticulo;
+import com.IntegradorIO.InventarioyStock.OrdenCompraArticulo.OrdenCompraArticuloRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,42 +23,91 @@ public class OrdenCompraService {
     private OrdenCompraRepository ordenCompraRepository;
     @Autowired
     private  EstadoOrdenCompraRepository estadoOrdenCompraRepository;
+    @Autowired
+    private OrdenCompraArticuloRepository ordenCompraArticuloRepository;
+
+    @Autowired
+    private ArticuloRepository articuloRepository;
 
     //buscar una orden de compra por codigo
     public OrdenCompra obtenerOC(int nroOrden) throws Exception {
         try {
             Optional<OrdenCompra> ordenCompraOptional = ordenCompraRepository.findById(nroOrden);
-            return ordenCompraOptional.get(); //lo pone como art.get();
+            return ordenCompraOptional.get();
         } catch (Exception e) {
-            throw new Exception(e.getMessage()); //No se encontro un articulo con ese codigo
+            throw new Exception(e.getMessage()); //No se encontro un oc con ese codigo
         }
     }
 
     //alta OC
     public OrdenCompra crearOrdenCompra(DTOOrdenCompra dtoOC) throws Exception{
+
         EstadoOrdenCompra estadoOrdenCompra = new EstadoOrdenCompra();
         estadoOrdenCompra.setFechaHoraBajaEstadoOC(null);
         estadoOrdenCompra.setNombreEstado(EstadoOrdencCompra.PENDIENTE); //todas empiezan en pendiente
         estadoOrdenCompraRepository.save(estadoOrdenCompra);
 
         OrdenCompra oc = new OrdenCompra();
-            oc.setCantidadOrdenCompra(dtoOC.getCantidad());
             oc.setNombreOrdenCompra(dtoOC.getNombreOC());
-            oc.setNumeroOrdenCompra(dtoOC.getCantidad());
-            oc.setEstadoOrdenCompra(estadoOrdenCompra);
-            //verificar que no este pendiente o enviada ya
-
+            oc.setNumeroOrdenCompra(dtoOC.getNroOrden());
+            //verifica que no exista el codigo
+            if(ordenCompraRepository.existsById(dtoOC.getNroOrden())){
+                throw new Exception("Ya existe una orden de compra con este numero de orden");
+            }
+            oc.setEstadoOrdenCompra(estadoOrdenCompra); //relacion con estado
         ordenCompraRepository.save(oc);
+
+        List<DTODetalleOC> detallesOCList = dtoOC.getDetallesOC(); //aca vienen los datos de los articulos
+        for (DTODetalleOC detalle : detallesOCList){
+            //busco articulos que vienen en la orden de compra
+            Articulo articulo = articuloRepository.obtenerArticulo(detalle.getCodArticulo());
+
+            //verifica que sea modelo de lote fijo
+            if (articulo.getModeloInventario()== ModeloInventario.LOTE_FIJO){
+                //compara el stock con el punto de pedido, si no llega al PP, tira un error
+                int cantidadPedidoOC = detalle.getCantidadArticulo();
+                int stockTotal = articulo.getStockActualArticulo() + cantidadPedidoOC;
+                if (stockTotal < articulo.getPuntoPedido()) { //compara con el punto de pedido
+                    throw new Exception("La cantidad pedida no supera el punto de pedido del modelo lote fijo. Ingrese nuevamente la cantidad");
+                }
+            }
+
+            //creo clase que tiene el detalle
+            OrdenCompraArticulo ordenCompraArticulo = new OrdenCompraArticulo();
+            ordenCompraArticulo.setArticulo(articulo); //reliono el articulo
+            ordenCompraArticulo.setOrdenCompra(oc); //relaciono con la OC
+            ordenCompraArticulo.setCantidadOCA(detalle.getCantidadArticulo()); //lote
+
+            ordenCompraArticuloRepository.save(ordenCompraArticulo);
+        }
+
         return  oc;
     }
 
     //modificar la orden
     public OrdenCompra modificarOrdenCompra(int nroOrden,DTOOrdenCompra dtoOC) throws Exception{
+
         OrdenCompra ocModificada = obtenerOC(nroOrden);
-            ocModificada.setNombreOrdenCompra(dtoOC.getNombreOC());
-            ocModificada.setCantidadOrdenCompra(dtoOC.getCantidad());
-            ocModificada.setNumeroOrdenCompra(nroOrden); //esto en realidad no
+
         if (ocModificada.getEstadoOrdenCompra().getNombreEstado()==EstadoOrdencCompra.PENDIENTE) { //solo modifica si esta pendiente
+
+            ocModificada.setNombreOrdenCompra(dtoOC.getNombreOC());
+            ocModificada.setNumeroOrdenCompra(dtoOC.getNroOrden()); //esto en realidad no se deberia
+
+        List<OrdenCompraArticulo> detallesOCViejos= ocModificada.getListaOrdenCompraArticulo();
+        for (OrdenCompraArticulo oca : detallesOCViejos) {
+
+            for (DTODetalleOC detalleOC : dtoOC.getDetallesOC()) {
+                oca.setCantidadOCA(detalleOC.getCantidadArticulo());
+                oca.setArticulo(articuloRepository.obtenerArticulo(detalleOC.getCodArticulo()));
+                oca.setOrdenCompra(ocModificada);
+                ordenCompraArticuloRepository.save(oca);
+            }
+
+        }
+
+
+
             ordenCompraRepository.save(ocModificada);
         }else{
             throw new Exception("No se puede modificar la orden. Ya no se encuentra  PENDIENTE");
@@ -65,7 +122,6 @@ public class OrdenCompraService {
     //GESTION DE ESTADOS
 
     //cancelar solo si esta en estado pendiente
-
     public void cancelarOC(int nroOrden) throws Exception {
         OrdenCompra oc = obtenerOC(nroOrden); //buscarla por id
             EstadoOrdenCompra estadoActual = oc.getEstadoOrdenCompra();//buscar el estado actual relacionado
@@ -102,7 +158,20 @@ public class OrdenCompraService {
             estadoActual.setNombreEstado(EstadoOrdencCompra.FINALIZADO); //cambio a finalizado
             estadoOrdenCompraRepository.save(estadoActual);
         }
-        //debería invocar a una funcion de actualizar el inventario
+        // actualizar el inventario
+
+        int ingresoArticulos= oc.getCantidadOrdenCompra();
+        //busco el articulo de la OC y ahí hago stockActual+ingresoArticulos, dsp guardo
+        List< OrdenCompraArticulo > detallesListOC = oc.getListaOrdenCompraArticulo();
+        for (OrdenCompraArticulo detalle :detallesListOC ){
+            Articulo articuloPedido = detalle.getArticulo(); //busco el articulo de la OC
+            int stockActual= articuloPedido.getStockActualArticulo();//leo stock actual
+            int nuevoStock= stockActual+ingresoArticulos; //calculo nuevo stock con el reingreso
+            detalle.getArticulo().setStockActualArticulo(nuevoStock); //se piso el stock viejo
+            articuloRepository.save(articuloPedido);//guardo el cambio
+        }
+
+
 
     }
 

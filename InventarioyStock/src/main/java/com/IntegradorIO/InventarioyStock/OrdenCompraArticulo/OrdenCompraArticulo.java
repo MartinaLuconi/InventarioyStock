@@ -13,6 +13,7 @@ public class OrdenCompraArticulo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int codigoOCA;
+
     private int cantidadOCA;
 
     @ManyToOne
