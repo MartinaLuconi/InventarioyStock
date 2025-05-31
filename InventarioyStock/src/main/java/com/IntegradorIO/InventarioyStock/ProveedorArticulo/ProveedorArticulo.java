@@ -30,6 +30,7 @@ public class ProveedorArticulo {
     private float costoUnitario;
     private Timestamp fechaDesdePA;
     private Timestamp fechaHastaPA;
+    private int eoq;
 
     @ManyToOne
     @JoinColumn(name = "articulo_id")

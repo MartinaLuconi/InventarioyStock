@@ -35,9 +35,9 @@ public class CalculoService {
             );
             pa.setCGIProveedorArticulo((float) cgi);
 
-            double Z = 1.65; // Nivel de servicio 95%
+
             int stockSeguridad = CalculosEstrRevisionContinua.calcularStockSeguridad(
-                    Z,
+                    pa.getNivelDeServicio(),
                     articulo.getDesviacionEstandar(),
                     pa.getDemoraEntrega()
             );
