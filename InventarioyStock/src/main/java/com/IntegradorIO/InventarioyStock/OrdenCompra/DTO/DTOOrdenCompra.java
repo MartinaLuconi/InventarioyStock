@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 public class DTOOrdenCompra {
     private int nroOrden;
-    private float precioTotal; //podría no estar tranquilamente
+    //private float precioTotal; //podría no estar tranquilamente
     private  String nombreOC;
     private List<DTODetalleOC> detallesOC;
     //falta proveedor y tamaño del lote --> datos sugeridos

@@ -115,6 +115,27 @@ public class OrdenCompraService {
         return  ocModificada;
     }
 
+    public DTOOrdenCompra mostrarDatosOC(int nroOrden) throws Exception {
+        DTOOrdenCompra datosOrdenCompra = new DTOOrdenCompra();
+        //buscar la orden
+        OrdenCompra ordenCompra = obtenerOC(nroOrden);
+
+        //lleno el dto
+        datosOrdenCompra.setNroOrden(nroOrden);
+        datosOrdenCompra.setNombreOC(ordenCompra.getNombreOrdenCompra());
+        List <OrdenCompraArticulo> listaDetalles = ordenCompra.getListaOrdenCompraArticulo();
+        List <DTODetalleOC> detalleOCS=new ArrayList<>();
+        for (OrdenCompraArticulo oca : listaDetalles){
+            DTODetalleOC detalleOC = new DTODetalleOC();
+            detalleOC.setCantidadArticulo(oca.getCantidadOCA());
+            detalleOC.setNombreArticulo(detalleOC.getNombreArticulo());
+            detalleOC.setCodArticulo(detalleOC.getCodArticulo());
+            detalleOCS.add(detalleOC);
+        }
+
+        return datosOrdenCompra;
+    }
+
     //sugerir proveedor
 
     //sugerir lote

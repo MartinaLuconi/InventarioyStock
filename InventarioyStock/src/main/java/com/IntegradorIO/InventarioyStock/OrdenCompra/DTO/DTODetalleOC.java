@@ -11,5 +11,5 @@ public class DTODetalleOC {
     private int cantidadArticulo; //tamaño del lote
     private String nombreArticulo;
     private  int codArticulo;
-    private  float precioUnitarioArticulo;
+    //private  float precioUnitarioArticulo;
 }
