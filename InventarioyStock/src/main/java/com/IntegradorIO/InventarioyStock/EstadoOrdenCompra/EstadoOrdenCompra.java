@@ -6,17 +6,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
-
+@Getter
+@Setter
 @Entity
 public class EstadoOrdenCompra {
-    @Getter
-    @Setter
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int codigoEstadoOrdenCompra;
-    private EstadoOrdencCompra nombreEstado;
+
+    private EstadoOrdencCompra nombreEstadoOC;
     private Timestamp fechaHoraBajaEstadoOC;
-    private String nombreEstadoOC;
+    //private String nombreEstadoOC;
 
     @ManyToOne
     @JoinColumn(name = "codigo_articulo")

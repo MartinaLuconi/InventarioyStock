@@ -80,7 +80,7 @@ public class ArticuloService  {
                 dtoMostrar.setDesviacionEstandar(articuloEncontrado.getDesviacionEstandar());
         return dtoMostrar;
     }
-    // para todos los cambios
+    // para todos los cambios --> es el alta
     public Articulo guardarArticulo(DTONuevoArticulo dtoNuevoArticulo) throws Exception{
         try {
             //paso datos del dto a las entidades
