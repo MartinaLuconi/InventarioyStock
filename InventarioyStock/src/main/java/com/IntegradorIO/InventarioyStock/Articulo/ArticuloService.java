@@ -65,8 +65,8 @@ public class ArticuloService  {
         DTODetalleArticulo dtoMostrar = new DTODetalleArticulo();
                 dtoMostrar.setNombreArticulo(articuloEncontrado.getNombreArticulo());
                 dtoMostrar.setDescripcion(articuloEncontrado.getDescripcion());
-                //dtoMostrar.setStockReal(articuloEncontrado.getStockActualArticulo());
-               // dtoMostrar.setStockSeguridad(articuloEncontrado.getStockSeguridadArticulo());
+                dtoMostrar.setStockReal(articuloEncontrado.getStockActualArticulo());
+                dtoMostrar.setStockSeguridad(articuloEncontrado.getStockSeguridadArticulo());
                 dtoMostrar.setCostoMantener(pae.getCostoMantenimiento());
                 dtoMostrar.setDemandaAnual(articuloEncontrado.getDemandaAnual());
                 dtoMostrar.setCostoAlmacenamiento(pae.getCostoAlmacenamiento());
@@ -77,6 +77,7 @@ public class ArticuloService  {
                 dtoMostrar.setPuntoPedido(articuloEncontrado.getPuntoPedido());
                 dtoMostrar.setDemoraEntrega(pae.getDemoraEntrega());
                 dtoMostrar.setInventarioMax(pae.getInventarioMaximo());
+                dtoMostrar.setDesviacionEstandar(articuloEncontrado.getDesviacionEstandar());
         return dtoMostrar;
     }
     // para todos los cambios
@@ -93,6 +94,7 @@ public class ArticuloService  {
                 articulo.setPuntoPedido(dtoNuevoArticulo.getPuntoPedido());
                 articulo.setModeloInventario(dtoNuevoArticulo.getModeloElegido());
                 articulo.setDemandaAnual(dtoNuevoArticulo.getDemandaAnual());
+                articulo.setDesviacionEstandar(dtoNuevoArticulo.getDesviacionEstandar());
 
 
             articuloRepository.save(articulo);
@@ -139,6 +141,7 @@ public class ArticuloService  {
             articulo.setPuntoPedido(articuloModificado.getPuntoPedido());
             articulo.setModeloInventario(articuloModificado.getModeloElegido());
             articulo.setDemandaAnual(articuloModificado.getDemandaAnual());
+            articulo.setDesviacionEstandar(articuloModificado.getDesviacionEstandar());
             articuloRepository.save(articulo);
 
             //encuentra la intermedia vigente con ultima instancia con la mayor FD, es la ultima cargada
