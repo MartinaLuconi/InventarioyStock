@@ -2,11 +2,20 @@
 package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión;
 
 import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
+import com.IntegradorIO.InventarioyStock.Articulo.ArticuloRepository;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
+import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CalculoService {
+
+    @Autowired
+    private ProveedorArticuloRepository proveedorArticuloRepository;
+
+    @Autowired
+    private ArticuloRepository articuloRepository;
 
     public void recalcularYActualizar(Articulo articulo) {
         for (ProveedorArticulo pa : articulo.getProveedorArticuloList()) {
@@ -40,6 +49,9 @@ public class CalculoService {
                     pa.getDemoraEntrega()
             );
             articulo.setPuntoPedido(rop);
+
+            proveedorArticuloRepository.save(pa);
         }
+        articuloRepository.save(articulo);
     }
 }
