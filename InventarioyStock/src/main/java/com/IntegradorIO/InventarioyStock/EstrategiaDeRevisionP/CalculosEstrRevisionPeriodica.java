@@ -2,6 +2,22 @@ package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionP;
 
 public class CalculosEstrRevisionPeriodica {
 
+
+
+    // Costo de gestión de inventario (CGI) para revisión periódica
+    public static double calcularCGI(
+            int demandaAnual,
+            int q,
+            double costoPedido,
+            double costoUnitario,
+            double costoMantenimiento
+    ) {
+        if (q == 0) return 0;
+        return (demandaAnual / (double) q) * costoPedido
+                + (q / 2.0) * costoMantenimiento
+                + demandaAnual * costoUnitario;
+    }
+
     // Cantidad a pedir q = Demanda durante el periodo de revisión + Demanda durante el lead time + Stock de seguridad - Inventario disponible
     public static int calcularCantidadAPedir(
             int demandaAnual,
