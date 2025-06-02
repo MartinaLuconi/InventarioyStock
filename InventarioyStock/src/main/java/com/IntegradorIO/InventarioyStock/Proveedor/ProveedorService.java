@@ -4,18 +4,19 @@ import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
 import com.IntegradorIO.InventarioyStock.Articulo.ArticuloRepository;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.OrdenCompraRepository;
+import com.IntegradorIO.InventarioyStock.Proveedor.dto.DTODetalleProveedorArticulo;
+import com.IntegradorIO.InventarioyStock.Proveedor.dto.DTOModificarProveedor;
+import com.IntegradorIO.InventarioyStock.Proveedor.dto.DTONuevoProveedor;
+import com.IntegradorIO.InventarioyStock.Proveedor.dto.DTOTablaProveedor;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloRepository;
-import com.IntegradorIO.InventarioyStock.Proveedor.dto.ProveedorArticuloRequest;
-import com.IntegradorIO.InventarioyStock.Proveedor.dto.ProveedorRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProveedorService {
@@ -26,8 +27,12 @@ public class ProveedorService {
     @Autowired private OrdenCompraRepository ordenCompraRepository;
 
     /** Listar solo proveedores activos */
-    public List<Proveedor> obtenerProveedores() {
-        return proveedorRepository.findByActivoTrue();
+    public List<DTOTablaProveedor> obtenerProveedores() {
+
+        return proveedorRepository.findByActivoTrue()
+                .stream()
+                .map(DTOTablaProveedor::new)
+                .collect(Collectors.toList());
     }
 
     public Optional<Proveedor> obtenerProveedor(Integer codigoProveedor) {
@@ -35,26 +40,138 @@ public class ProveedorService {
                 .filter(Proveedor::isActivo);
     }
 
-    public Proveedor guardarProveedor(Proveedor proveedor) {
-        proveedor.setActivo(true);
-        return proveedorRepository.save(proveedor);
+    public Proveedor guardarProveedor(DTONuevoProveedor dto) {
+        // 1) Convertir el dto en entidad Proveedor
+        Proveedor entidad = new Proveedor();
+        entidad.setNombreProveedor(dto.getNombreProveedor());
+        entidad.setActivo(true);
+        // (asigna aquí otros campos de Proveedor si tu DTO los trae)
+
+        // 2) Persistir primero la entidad Proveedor para que obtenga un ID
+        Proveedor guardado = proveedorRepository.save(entidad);
+
+        // 3) Si el dto trae asociaciones a artículos, crearlas ahora
+        if (dto.getAsociaciones() != null && !dto.getAsociaciones().isEmpty()) {
+            List<ProveedorArticulo> listaPA = new ArrayList<>();
+            for (DTODetalleProveedorArticulo detalle : dto.getAsociaciones()) {
+                // 3.1) Buscar el Artículo correspondiente
+                Articulo art = articuloRepository.findById(detalle.getCodigoArticulo())
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Artículo no encontrado: " + detalle.getCodigoArticulo()
+                                )
+                        );
+
+                // 3.2) Crear y poblar la entidad ProveedorArticulo
+                ProveedorArticulo pa = new ProveedorArticulo();
+                pa.setProveedor(guardado);
+                pa.setArticulo(art);
+                pa.setDemoraEntrega(detalle.getDemoraEntrega());
+                pa.setPrecioUnitProveedorArticulo(detalle.getPrecioUnitProveedorArticulo());
+                pa.setCostoPedido(detalle.getCostoPedido());
+                pa.setCargoProveedorPedido(detalle.getCargoProveedorPedido());
+                pa.setEsPredeterminado(detalle.isEsPredeterminado());
+
+                listaPA.add(pa);
+            }
+            // 3.3) Guardar todas las asociaciones de golpe
+            proveedorArticuloRepository.saveAll(listaPA);
+
+            // 3.4) Asociar la lista al proveedor (opcional, si tu relación es bidireccional)
+            guardado.setProveedorArticulos(listaPA);
+        }
+
+        // 4) Devolver el proveedor ya persistido (con su ID y sus asociaciones)
+        return guardado;
     }
 
-    public Proveedor modificarProveedor(Integer codigoProveedor, Proveedor proveedorModificado) {
-        return proveedorRepository.findById(codigoProveedor)
+    public Proveedor modificarProveedor(Integer codigoProveedor, DTOModificarProveedor dto) {
+        // 1) Recuperar proveedor
+        Proveedor existente = proveedorRepository.findById(codigoProveedor)
                 .filter(Proveedor::isActivo)
-                .map(p -> {
-                    proveedorModificado.setCodigoProveedor(codigoProveedor);
-                    proveedorModificado.setActivo(true);
-                    return proveedorRepository.save(proveedorModificado);
-                }).orElse(null);
+                .orElseThrow(() -> new IllegalArgumentException("Proveedor no encontrado o inactivo"));
+
+        // 2) Actualizar datos básicos
+        existente.setNombreProveedor(dto.getNombreProveedor());
+        // (Si tuvieras más campos en Proveedor, asignarlos aquí)
+
+        // 3) Cargar asociaciones actuales desde BD
+        List<ProveedorArticulo> asociadasActuales =
+                proveedorArticuloRepository.findByProveedorCodigoProveedor(codigoProveedor);
+
+        // 4) Construir un mapa para “buscar por código de artículo” rápidamente
+        //    Clave: codigoArticulo; Valor: ProveedorArticulo existente
+        Map<Integer, ProveedorArticulo> mapaActuales = new HashMap<>();
+        for (ProveedorArticulo pa : asociadasActuales) {
+            mapaActuales.put(pa.getArticulo().getCodigoArticulo(), pa);
+        }
+
+        // 5) Procesar la lista que viene en el DTO
+        //    Creamos una lista donde iremos guardando (o actualizando) las asociaciones finales
+        List<ProveedorArticulo> listaFinal = new ArrayList<>();
+
+        for (DTODetalleProveedorArticulo detalle : dto.getAsociaciones()) {
+            Integer codigoArt = detalle.getCodigoArticulo();
+
+            // 5a) Chequeo que el Artículo exista en BD
+            Articulo art = articuloRepository.findById(codigoArt)
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Artículo no encontrado: " + codigoArt));
+
+            if (mapaActuales.containsKey(codigoArt)) {
+                // 5b) Ya existía esa asociación en BD: la “actualizo”
+                ProveedorArticulo paExistente = mapaActuales.get(codigoArt);
+
+                paExistente.setDemoraEntrega(detalle.getDemoraEntrega());
+                paExistente.setPrecioUnitProveedorArticulo(detalle.getPrecioUnitProveedorArticulo());
+                paExistente.setCostoPedido(detalle.getCostoPedido());
+                paExistente.setCargoProveedorPedido(detalle.getCargoProveedorPedido());
+                paExistente.setEsPredeterminado(detalle.isEsPredeterminado());
+
+                // La guardamos en la lista final para no borrarla posteriormente
+                listaFinal.add(paExistente);
+
+                // Marcamos que ya procesamos esta asociación, para que no sea eliminada
+                mapaActuales.remove(codigoArt);
+
+            } else {
+                // 5c) No existía: creamos un nuevo ProveedorArticulo
+                ProveedorArticulo nuevo = new ProveedorArticulo();
+                nuevo.setProveedor(existente);
+                nuevo.setArticulo(art);
+                nuevo.setDemoraEntrega(detalle.getDemoraEntrega());
+                nuevo.setPrecioUnitProveedorArticulo(detalle.getPrecioUnitProveedorArticulo());
+                nuevo.setCostoPedido(detalle.getCostoPedido());
+                nuevo.setCargoProveedorPedido(detalle.getCargoProveedorPedido());
+                nuevo.setEsPredeterminado(detalle.isEsPredeterminado());
+
+                listaFinal.add(nuevo);
+            }
+        }
+
+        // 6) Aquellos que quedaron en mapaActuales eran asociaciones antiguas
+        //    que ya no aparecen en el DTO: las debemos eliminar
+        //    (o dar de baja lógica, según tu modelo). Aquí las borramos físicamente:
+        if (!mapaActuales.isEmpty()) {
+            proveedorArticuloRepository.deleteAll(mapaActuales.values());
+        }
+
+        // 7) Guardar todas las asociaciones “nuevas y actualizadas”
+        //    Como las instancias pueden ser nuevas o modificadas, saveAll las persiste correctamente.
+        proveedorArticuloRepository.saveAll(listaFinal);
+
+        // 8) Asignar la lista final al proveedor (opcional si tu relación es bidireccional)
+        existente.setProveedorArticulos(listaFinal);
+
+        // 9) Finalmente salvar el proveedor con sus cambios
+        return proveedorRepository.save(existente);
     }
 
     /**
      * Alta de proveedor con asociación mínima.
      * @throws IllegalArgumentException si no viene ninguna asociación.
      */
-    public Proveedor guardarConAsociaciones(ProveedorRequest req) {
+    public Proveedor guardarConAsociaciones(DTONuevoProveedor req) {
         if (req.getAsociaciones() == null || req.getAsociaciones().isEmpty()) {
             throw new IllegalArgumentException("Debe proporcionar al menos una asociación con artículo");
         }
@@ -67,7 +184,7 @@ public class ProveedorService {
 
         // 2) Crear asociaciones
         List<ProveedorArticulo> lista = new ArrayList<>();
-        for (ProveedorArticuloRequest paReq : req.getAsociaciones()) {
+        for (DTODetalleProveedorArticulo paReq : req.getAsociaciones()) {
             Articulo art = articuloRepository.findById(paReq.getCodigoArticulo())
                     .orElseThrow(() -> new IllegalArgumentException(
                             "Artículo no encontrado: " + paReq.getCodigoArticulo()));

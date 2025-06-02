@@ -1,19 +1,19 @@
 package com.IntegradorIO.InventarioyStock.Proveedor;
 
-import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
+import com.IntegradorIO.InventarioyStock.Proveedor.dto.DTOModificarProveedor;
+import com.IntegradorIO.InventarioyStock.Proveedor.dto.DTONuevoProveedor;
+import com.IntegradorIO.InventarioyStock.Proveedor.dto.DTOTablaProveedor;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/proveedores")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 public class ProveedorController {
 
     @Autowired
@@ -21,8 +21,8 @@ public class ProveedorController {
 
     // Listar solo proveedores activos
     @GetMapping
-    public ResponseEntity<List<Proveedor>> obtenerTodosLosProveedores() {
-        List<Proveedor> proveedores = proveedorService.obtenerProveedores();
+    public ResponseEntity<List<DTOTablaProveedor>> obtenerProveedores() {
+        List<DTOTablaProveedor> proveedores = proveedorService.obtenerProveedores();
         return new ResponseEntity<>(proveedores, HttpStatus.OK);
     }
 
@@ -36,16 +36,16 @@ public class ProveedorController {
 
     // Crear un nuevo proveedor (siempre activo)
     @PostMapping
-    public ResponseEntity<Proveedor> guardarProveedor(@RequestBody Proveedor proveedor) {
-        Proveedor creado = proveedorService.guardarProveedor(proveedor);
-        return new ResponseEntity<>(creado, HttpStatus.CREATED);
+    public ResponseEntity<Proveedor> guardarProveedor(@RequestBody DTONuevoProveedor dtonuevoproveedor) {
+        Proveedor nuevoProveedor = proveedorService.guardarProveedor(dtonuevoproveedor);
+        return new ResponseEntity<>(nuevoProveedor, HttpStatus.CREATED);
     }
 
     // Actualizar proveedor activo
     @PutMapping("/{codigoProveedor}")
     public ResponseEntity<Proveedor> modificarProveedor(
             @PathVariable Integer codigoProveedor,
-            @RequestBody Proveedor proveedorModificado) {
+            @RequestBody DTOModificarProveedor proveedorModificado) {
 
         Proveedor actualizado = proveedorService.modificarProveedor(codigoProveedor, proveedorModificado);
         if (actualizado != null) {
