@@ -22,7 +22,7 @@ public class CalculoServiceP {
 
             int inventarioMaximo = CalculosEstrRevisionPeriodica.calcularInventarioMaximo(
                     articulo.getDemandaAnual(),
-                    periodoRevision,
+                    pa.getPeriodoRevision(),
                     pa.getDemoraEntrega(),
                     articulo.getDesviacionEstandar(),
                     pa.getNivelDeServicio()

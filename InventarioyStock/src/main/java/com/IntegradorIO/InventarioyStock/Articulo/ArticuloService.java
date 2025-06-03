@@ -73,7 +73,6 @@ public class ArticuloService  {
                 dtoMostrar.setCostoPedido(pae.getCostoPedido());
                 dtoMostrar.setLoteOptimo(pae.getLoteOptimo());
                 dtoMostrar.setModeloElegido(articuloEncontrado.getModeloInventario());
-                dtoMostrar.setPrecioUnitario(pae.getPrecioUnitProveedorArticulo());
                 dtoMostrar.setPuntoPedido(articuloEncontrado.getPuntoPedido());
                 dtoMostrar.setDemoraEntrega(pae.getDemoraEntrega());
                 dtoMostrar.setInventarioMax(pae.getInventarioMaximo());
@@ -104,13 +103,13 @@ public class ArticuloService  {
                 pa.setArticulo(articulo); //relacion con articulo
 
                 pa.setCostoPedido(dtoNuevoArticulo.getCostoPedido());
-                pa.setPrecioUnitProveedorArticulo(dtoNuevoArticulo.getPrecioUnitario());
                 pa.setDemoraEntrega(dtoNuevoArticulo.getDemoraEntrega());
                 pa.setCostoMantenimiento(dtoNuevoArticulo.getCostoMantener());
                 pa.setCostoAlmacenamiento(dtoNuevoArticulo.getCostoAlmacenamiento());
                 pa.setLoteOptimo(dtoNuevoArticulo.getLoteOptimo());
                 pa.setInventarioMaximo(dtoNuevoArticulo.getInventarioMax());
                 pa.setFechaDesdePA(new Timestamp(System.currentTimeMillis()));
+                pa.setCostoUnitario(dtoNuevoArticulo.getCostoUnitario());
 
                 //por cada proveedor seleccionado, hacer la relacion
                 List<Proveedor> proveedorList = dtoNuevoArticulo.getProveedoresAsignados();
@@ -159,12 +158,12 @@ public class ArticuloService  {
             paNueva.setArticulo(articulo); //relaciono con el articulo q estoy modificando
             paNueva.setFechaDesdePA(pa.getFechaHastaPA()); //cuando termina la vieja, empieza la nueva
             paNueva.setCostoPedido(articuloModificado.getCostoPedido());
-            paNueva.setPrecioUnitProveedorArticulo(articuloModificado.getPrecioUnitario());
             paNueva.setDemoraEntrega(articuloModificado.getDemoraEntrega());
             paNueva.setCostoMantenimiento(articuloModificado.getCostoMantener());
             paNueva.setCostoAlmacenamiento(articuloModificado.getCostoAlmacenamiento());
             paNueva.setLoteOptimo(articuloModificado.getLoteOptimo());
             paNueva.setInventarioMaximo(articuloModificado.getInventarioMax());
+            paNueva.setCostoUnitario(articuloModificado.getCostoUnitario());
 
                 //SOLO LA COMENTE PORQUE SI NO HAY LISTA DE PROVEEDORES, NO FUNCIONA LA MODIFICACION
                 //por cada proveedor seleccionado, hacer la relacion

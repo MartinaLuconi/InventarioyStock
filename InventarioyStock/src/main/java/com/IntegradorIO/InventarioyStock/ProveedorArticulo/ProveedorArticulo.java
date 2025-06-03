@@ -20,7 +20,6 @@ public class ProveedorArticulo {
     private float costoPedido;
     private int demoraEntrega;
     private boolean esPredeterminado;
-    private float precioUnitProveedorArticulo;
     private int cargoProveedorPedido;
     private double costoMantenimiento;
     private double costoAlmacenamiento;
@@ -31,6 +30,7 @@ public class ProveedorArticulo {
     private Timestamp fechaDesdePA;
     private Timestamp fechaHastaPA;
     private int eoq;
+    private int periodoRevision;
 
     @ManyToOne
     @JoinColumn(name = "articulo_id")
@@ -39,7 +39,6 @@ public class ProveedorArticulo {
     @ManyToOne
     @JoinColumn(name = "proveedor_id")
     private Proveedor proveedor;
-
 
 
 }
