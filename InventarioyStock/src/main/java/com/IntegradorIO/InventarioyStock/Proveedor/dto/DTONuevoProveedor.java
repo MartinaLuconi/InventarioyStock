@@ -12,10 +12,5 @@ public class DTONuevoProveedor {
     private List<DTODetalleProveedorArticulo> asociaciones;
     private boolean activo;
 
-    private Integer codigoArticulo;
-    private int demoraEntrega;
-    private float precioUnitProveedorArticulo;
-    private float costoPedido;
-    private int cargoProveedorPedido;
-    private boolean esPredeterminado;
+
 }
