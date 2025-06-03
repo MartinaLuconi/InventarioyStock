@@ -4,6 +4,15 @@ public class CalculosEstrRevisionPeriodica {
 
 
 
+    // Cálculo del lote óptimo (EOQ) para revisión periódica
+    public static int calcularLoteOptimo(int demandaAnual, double costoPedido, double costoMantenimiento, double pedido, double mantenimiento) {
+        if (demandaAnual <= 0 || costoPedido <= 0 || costoMantenimiento <= 0) return 0;
+        double eoq = Math.sqrt((2 * demandaAnual * costoPedido) / costoMantenimiento);
+        return (int) Math.round(eoq);
+    }
+
+
+
     // Costo de gestión de inventario (CGI) para revisión periódica
     public static double calcularCGI(
             int demandaAnual,

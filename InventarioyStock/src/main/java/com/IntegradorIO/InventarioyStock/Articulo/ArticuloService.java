@@ -77,6 +77,7 @@ public class ArticuloService  {
                 dtoMostrar.setDemoraEntrega(pae.getDemoraEntrega());
                 dtoMostrar.setInventarioMax(pae.getInventarioMaximo());
                 dtoMostrar.setDesviacionEstandar(articuloEncontrado.getDesviacionEstandar());
+                dtoMostrar.setPrecioUnitario(pae.getCostoUnitario());
         return dtoMostrar;
     }
     // para todos los cambios

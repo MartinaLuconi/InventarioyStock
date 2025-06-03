@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class CalculoServiceP {
 
-    public void recalcularYActualizar(Articulo articulo, double periodoRevision) {
+    public void recalcularYActualizar(Articulo articulo) {
         for (ProveedorArticulo pa : articulo.getProveedorArticuloList()) {
 
             int stockSeguridad = CalculosEstrRevisionPeriodica.calcularStockSeguridad(
                     pa.getNivelDeServicio(),
                     articulo.getDesviacionEstandar(),
-                    periodoRevision,
+                    pa.getPeriodoRevision(),
                     pa.getDemoraEntrega()
             );
             articulo.setStockSeguridadArticulo(stockSeguridad);
@@ -40,7 +40,7 @@ public class CalculoServiceP {
 
             int q = CalculosEstrRevisionPeriodica.calcularCantidadAPedir(
                     articulo.getDemandaAnual(),
-                    periodoRevision,
+                    pa.getPeriodoRevision(),
                     pa.getDemoraEntrega(),
                     articulo.getDesviacionEstandar(),
                     pa.getNivelDeServicio(),
@@ -59,4 +59,6 @@ public class CalculoServiceP {
         }
     }
 
+    public void recalcularYActualizar(ProveedorArticulo proveedorArticulo) {
+    }
 }

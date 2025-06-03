@@ -12,6 +12,12 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @jakarta.persistence.EntityListeners(com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión.ProveedorArticuloListener.class)
+/*
+@jakarta.persistence.EntityListeners({
+        com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionP.ProveedorArticulListenerP.class,
+        com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión.ProveedorArticuloListener.class
+})
+*/
 public class ProveedorArticulo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +26,7 @@ public class ProveedorArticulo {
     private float costoPedido;
     private int demoraEntrega;
     private boolean esPredeterminado;
+    private float precioUnitProveedorArticulo;
     private int cargoProveedorPedido;
     private double costoMantenimiento;
     private double costoAlmacenamiento;
