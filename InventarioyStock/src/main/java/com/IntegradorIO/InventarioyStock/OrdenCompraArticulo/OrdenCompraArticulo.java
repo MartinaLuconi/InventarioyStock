@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+
 @Entity
 @Getter
 @Setter
@@ -15,6 +17,7 @@ public class OrdenCompraArticulo {
     private int codigoOCA;
 
     private int cantidadOCA;
+    private Timestamp fechaDesdeOCA;
 
     @ManyToOne
     @JoinColumn(name = "articulo_id")

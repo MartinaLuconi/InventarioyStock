@@ -2,20 +2,25 @@ package com.IntegradorIO.InventarioyStock.OrdenCompra;
 
 import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
 import com.IntegradorIO.InventarioyStock.Articulo.ArticuloRepository;
+import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOTablaArticulos;
 import com.IntegradorIO.InventarioyStock.Articulo.ModeloInventario;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompra;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompraRepository;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTODetalleOC;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOOrdenCompra;
+import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOTablaOrdenCompra;
 import com.IntegradorIO.InventarioyStock.OrdenCompraArticulo.OrdenCompraArticulo;
 import com.IntegradorIO.InventarioyStock.OrdenCompraArticulo.OrdenCompraArticuloRepository;
+import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrdenCompraService {
@@ -28,6 +33,32 @@ public class OrdenCompraService {
 
     @Autowired
     private ArticuloRepository articuloRepository;
+    public List<DTOTablaOrdenCompra> obtenerOrdenesCompra() throws Exception{
+        List<DTOTablaOrdenCompra> tablaOC = new ArrayList<>();
+        try{
+            List<OrdenCompra> ordenCompraList = ordenCompraRepository.findAll();
+            for (OrdenCompra oc : ordenCompraList){
+                DTOTablaOrdenCompra dtoFilaTabla = new DTOTablaOrdenCompra();
+                dtoFilaTabla.setNroOrdenCompra(oc.getNumeroOrdenCompra());
+                dtoFilaTabla.setNombreOC(oc.getNombreOrdenCompra());
+                dtoFilaTabla.setNombreProveedor(oc.getProveedor().getNombreProveedor());
+                dtoFilaTabla.setEstadoOC(oc.getEstadoOrdenCompra().getNombreEstado());
+                List<OrdenCompraArticulo> ocaList = oc.getListaOrdenCompraArticulo();
+               //encuentra la orden actual relacionada
+                    OrdenCompraArticulo oca = ocaList.stream()
+                            .max(Comparator.comparing(OrdenCompraArticulo::getFechaDesdeOCA))
+                            .orElse(null);
+                    dtoFilaTabla.setFechaOrden(oca.getFechaDesdeOCA());
+                    tablaOC.add(dtoFilaTabla);
+
+            }
+            return  tablaOC;
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+
+
+    }
 
     //buscar una orden de compra por codigo
     public OrdenCompra obtenerOC(int nroOrden) throws Exception {
