@@ -16,6 +16,7 @@ import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -108,6 +109,8 @@ public class OrdenCompraService {
             ordenCompraArticulo.setArticulo(articulo); //reliono el articulo
             ordenCompraArticulo.setOrdenCompra(oc); //relaciono con la OC
             ordenCompraArticulo.setCantidadOCA(detalle.getCantidadArticulo()); //lote
+            ordenCompraArticulo.setFechaDesdeOCA(new Timestamp(System.currentTimeMillis())); //fecha de creación
+            ordenCompraArticulo.setFechaHastaOCA(null);
 
             ordenCompraArticuloRepository.save(ordenCompraArticulo);
         }
@@ -181,6 +184,7 @@ public class OrdenCompraService {
 
             if (nombreEstado == EstadoOrdencCompra.PENDIENTE){
                 estadoActual.setNombreEstado(EstadoOrdencCompra.CANCELADO);
+                //se ponerle fecha baja
             }else {
                 throw new Exception("No se puede cancelar la orden porque está en estado:"+nombreEstado);
             }
@@ -209,6 +213,12 @@ public class OrdenCompraService {
         if (estadoActual.getNombreEstado() == EstadoOrdencCompra.ENVIADA) {
             estadoActual.setNombreEstado(EstadoOrdencCompra.FINALIZADO); //cambio a finalizado
             estadoOrdenCompraRepository.save(estadoActual);
+            List<OrdenCompraArticulo> ocaList = oc.getListaOrdenCompraArticulo();
+            OrdenCompraArticulo ocaActual = ocaList.stream()
+                    .max(Comparator.comparing(OrdenCompraArticulo::getFechaDesdeOCA))
+                    .orElse(null);
+            ocaActual.setFechaHastaOCA(new Timestamp(System.currentTimeMillis())); //le ponemos fin fecha hasta
+            ordenCompraArticuloRepository.save(ocaActual);
         }
         // actualizar el inventario
 

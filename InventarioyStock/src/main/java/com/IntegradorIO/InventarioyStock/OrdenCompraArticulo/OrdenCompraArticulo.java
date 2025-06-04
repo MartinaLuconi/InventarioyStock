@@ -18,6 +18,7 @@ public class OrdenCompraArticulo {
 
     private int cantidadOCA;
     private Timestamp fechaDesdeOCA;
+    private Timestamp fechaHastaOCA;
 
     @ManyToOne
     @JoinColumn(name = "articulo_id")
