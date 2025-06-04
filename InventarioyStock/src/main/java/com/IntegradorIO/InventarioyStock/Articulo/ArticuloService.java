@@ -168,10 +168,10 @@ public class ArticuloService  {
 
                 //SOLO LA COMENTE PORQUE SI NO HAY LISTA DE PROVEEDORES, NO FUNCIONA LA MODIFICACION
                 //por cada proveedor seleccionado, hacer la relacion
-                // List<Proveedor> proveedorList = articuloModificado.getProveedoresAsignados();
-                //for (Proveedor p:proveedorList){
-                //   pa.setProveedor(p);
-                // }
+                 List<Proveedor> proveedorList = articuloModificado.getProveedoresAsignados();
+                for (Proveedor p:proveedorList){
+                   pa.setProveedor(p);
+                 }
             //guardo la instancia
             proveedorArticuloRepository.save(paNueva);
 
