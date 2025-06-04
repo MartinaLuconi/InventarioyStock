@@ -129,18 +129,18 @@ public class OrdenCompraService {
             ocModificada.setNumeroOrdenCompra(dtoOC.getNroOrden()); //esto en realidad no se deberia
 
         List<OrdenCompraArticulo> detallesOCViejos= ocModificada.getListaOrdenCompraArticulo();
-        for (OrdenCompraArticulo oca : detallesOCViejos) {
-
-            for (DTODetalleOC detalleOC : dtoOC.getDetallesOC()) {
-                oca.setCantidadOCA(detalleOC.getCantidadArticulo());
-                oca.setArticulo(articuloRepository.obtenerArticulo(detalleOC.getCodArticulo()));
-                oca.setOrdenCompra(ocModificada);
-                ordenCompraArticuloRepository.save(oca);
+        for (OrdenCompraArticulo oca : detallesOCViejos) { //por cada detalle
+            for (DTODetalleOC detalleOC : dtoOC.getDetallesOC()) {  //por cada dto que tenemos con los datos
+                //pasar del dto  a la entidad
+                if (detalleOC.getCodArticulo() == oca.getArticulo().getCodigoArticulo()) {
+                    oca.setCantidadOCA(detalleOC.getCantidadArticulo());
+                    oca.setArticulo(articuloRepository.obtenerArticulo(detalleOC.getCodArticulo()));
+                    oca.setOrdenCompra(ocModificada);
+                    ordenCompraArticuloRepository.save(oca);
+                }
             }
 
         }
-
-
 
             ordenCompraRepository.save(ocModificada);
         }else{
