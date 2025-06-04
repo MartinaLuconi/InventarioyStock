@@ -81,7 +81,7 @@ public class ArticuloService  {
         return dtoMostrar;
     }
     // para todos los cambios --> es el alta
-    public Articulo guardarArticulo(DTONuevoArticulo dtoNuevoArticulo) throws Exception{
+    /*public Articulo guardarArticulo(DTONuevoArticulo dtoNuevoArticulo) throws Exception{
         try {
             //paso datos del dto a las entidades
             Articulo articulo = new Articulo();
@@ -126,7 +126,49 @@ public class ArticuloService  {
             throw new Exception(e.getMessage());
         }
 
+    }*/
+    public Articulo guardarArticulo(DTONuevoArticulo dtoNuevoArticulo) throws Exception {
+        try {
+            // paso datos del dto a la entidad Articulo
+            Articulo articulo = new Articulo();
+            articulo.setDescripcion(dtoNuevoArticulo.getDescripcion());
+            articulo.setNombreArticulo(dtoNuevoArticulo.getNombreArticulo());
+            articulo.setStockActualArticulo(dtoNuevoArticulo.getStockReal());
+            articulo.setFechaHoraBajaArticulo(null);
+            articulo.setStockSeguridadArticulo(dtoNuevoArticulo.getStockSeguridad());
+            articulo.setPuntoPedido(dtoNuevoArticulo.getPuntoPedido());
+            articulo.setModeloInventario(dtoNuevoArticulo.getModeloElegido());
+            articulo.setDemandaAnual(dtoNuevoArticulo.getDemandaAnual());
+            articulo.setDesviacionEstandar(dtoNuevoArticulo.getDesviacionEstandar());
+
+            // guardo primero el artículo para que tenga ID
+            articuloRepository.save(articulo);
+
+            // por cada proveedor asignado, crear y guardar una instancia ProveedorArticulo
+            List<Proveedor> proveedorList = dtoNuevoArticulo.getProveedoresAsignados();
+            for (Proveedor p : proveedorList) {
+                ProveedorArticulo pa = new ProveedorArticulo(); // CREAR nueva instancia aquí
+                pa.setArticulo(articulo);
+                pa.setProveedor(p);
+
+                pa.setCostoPedido(dtoNuevoArticulo.getCostoPedido());
+                pa.setPrecioUnitProveedorArticulo(dtoNuevoArticulo.getPrecioUnitario());
+                pa.setDemoraEntrega(dtoNuevoArticulo.getDemoraEntrega());
+                pa.setCostoMantenimiento(dtoNuevoArticulo.getCostoMantener());
+                pa.setCostoAlmacenamiento(dtoNuevoArticulo.getCostoAlmacenamiento());
+                pa.setLoteOptimo(dtoNuevoArticulo.getLoteOptimo());
+                pa.setInventarioMaximo(dtoNuevoArticulo.getInventarioMax());
+                pa.setFechaDesdePA(new Timestamp(System.currentTimeMillis()));
+
+                proveedorArticuloRepository.save(pa);
+            }
+
+            return articulo;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
+
 
     // Modificar un artículo existente
     public Articulo modificarArticulo(int codigoArticulo, DTOModificarArticulo articuloModificado) throws Exception{
