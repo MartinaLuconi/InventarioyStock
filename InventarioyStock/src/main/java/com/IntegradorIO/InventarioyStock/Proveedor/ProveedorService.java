@@ -250,6 +250,7 @@ public class ProveedorService {
                 .filter(Proveedor::isActivo)
                 .orElseThrow(() -> new IllegalArgumentException("Proveedor no encontrado o inactivo"));
 
-        return proveedorArticuloRepository.findByProveedorCodigoProveedor(codigoProveedor);
+        return proveedorArticuloRepository.findArticulosConArticuloPorProveedor(codigoProveedor);
+
     }
 }

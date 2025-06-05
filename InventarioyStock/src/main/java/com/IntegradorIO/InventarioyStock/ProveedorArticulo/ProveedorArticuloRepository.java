@@ -2,6 +2,8 @@ package com.IntegradorIO.InventarioyStock.ProveedorArticulo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -18,6 +20,12 @@ public interface ProveedorArticuloRepository
     // Opcional: buscar todas las asociaciones de un artículo
     List<ProveedorArticulo> findByArticulo_CodigoArticulo(Integer codigoArticulo);
 
+    // NUEVO: Buscar asociaciones de un proveedor y traer el artículo con JOIN FETCH
+    @Query("SELECT pa FROM ProveedorArticulo pa JOIN FETCH pa.articulo WHERE pa.proveedor.codigoProveedor = :codigoProveedor")
+    List<ProveedorArticulo> findArticulosConArticuloPorProveedor(@Param("codigoProveedor") Integer codigoProveedor);
 
 }
+
+
+
 
