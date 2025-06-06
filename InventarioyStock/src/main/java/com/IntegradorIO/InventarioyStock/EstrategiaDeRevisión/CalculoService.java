@@ -22,7 +22,7 @@ public class CalculoService {
             int eoq = CalculosEstrRevisionContinua.calcularEOQ(
                     articulo.getDemandaAnual(),
                     pa.getCostoPedido(),
-                    pa.getCostoAlmacenamiento()
+                    articulo.getCostoAlmacenamiento()
             );
             pa.setLoteOptimo(eoq);
 
