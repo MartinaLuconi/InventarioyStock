@@ -20,12 +20,8 @@ public class DTONuevoArticulo {
     private int stockSeguridad;
     private int puntoPedido;
     private Timestamp fechaHoraBajaArticulo;
-    private List<Proveedor> proveedoresAsignados;
     private int demoraEntrega;
-    private  float costoPedido;
-    private double   costoMantener;
     private double costoAlmacenamiento;
-    private int loteOptimo;
     private int inventarioMax;
     private ModeloInventario modeloElegido;
     private int demandaAnual;

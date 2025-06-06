@@ -29,7 +29,6 @@ public class ProveedorArticulo {
     private float precioUnitProveedorArticulo;
     private int cargoProveedorPedido;
     private double costoMantenimiento;
-    private double costoAlmacenamiento;
     private int loteOptimo;
     private int inventarioMaximo;
     private float nivelDeServicio;

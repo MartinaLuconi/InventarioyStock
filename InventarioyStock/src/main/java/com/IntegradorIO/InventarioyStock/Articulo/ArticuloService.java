@@ -61,17 +61,17 @@ public class ArticuloService  {
     //mostrar detalle Articulo
     public DTODetalleArticulo mostrarDetalle(int codigoArticulo){
         Articulo articuloEncontrado = articuloRepository.obtenerArticulo(codigoArticulo);
-        ProveedorArticulo pae = articuloEncontrado.getProveedorArticuloList().get(0);
+        List<ProveedorArticulo> paeList = articuloEncontrado.getProveedorArticuloList();
+        ProveedorArticulo pae = paeList.stream()
+                .max(Comparator.comparing(ProveedorArticulo::getFechaDesdePA))
+                .orElse(null);
         DTODetalleArticulo dtoMostrar = new DTODetalleArticulo();
                 dtoMostrar.setNombreArticulo(articuloEncontrado.getNombreArticulo());
                 dtoMostrar.setDescripcion(articuloEncontrado.getDescripcion());
                 dtoMostrar.setStockReal(articuloEncontrado.getStockActualArticulo());
                 dtoMostrar.setStockSeguridad(articuloEncontrado.getStockSeguridadArticulo());
-                dtoMostrar.setCostoMantener(pae.getCostoMantenimiento());
                 dtoMostrar.setDemandaAnual(articuloEncontrado.getDemandaAnual());
-                dtoMostrar.setCostoAlmacenamiento(pae.getCostoAlmacenamiento());
-                dtoMostrar.setCostoPedido(pae.getCostoPedido());
-                dtoMostrar.setLoteOptimo(pae.getLoteOptimo());
+                dtoMostrar.setCostoAlmacenamiento(articuloEncontrado.getCostoAlmacenamiento());
                 dtoMostrar.setModeloElegido(articuloEncontrado.getModeloInventario());
                 dtoMostrar.setPuntoPedido(articuloEncontrado.getPuntoPedido());
                 dtoMostrar.setDemoraEntrega(pae.getDemoraEntrega());
@@ -95,31 +95,9 @@ public class ArticuloService  {
                 articulo.setModeloInventario(dtoNuevoArticulo.getModeloElegido());
                 articulo.setDemandaAnual(dtoNuevoArticulo.getDemandaAnual());
                 articulo.setDesviacionEstandar(dtoNuevoArticulo.getDesviacionEstandar());
-
+                articulo.setCostoAlmacenamiento(dtoNuevoArticulo.getCostoAlmacenamiento());
 
             articuloRepository.save(articulo);
-
-
-            ProveedorArticulo pa = new ProveedorArticulo();
-                pa.setArticulo(articulo); //relacion con articulo
-
-                pa.setCostoPedido(dtoNuevoArticulo.getCostoPedido());
-                pa.setDemoraEntrega(dtoNuevoArticulo.getDemoraEntrega());
-                pa.setCostoMantenimiento(dtoNuevoArticulo.getCostoMantener());
-                pa.setCostoAlmacenamiento(dtoNuevoArticulo.getCostoAlmacenamiento());
-                pa.setLoteOptimo(dtoNuevoArticulo.getLoteOptimo());
-                pa.setInventarioMaximo(dtoNuevoArticulo.getInventarioMax());
-                pa.setFechaDesdePA(new Timestamp(System.currentTimeMillis()));
-                pa.setCostoUnitario(dtoNuevoArticulo.getCostoUnitario());
-
-                //por cada proveedor seleccionado, hacer la relacion
-                List<Proveedor> proveedorList = dtoNuevoArticulo.getProveedoresAsignados();
-                for (Proveedor p:proveedorList){
-                   pa.setProveedor(p);
-                }
-                //guardo instancias
-                proveedorArticuloRepository.save(pa);
-
 
             return articulo;
         }catch (Exception e){
@@ -142,38 +120,8 @@ public class ArticuloService  {
             articulo.setModeloInventario(articuloModificado.getModeloElegido());
             articulo.setDemandaAnual(articuloModificado.getDemandaAnual());
             articulo.setDesviacionEstandar(articuloModificado.getDesviacionEstandar());
+            articulo.setCostoAlmacenamiento(articuloModificado.getCostoAlmacenamiento());
             articuloRepository.save(articulo);
-
-            //encuentra la intermedia vigente con ultima instancia con la mayor FD, es la ultima cargada
-            List<ProveedorArticulo> paList = articulo.getProveedorArticuloList();
-            ProveedorArticulo pa = paList.stream()
-                    .max(Comparator.comparing(ProveedorArticulo::getFechaDesdePA))
-                    .orElse(null);
-            //la dejo no vigente
-            pa.setFechaHastaPA(new Timestamp(System.currentTimeMillis()));
-            //guardo el cambio
-            proveedorArticuloRepository.save(pa);
-
-            //creo nueva intermedia
-            ProveedorArticulo paNueva = new ProveedorArticulo();
-            paNueva.setArticulo(articulo); //relaciono con el articulo q estoy modificando
-            paNueva.setFechaDesdePA(pa.getFechaHastaPA()); //cuando termina la vieja, empieza la nueva
-            paNueva.setCostoPedido(articuloModificado.getCostoPedido());
-            paNueva.setDemoraEntrega(articuloModificado.getDemoraEntrega());
-            paNueva.setCostoMantenimiento(articuloModificado.getCostoMantener());
-            paNueva.setCostoAlmacenamiento(articuloModificado.getCostoAlmacenamiento());
-            paNueva.setLoteOptimo(articuloModificado.getLoteOptimo());
-            paNueva.setInventarioMaximo(articuloModificado.getInventarioMax());
-            paNueva.setCostoUnitario(articuloModificado.getCostoUnitario());
-
-                //SOLO LA COMENTE PORQUE SI NO HAY LISTA DE PROVEEDORES, NO FUNCIONA LA MODIFICACION
-                //por cada proveedor seleccionado, hacer la relacion
-                 List<Proveedor> proveedorList = articuloModificado.getProveedoresAsignados();
-                for (Proveedor p:proveedorList){
-                   pa.setProveedor(p);
-                 }
-            //guardo la instancia
-            proveedorArticuloRepository.save(paNueva);
 
             return articulo;
         }catch (Exception e){
@@ -314,7 +262,7 @@ public class ArticuloService  {
         model.setCostoPedido(proveedorArticulo.getCostoPedido());
         model.setCostoUnitario(proveedorArticulo.getCostoUnitario());
         model.setCostoMantenimiento(proveedorArticulo.getCostoMantenimiento());
-        model.setCostoAlmacenamiento(proveedorArticulo.getCostoAlmacenamiento());
+        model.setCostoAlmacenamiento(articulo.getCostoAlmacenamiento());
         return model.getCGI();
     }
 
@@ -322,7 +270,7 @@ public class ArticuloService  {
         return CalculosEstrRevisionContinua.calcularEOQ(
                 articulo.getDemandaAnual(),
                 proveedorArticulo.getCostoPedido(),
-                proveedorArticulo.getCostoAlmacenamiento()
+                articulo.getCostoAlmacenamiento()
         );
     }
 

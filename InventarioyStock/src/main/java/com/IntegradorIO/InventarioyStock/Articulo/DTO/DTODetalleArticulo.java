@@ -19,12 +19,11 @@ public class DTODetalleArticulo {
     private int puntoPedido;
     private Timestamp fechaHoraBajaArticulo;
     private float precioUnitario;
-    private List<Proveedor> proveedoresAsignados;
     private int demoraEntrega;
-    private  float costoPedido;
-    private double   costoMantener;
+    //private  float costoPedido;
+   // private double   costoMantener;
     private double costoAlmacenamiento;
-    private int loteOptimo;
+   // private int loteOptimo;
     private int inventarioMax;
     private ModeloInventario modeloElegido;
     private int demandaAnual;
