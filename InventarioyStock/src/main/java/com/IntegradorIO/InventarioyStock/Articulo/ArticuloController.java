@@ -108,17 +108,23 @@ public class ArticuloController {
     }
 
 // Calcular Punto de Pedido (CGI) para un artículo y proveedor específico
-    @GetMapping("/{idArticulo}/proveedor/{idProveedorArticulo}/cgi")
-    public double obtenerCGI(
-            @PathVariable int idArticulo,
-            @PathVariable int idProveedorArticulo
-    ) throws Exception {
-        Articulo articulo = articuloRepository.findById(idArticulo)
-                .orElseThrow(() -> new Exception("Artículo no encontrado"));
-        ProveedorArticulo proveedorArticulo = proveedorArticuloRepository.findById(idProveedorArticulo)
-                .orElseThrow(() -> new Exception("ProveedorArticulo no encontrado"));
-        return articuloService.calcularCGIArticulo(articulo, proveedorArticulo);
-    }
+@GetMapping("/{idArticulo}/proveedor/{idProveedorArticulo}/cgi")
+public double obtenerCGI(
+        @PathVariable int idArticulo,
+        @PathVariable int idProveedorArticulo,
+        @RequestParam int periodoRevision,
+        @RequestParam int demoraEntrega,
+        @RequestParam double desviacionEstandar,
+        @RequestParam double Z
+) throws Exception {
+    Articulo articulo = articuloRepository.findById(idArticulo)
+            .orElseThrow(() -> new Exception("Artículo no encontrado"));
+    ProveedorArticulo proveedorArticulo = proveedorArticuloRepository.findById(idProveedorArticulo)
+            .orElseThrow(() -> new Exception("ProveedorArticulo no encontrado"));
+    return articuloService.calcularCGIArticulo(
+            articulo, proveedorArticulo, periodoRevision, demoraEntrega, desviacionEstandar, Z
+    );
+}
 
 
     // EOQ para un artículo y proveedor

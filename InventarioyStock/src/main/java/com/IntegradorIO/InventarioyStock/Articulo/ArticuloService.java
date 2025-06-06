@@ -6,6 +6,7 @@ import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTONuevoArticulo;
 import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOTablaArticulos;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompraRepository;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
+import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionP.CGIModelP;
 import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión.CGIModel;
 import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión.CalculosEstrRevisionContinua;
 import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
@@ -253,20 +254,40 @@ public class ArticuloService  {
 // Para calcular el (CGI) (ROP) y StockSeguridad para un artículo y su proveedor Modeelo LOTE_FIJO
 
 
-    public double calcularCGIArticulo(Articulo articulo, ProveedorArticulo proveedorArticulo) {
-        if (articulo.getModeloInventario() != ModeloInventario.LOTE_FIJO) {
-            throw new IllegalArgumentException("El modelo de inventario no es LOTE_FIJO");
+
+
+
+
+
+
+    public double calcularCGIArticulo(Articulo articulo, ProveedorArticulo proveedorArticulo, int periodoRevision, int demoraEntrega, double desviacionEstandar, double Z) {
+        if (articulo.getModeloInventario() == ModeloInventario.LOTE_FIJO) {
+            CGIModel model = new CGIModel();
+            model.setDemandaAnual(articulo.getDemandaAnual());
+            model.setCostoPedido(proveedorArticulo.getCostoPedido());
+            model.setCostoUnitario(proveedorArticulo.getCostoUnitario());
+            model.setCostoMantenimiento(proveedorArticulo.getCostoMantenimiento());
+            model.setCostoAlmacenamiento(articulo.getCostoAlmacenamiento());
+            return model.getCGI();
+        } else if (articulo.getModeloInventario() == ModeloInventario.TIEMPO_FIJO) {
+            CGIModelP modelP = new CGIModelP();
+            modelP.setDemandaAnual(articulo.getDemandaAnual());
+            modelP.setPeriodoRevision(periodoRevision);
+            modelP.setDemoraEntrega(demoraEntrega);
+            modelP.setDesviacionEstandar(desviacionEstandar);
+            modelP.setZ(Z);
+            modelP.setCostoPedido(proveedorArticulo.getCostoPedido());
+            modelP.setCostoUnitario(proveedorArticulo.getCostoUnitario());
+            modelP.setCostoMantenimiento(proveedorArticulo.getCostoMantenimiento());
+            // Puedes setear otros parámetros si es necesario
+            return modelP.getCGI();
+        } else {
+            throw new IllegalArgumentException("Modelo de inventario no soportado");
+
         }
-        CGIModel model = new CGIModel();
-        model.setDemandaAnual(articulo.getDemandaAnual());
-        model.setCostoPedido(proveedorArticulo.getCostoPedido());
-        model.setCostoUnitario(proveedorArticulo.getCostoUnitario());
-        model.setCostoMantenimiento(proveedorArticulo.getCostoMantenimiento());
-        model.setCostoAlmacenamiento(articulo.getCostoAlmacenamiento());
-        return model.getCGI();
     }
 
-    public int calcularEOQArticulo(Articulo articulo, ProveedorArticulo proveedorArticulo) {
+        public int calcularEOQArticulo(Articulo articulo, ProveedorArticulo proveedorArticulo) {
         return CalculosEstrRevisionContinua.calcularEOQ(
                 articulo.getDemandaAnual(),
                 proveedorArticulo.getCostoPedido(),
