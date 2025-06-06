@@ -9,13 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@jakarta.persistence.EntityListeners(com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión.ArticuloListener.class)
-/*
+
 @jakarta.persistence.EntityListeners({
         com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionP.ArticuloListenerP.class,
         com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión.ArticuloListener.class
 })
-*/
+
 @Getter
 @Setter
 public class Articulo {

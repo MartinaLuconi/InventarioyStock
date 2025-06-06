@@ -1,13 +1,17 @@
 package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionP;
 
 import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ArticuloListenerP {
 
     private static CalculoServiceP calculoServiceP;
 
-    public static void setCalculoServiceP(CalculoServiceP service) {
-        calculoServiceP = service;
+    @Autowired
+    public void setCalculoServiceP(CalculoServiceP service) {
+        ArticuloListenerP.calculoServiceP = service;
     }
 
     @jakarta.persistence.PrePersist
