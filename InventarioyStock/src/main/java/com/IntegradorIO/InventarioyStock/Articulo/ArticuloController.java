@@ -148,4 +148,9 @@ public class ArticuloController {
     ) {
         return articuloService.calcularROP(demandaPromedio, stockSeguridad, l);
     }
+
+    @GetMapping("/articulos")
+    public ResponseEntity<List<Articulo>> listarArticulosActivos() {
+        return ResponseEntity.ok(articuloRepository.findByFechaHoraBajaArticuloIsNull());
+    }
 }

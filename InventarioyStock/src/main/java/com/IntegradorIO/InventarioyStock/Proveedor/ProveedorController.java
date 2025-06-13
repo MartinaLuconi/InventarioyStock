@@ -56,16 +56,19 @@ public class ProveedorController {
 
     // Baja lógica con control de predeterminado
     @DeleteMapping("/{codigoProveedor}")
-    public ResponseEntity<Void> bajaProveedor(@PathVariable Integer codigoProveedor) {
+    //public ResponseEntity<Void> bajaProveedor(@PathVariable Integer codigoProveedor) {
+    public ResponseEntity<String> bajaProveedor(@PathVariable Integer codigoProveedor) {
         try {
             proveedorService.bajaProveedor(codigoProveedor);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (IllegalArgumentException e) {
             // No existe o ya estaba inactivo
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            //return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("No encontrado o inactivo",HttpStatus.NOT_FOUND);
         } catch (IllegalStateException e) {
             // Está predeterminado en algún artículo
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            //return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.CONFLICT);
         }
     }
 

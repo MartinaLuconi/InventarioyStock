@@ -29,7 +29,8 @@ public class ProveedorService {
     /** Listar solo proveedores activos */
     public List<DTOTablaProveedor> obtenerProveedores() {
 
-        return proveedorRepository.findByActivoTrue()
+        //return proveedorRepository.findByActivoTrue()
+        return proveedorRepository.findAll()
                 .stream()
                 .map(DTOTablaProveedor::new)
                 .collect(Collectors.toList());
@@ -217,9 +218,11 @@ public class ProveedorService {
                 .orElseThrow(() -> new IllegalArgumentException("Proveedor no encontrado o ya inactivo"));
 
         // 1) Verificar predeterminado
-        ProveedorArticulo pred = proveedorArticuloRepository
+        //ProveedorArticulo pred = proveedorArticuloRepository
+        List<ProveedorArticulo> pred = proveedorArticuloRepository
                 .findByProveedorCodigoProveedorAndEsPredeterminadoTrue(codigoProveedor);
-        if (pred != null) {
+        //if (pred != null) {
+        if (!pred.isEmpty()) {
             throw new IllegalStateException(
                     "No se puede dar de baja: proveedor predeterminado en un artículo"
             );
