@@ -1,6 +1,10 @@
 package com.IntegradorIO.InventarioyStock.Articulo;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import lombok.Getter;
@@ -12,7 +16,14 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@jakarta.persistence.EntityListeners(com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión.ArticuloListener.class)
+
+@jakarta.persistence.EntityListeners({
+        com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionP.ArticuloListenerP.class,
+        com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión.ArticuloListener.class
+})
+
+@Getter
+@Setter
 public class Articulo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,47 +38,17 @@ public class Articulo {
     private int demandaAnual;
     private int puntoPedido;
     private int desviacionEstandar;
+    private double costoAlmacenamiento;
 
-    @OneToMany(mappedBy = "articulo",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProveedorArticulo> proveedorArticuloList = new ArrayList<>();
+    //@OneToMany(mappedBy = "articulo",cascade = CascadeType.ALL, orphanRemoval = true)
+   // @JsonIgnore
+   // private List<ProveedorArticulo> proveedorArticuloList = new ArrayList<>();
 
    
     public Articulo() {
     }
 
-    public void addProveedorArticulo(ProveedorArticulo proveedorArticulo) {
-        proveedorArticuloList.add(proveedorArticulo);
-    }
 
-
-
-    public void setPuntoPedido(int puntoPedido) {
-        this.puntoPedido = puntoPedido;
-    }
-
-    public ModeloInventario getModeloInventario() {
-        return modeloInventario;
-    }
-
-    public void setModeloInventario(ModeloInventario modeloInventario) {
-        this.modeloInventario = modeloInventario;
-    }
-
-    public int getDemandaAnual() {
-        return demandaAnual;
-    }
-
-    public void setDemandaAnual(int demandaAnual) {
-        this.demandaAnual = demandaAnual;
-    }
-
-    public int getDesviacionEstandar() {
-        return desviacionEstandar;
-    }
-
-    public void setDesviacionEstandar(int desviacionEstandar) {
-        this.desviacionEstandar = desviacionEstandar;
-    }
 }
 
 

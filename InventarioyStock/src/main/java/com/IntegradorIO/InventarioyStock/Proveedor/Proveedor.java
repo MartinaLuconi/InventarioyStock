@@ -1,6 +1,8 @@
 package com.IntegradorIO.InventarioyStock.Proveedor;
 
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +19,7 @@ public class Proveedor {
 
     private String nombreProveedor;
 
-    @OneToMany(mappedBy = "proveedor")
+    @OneToMany
     private List<ProveedorArticulo> proveedorArticulos;
 
 
@@ -64,4 +66,7 @@ public class Proveedor {
     public void setProveedorArticulos(List<ProveedorArticulo> proveedorArticulos) {
         this.proveedorArticulos = proveedorArticulos;
     }
+
+
+
 }

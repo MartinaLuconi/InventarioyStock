@@ -2,6 +2,31 @@ package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionP;
 
 public class CalculosEstrRevisionPeriodica {
 
+
+
+    // Cálculo del lote óptimo (EOQ) para revisión periódica
+    public static int calcularLoteOptimo(int demandaAnual, double costoPedido, double costoMantenimiento, double pedido, double mantenimiento) {
+        if (demandaAnual <= 0 || costoPedido <= 0 || costoMantenimiento <= 0) return 0;
+        double eoq = Math.sqrt((2 * demandaAnual * costoPedido) / costoMantenimiento);
+        return (int) Math.round(eoq);
+    }
+
+
+
+    // Costo de gestión de inventario (CGI) para revisión periódica
+    public static double calcularCGI(
+            int demandaAnual,
+            int q,
+            double costoPedido,
+            double costoUnitario,
+            double costoMantenimiento
+    ) {
+        if (q == 0) return 0;
+        return (demandaAnual / (double) q) * costoPedido
+                + (q / 2.0) * costoMantenimiento
+                + demandaAnual * costoUnitario;
+    }
+
     // Cantidad a pedir q = Demanda durante el periodo de revisión + Demanda durante el lead time + Stock de seguridad - Inventario disponible
     public static int calcularCantidadAPedir(
             int demandaAnual,
