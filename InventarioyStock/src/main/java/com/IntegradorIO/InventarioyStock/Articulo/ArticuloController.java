@@ -56,9 +56,16 @@ public class ArticuloController {
     }
     //crear articulo
     @PostMapping
-    public ResponseEntity<Articulo> guardarArticulo(@RequestBody DTONuevoArticulo dtoNuevoArticulo)  throws Exception{
-        Articulo nuevoArticulo = articuloService.guardarArticulo(dtoNuevoArticulo);
-        return new ResponseEntity<>(nuevoArticulo, HttpStatus.CREATED);
+    public ResponseEntity<?> guardarArticulo(@RequestBody DTONuevoArticulo dtoNuevoArticulo)  throws Exception{
+        try {
+            //Articulo nuevoArticulo = articuloService.guardarArticulo(dtoNuevoArticulo);
+            //return new ResponseEntity<>(nuevoArticulo, HttpStatus.CREATED);
+            return ResponseEntity.status(HttpStatus.OK).body(articuloService.guardarArticulo(dtoNuevoArticulo));
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+
     }
     // modificar articulo existente
     @PutMapping("/{codigoArticulo}")

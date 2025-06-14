@@ -3,14 +3,21 @@ package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionP;
 
 import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
 import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión.CalculosEstrRevisionContinua;
+import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
+import org.hibernate.mapping.Array;
+import org.hibernate.mapping.List;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 public class CalculoServiceP {
 
     public void recalcularYActualizar(Articulo articulo) {
-        for (ProveedorArticulo pa : articulo.getProveedorArticuloList()) {
+
+       /////////////////// MODIFIQUE ESTO
+       /*for (ProveedorArticulo pa : articulo.getProveedorArticuloList()) {
 
             int stockSeguridad = CalculosEstrRevisionPeriodica.calcularStockSeguridad(
                     pa.getNivelDeServicio(),
@@ -56,7 +63,7 @@ public class CalculoServiceP {
                     pa.getCostoMantenimiento()
             );
             pa.setCGIProveedorArticulo((float) cgi);
-        }
+        } */
     }
 
     public void recalcularYActualizar(ProveedorArticulo proveedorArticulo) {

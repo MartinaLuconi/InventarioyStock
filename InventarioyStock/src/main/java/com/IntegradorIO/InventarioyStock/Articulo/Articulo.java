@@ -1,5 +1,7 @@
 package com.IntegradorIO.InventarioyStock.Articulo;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,11 +35,13 @@ public class Articulo {
     private int desviacionEstandar;
     private double costoAlmacenamiento;
 
-    @OneToMany(mappedBy = "articulo",cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProveedorArticulo> proveedorArticuloList = new ArrayList<>();
+    //@OneToMany(mappedBy = "articulo",cascade = CascadeType.ALL, orphanRemoval = true)
+   // @JsonIgnore
+   // private List<ProveedorArticulo> proveedorArticuloList = new ArrayList<>();
 
     public Articulo() {
     }
+
 
 }
 

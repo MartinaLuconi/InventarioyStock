@@ -97,7 +97,7 @@ public class ArticuloService  {
                 articulo.setDemandaAnual(dtoNuevoArticulo.getDemandaAnual());
                 articulo.setDesviacionEstandar(dtoNuevoArticulo.getDesviacionEstandar());
                 articulo.setCostoAlmacenamiento(dtoNuevoArticulo.getCostoAlmacenamiento());
-
+               // articulo.setProveedorArticuloList(null);
             articuloRepository.save(articulo);
 
             return articulo;
@@ -167,24 +167,24 @@ public class ArticuloService  {
     //listar proveedores de un articulo
 
     public List<Proveedor> listarProveedores(int codArticulo) throws Exception{
-        try {
+       // try {
 
             List<Proveedor> listaProveedores = new ArrayList<>();
 
             //busco el articulo
-            Articulo a = articuloRepository.obtenerArticulo(codArticulo);
+        //    Articulo a = articuloRepository.obtenerArticulo(codArticulo);
 
             //leo intermedias de ese articulo
-            List<ProveedorArticulo> palist = a.getProveedorArticuloList();
-            for (ProveedorArticulo pa : palist) {
+         //   List<ProveedorArticulo> palist = a.getProveedorArticuloList();
+         //   for (ProveedorArticulo pa : palist) {
                 //meto proveedores en lista
-                listaProveedores.add(pa.getProveedor());
-            }
+          //      listaProveedores.add(pa.getProveedor());
+         //   }
 
             return listaProveedores;
-        }catch (Exception e){
-            throw new Exception(e.getMessage());
-        }
+       // }catch (Exception e){
+      //      throw new Exception(e.getMessage());
+      //  }
     }
 
     //listar productos faltantes

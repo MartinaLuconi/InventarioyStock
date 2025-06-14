@@ -2,6 +2,7 @@ package com.IntegradorIO.InventarioyStock.ProveedorArticulo;
 
 import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
 import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,13 +40,15 @@ public class ProveedorArticulo {
     private int eoq;
     private int periodoRevision;
 
-    @ManyToOne(cascade= CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "articulo_id")
+    @JsonBackReference
     private Articulo articulo;
 
-    @ManyToOne(cascade= CascadeType.PERSIST)
+    /*@ManyToOne
     @JoinColumn(name = "proveedor_id")
-    private Proveedor proveedor;
+    @JsonBackReference
+    private Proveedor proveedor;*/
 
 
 }
