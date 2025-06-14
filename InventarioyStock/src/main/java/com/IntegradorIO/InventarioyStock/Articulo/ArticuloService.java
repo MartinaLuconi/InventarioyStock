@@ -75,6 +75,7 @@ public class ArticuloService  {
                 dtoMostrar.setCostoAlmacenamiento(articuloEncontrado.getCostoAlmacenamiento());
                 dtoMostrar.setModeloElegido(articuloEncontrado.getModeloInventario());
                 dtoMostrar.setPuntoPedido(articuloEncontrado.getPuntoPedido());
+
                 //dtoMostrar.setDemoraEntrega(pae.getDemoraEntrega());
                // dtoMostrar.setInventarioMax(pae.getInventarioMaximo());
                 dtoMostrar.setDesviacionEstandar(articuloEncontrado.getDesviacionEstandar());
