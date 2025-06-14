@@ -170,7 +170,10 @@ public class OrdenCompraService {
         return datosOrdenCompra;
     }
 
-    //sugerir proveedor
+    //sugerir proveedor predeterminado
+    public void sugerirProveedorPredetertminado(){
+
+    }
 
     //sugerir lote
 
