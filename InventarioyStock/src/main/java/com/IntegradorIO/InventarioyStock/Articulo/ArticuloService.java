@@ -65,8 +65,8 @@ public class ArticuloService  {
         DTODetalleArticulo dtoMostrar = new DTODetalleArticulo();
                 dtoMostrar.setNombreArticulo(articuloEncontrado.getNombreArticulo());
                 dtoMostrar.setDescripcion(articuloEncontrado.getDescripcion());
-                //dtoMostrar.setStockReal(articuloEncontrado.getStockActualArticulo());
-               // dtoMostrar.setStockSeguridad(articuloEncontrado.getStockSeguridadArticulo());
+                dtoMostrar.setStockReal(articuloEncontrado.getStockActualArticulo());
+                dtoMostrar.setStockSeguridad(articuloEncontrado.getStockSeguridadArticulo());
                 dtoMostrar.setCostoMantener(pae.getCostoMantenimiento());
                 dtoMostrar.setDemandaAnual(articuloEncontrado.getDemandaAnual());
                 dtoMostrar.setCostoAlmacenamiento(pae.getCostoAlmacenamiento());
@@ -77,10 +77,11 @@ public class ArticuloService  {
                 dtoMostrar.setPuntoPedido(articuloEncontrado.getPuntoPedido());
                 dtoMostrar.setDemoraEntrega(pae.getDemoraEntrega());
                 dtoMostrar.setInventarioMax(pae.getInventarioMaximo());
+                dtoMostrar.setDesviacionEstandar(articuloEncontrado.getDesviacionEstandar());
         return dtoMostrar;
     }
-    // para todos los cambios
-    public Articulo guardarArticulo(DTONuevoArticulo dtoNuevoArticulo) throws Exception{
+    // para todos los cambios --> es el alta
+    /*public Articulo guardarArticulo(DTONuevoArticulo dtoNuevoArticulo) throws Exception{
         try {
             //paso datos del dto a las entidades
             Articulo articulo = new Articulo();
@@ -93,6 +94,7 @@ public class ArticuloService  {
                 articulo.setPuntoPedido(dtoNuevoArticulo.getPuntoPedido());
                 articulo.setModeloInventario(dtoNuevoArticulo.getModeloElegido());
                 articulo.setDemandaAnual(dtoNuevoArticulo.getDemandaAnual());
+                articulo.setDesviacionEstandar(dtoNuevoArticulo.getDesviacionEstandar());
 
 
             articuloRepository.save(articulo);
@@ -124,7 +126,49 @@ public class ArticuloService  {
             throw new Exception(e.getMessage());
         }
 
+    }*/
+    public Articulo guardarArticulo(DTONuevoArticulo dtoNuevoArticulo) throws Exception {
+        try {
+            // paso datos del dto a la entidad Articulo
+            Articulo articulo = new Articulo();
+            articulo.setDescripcion(dtoNuevoArticulo.getDescripcion());
+            articulo.setNombreArticulo(dtoNuevoArticulo.getNombreArticulo());
+            articulo.setStockActualArticulo(dtoNuevoArticulo.getStockReal());
+            articulo.setFechaHoraBajaArticulo(null);
+            articulo.setStockSeguridadArticulo(dtoNuevoArticulo.getStockSeguridad());
+            articulo.setPuntoPedido(dtoNuevoArticulo.getPuntoPedido());
+            articulo.setModeloInventario(dtoNuevoArticulo.getModeloElegido());
+            articulo.setDemandaAnual(dtoNuevoArticulo.getDemandaAnual());
+            articulo.setDesviacionEstandar(dtoNuevoArticulo.getDesviacionEstandar());
+
+            // guardo primero el artículo para que tenga ID
+            articuloRepository.save(articulo);
+
+            // por cada proveedor asignado, crear y guardar una instancia ProveedorArticulo
+            List<Proveedor> proveedorList = dtoNuevoArticulo.getProveedoresAsignados();
+            for (Proveedor p : proveedorList) {
+                ProveedorArticulo pa = new ProveedorArticulo(); // CREAR nueva instancia aquí
+                pa.setArticulo(articulo);
+                pa.setProveedor(p);
+
+                pa.setCostoPedido(dtoNuevoArticulo.getCostoPedido());
+                pa.setPrecioUnitProveedorArticulo(dtoNuevoArticulo.getPrecioUnitario());
+                pa.setDemoraEntrega(dtoNuevoArticulo.getDemoraEntrega());
+                pa.setCostoMantenimiento(dtoNuevoArticulo.getCostoMantener());
+                pa.setCostoAlmacenamiento(dtoNuevoArticulo.getCostoAlmacenamiento());
+                pa.setLoteOptimo(dtoNuevoArticulo.getLoteOptimo());
+                pa.setInventarioMaximo(dtoNuevoArticulo.getInventarioMax());
+                pa.setFechaDesdePA(new Timestamp(System.currentTimeMillis()));
+
+                proveedorArticuloRepository.save(pa);
+            }
+
+            return articulo;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
+
 
     // Modificar un artículo existente
     public Articulo modificarArticulo(int codigoArticulo, DTOModificarArticulo articuloModificado) throws Exception{
@@ -139,6 +183,7 @@ public class ArticuloService  {
             articulo.setPuntoPedido(articuloModificado.getPuntoPedido());
             articulo.setModeloInventario(articuloModificado.getModeloElegido());
             articulo.setDemandaAnual(articuloModificado.getDemandaAnual());
+            articulo.setDesviacionEstandar(articuloModificado.getDesviacionEstandar());
             articuloRepository.save(articulo);
 
             //encuentra la intermedia vigente con ultima instancia con la mayor FD, es la ultima cargada

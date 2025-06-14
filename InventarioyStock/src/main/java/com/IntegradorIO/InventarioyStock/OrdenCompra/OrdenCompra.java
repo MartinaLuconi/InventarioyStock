@@ -2,10 +2,13 @@ package com.IntegradorIO.InventarioyStock.OrdenCompra;
 
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompra;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
+import com.IntegradorIO.InventarioyStock.OrdenCompraArticulo.OrdenCompraArticulo;
 import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,5 +31,9 @@ public class OrdenCompra {
     @Enumerated(EnumType.STRING)
     @Column(name = "estado_orden_compra")
     private EstadoOrdencCompra estadoOrdenCompra;
+
+    @OneToMany(mappedBy = "ordenCompra", cascade = CascadeType.ALL)
+    private List<OrdenCompraArticulo> listaOrdenCompraArticulo;
+
 
 }

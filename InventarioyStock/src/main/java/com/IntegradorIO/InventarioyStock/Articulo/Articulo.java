@@ -26,6 +26,7 @@ public class Articulo {
     private ModeloInventario modeloInventario;
     private int demandaAnual;
     private int puntoPedido;
+    private int desviacionEstandar;
 
     @OneToMany(mappedBy = "articulo",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProveedorArticulo> proveedorArticuloList = new ArrayList<>();
@@ -40,7 +41,33 @@ public class Articulo {
 
 
 
-   
+    public void setPuntoPedido(int puntoPedido) {
+        this.puntoPedido = puntoPedido;
+    }
+
+    public ModeloInventario getModeloInventario() {
+        return modeloInventario;
+    }
+
+    public void setModeloInventario(ModeloInventario modeloInventario) {
+        this.modeloInventario = modeloInventario;
+    }
+
+    public int getDemandaAnual() {
+        return demandaAnual;
+    }
+
+    public void setDemandaAnual(int demandaAnual) {
+        this.demandaAnual = demandaAnual;
+    }
+
+    public int getDesviacionEstandar() {
+        return desviacionEstandar;
+    }
+
+    public void setDesviacionEstandar(int desviacionEstandar) {
+        this.desviacionEstandar = desviacionEstandar;
+    }
 }
 
 
