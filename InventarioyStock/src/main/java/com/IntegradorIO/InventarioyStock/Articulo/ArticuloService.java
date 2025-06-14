@@ -62,10 +62,10 @@ public class ArticuloService  {
     //mostrar detalle Articulo
     public DTODetalleArticulo mostrarDetalle(int codigoArticulo){
         Articulo articuloEncontrado = articuloRepository.obtenerArticulo(codigoArticulo);
-        List<ProveedorArticulo> paeList = articuloEncontrado.getProveedorArticuloList();
-        ProveedorArticulo pae = paeList.stream()
-                .max(Comparator.comparing(ProveedorArticulo::getFechaDesdePA))
-                .orElse(null);
+        //List<ProveedorArticulo> paeList = articuloEncontrado.getProveedorArticuloList();
+        //ProveedorArticulo pae = paeList.stream()
+         //       .max(Comparator.comparing(ProveedorArticulo::getFechaDesdePA))
+         //       .orElse(null);
         DTODetalleArticulo dtoMostrar = new DTODetalleArticulo();
                 dtoMostrar.setNombreArticulo(articuloEncontrado.getNombreArticulo());
                 dtoMostrar.setDescripcion(articuloEncontrado.getDescripcion());
@@ -75,10 +75,10 @@ public class ArticuloService  {
                 dtoMostrar.setCostoAlmacenamiento(articuloEncontrado.getCostoAlmacenamiento());
                 dtoMostrar.setModeloElegido(articuloEncontrado.getModeloInventario());
                 dtoMostrar.setPuntoPedido(articuloEncontrado.getPuntoPedido());
-                dtoMostrar.setDemoraEntrega(pae.getDemoraEntrega());
-                dtoMostrar.setInventarioMax(pae.getInventarioMaximo());
+                //dtoMostrar.setDemoraEntrega(pae.getDemoraEntrega());
+               // dtoMostrar.setInventarioMax(pae.getInventarioMaximo());
                 dtoMostrar.setDesviacionEstandar(articuloEncontrado.getDesviacionEstandar());
-                dtoMostrar.setPrecioUnitario(pae.getCostoUnitario());
+               // dtoMostrar.setPrecioUnitario(pae.getCostoUnitario());
         return dtoMostrar;
     }
     // para todos los cambios

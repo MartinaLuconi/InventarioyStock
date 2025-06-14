@@ -5,6 +5,7 @@ import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.engine.internal.Cascade;
 
 import java.sql.Timestamp;
 
@@ -38,11 +39,11 @@ public class ProveedorArticulo {
     private int eoq;
     private int periodoRevision;
 
-    @ManyToOne
+    @ManyToOne(cascade= CascadeType.PERSIST)
     @JoinColumn(name = "articulo_id")
     private Articulo articulo;
 
-    @ManyToOne
+    @ManyToOne(cascade= CascadeType.PERSIST)
     @JoinColumn(name = "proveedor_id")
     private Proveedor proveedor;
 

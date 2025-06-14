@@ -18,7 +18,7 @@ public class Proveedor {
     private Timestamp fechaHoraBajaProveedor;
     private String nombreProveedor;
 
-    @OneToMany(mappedBy = "proveedor")
+    @OneToMany(mappedBy = "proveedor",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProveedorArticulo> proveedorArticulos;
 
     public List<ProveedorArticulo> getProveedorArticulos() {
