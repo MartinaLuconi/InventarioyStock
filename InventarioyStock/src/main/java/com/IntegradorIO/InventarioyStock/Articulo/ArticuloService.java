@@ -82,31 +82,7 @@ public class ArticuloService  {
                // dtoMostrar.setPrecioUnitario(pae.getCostoUnitario());
         return dtoMostrar;
     }
-    // para todos los cambios --> es el alta
-    /*public Articulo guardarArticulo(DTONuevoArticulo dtoNuevoArticulo) throws Exception{
-        try {
-            //paso datos del dto a las entidades
-            Articulo articulo = new Articulo();
 
-                articulo.setDescripcion(dtoNuevoArticulo.getDescripcion());
-                articulo.setNombreArticulo(dtoNuevoArticulo.getNombreArticulo());
-                articulo.setStockActualArticulo(dtoNuevoArticulo.getStockReal());
-                articulo.setFechaHoraBajaArticulo(null);
-                articulo.setStockSeguridadArticulo(dtoNuevoArticulo.getStockSeguridad());
-                articulo.setPuntoPedido(dtoNuevoArticulo.getPuntoPedido());
-                articulo.setModeloInventario(dtoNuevoArticulo.getModeloElegido());
-                articulo.setDemandaAnual(dtoNuevoArticulo.getDemandaAnual());
-                articulo.setDesviacionEstandar(dtoNuevoArticulo.getDesviacionEstandar());
-                articulo.setCostoAlmacenamiento(dtoNuevoArticulo.getCostoAlmacenamiento());
-               // articulo.setProveedorArticuloList(null);
-            articuloRepository.save(articulo);
-
-            return articulo;
-        }catch (Exception e){
-            throw new Exception(e.getMessage());
-        }
-
-    }*/
     public Articulo guardarArticulo(DTONuevoArticulo dtoNuevoArticulo) throws Exception {
         try {
             // paso datos del dto a la entidad Articulo

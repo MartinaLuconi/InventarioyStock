@@ -21,9 +21,6 @@ import java.util.List;
         com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionP.ArticuloListenerP.class,
         com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión.ArticuloListener.class
 })
-
-@Getter
-@Setter
 public class Articulo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,9 +45,7 @@ public class Articulo {
     public Articulo() {
     }
 
-    public void addProveedorArticulo(ProveedorArticulo proveedorArticulo) {
-        proveedorArticuloList.add(proveedorArticulo);
-    }
+
 
 
 
