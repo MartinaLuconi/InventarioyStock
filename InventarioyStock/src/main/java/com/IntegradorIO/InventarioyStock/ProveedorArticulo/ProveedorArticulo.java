@@ -23,7 +23,7 @@ import java.sql.Timestamp;
 public class ProveedorArticulo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int codProveedorArticulo;
+    private Integer codProveedorArticulo;
     private float CGIProveedorArticulo;
     private float costoPedido;
     private int demoraEntrega;

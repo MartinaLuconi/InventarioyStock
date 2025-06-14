@@ -2,6 +2,7 @@ package com.IntegradorIO.InventarioyStock.OrdenCompra;
 
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompra;
 import com.IntegradorIO.InventarioyStock.OrdenCompraArticulo.OrdenCompraArticulo;
+import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
 import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -23,9 +24,13 @@ public class OrdenCompra {
     @JoinColumn(name = "proveedor_id")
     private Proveedor proveedor;
 
-    @ManyToOne
-    @JoinColumn(name = "estado_orden_compra_id")
-    private EstadoOrdenCompra estadoOrdenCompra;
+    //@ManyToOne
+    //@JoinColumn(name = "estado_orden_compra_id")
+    //private EstadoOrdenCompra estadoOrdenCompra;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado_orden_compra")
+    private EstadoOrdencCompra estadoOrdenCompra;
 
     @OneToMany(mappedBy = "ordenCompra", cascade = CascadeType.ALL)
     private List<OrdenCompraArticulo> listaOrdenCompraArticulo;

@@ -17,5 +17,6 @@ public interface ArticuloRepository extends JpaRepository<Articulo, Integer> {
     @Query("SELECT a FROM Articulo a WHERE a.codigoArticulo= :id")
     Articulo modificarArticulo(@Param("id") Integer id);
 
-
+    @Query("SELECT a FROM Articulo a WHERE a.fechaHoraBajaArticulo = null")
+    List<Articulo> findByFechaHoraBajaArticuloIsNull();
 }

@@ -6,10 +6,15 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
+@Getter
+@Setter
 @Entity
 
 @jakarta.persistence.EntityListeners({
@@ -39,10 +44,17 @@ public class Articulo {
    // @JsonIgnore
    // private List<ProveedorArticulo> proveedorArticuloList = new ArrayList<>();
 
+   
     public Articulo() {
     }
 
+    public void addProveedorArticulo(ProveedorArticulo proveedorArticulo) {
+        proveedorArticuloList.add(proveedorArticulo);
+    }
 
+
+
+   
 }
 
 
