@@ -3,7 +3,6 @@ package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión;
 
 import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
 import com.IntegradorIO.InventarioyStock.Articulo.ArticuloRepository;
-import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +18,11 @@ public class CalculoService {
     private ArticuloRepository articuloRepository;
 
     public void recalcularYActualizar(Articulo articulo) {
-
-      /*  for (ProveedorArticulo pa : articulo.getProveedorArticuloList()) {
+        for (ProveedorArticulo pa : articulo.getProveedorArticuloList()) {
             int eoq = CalculosEstrRevisionContinua.calcularEOQ(
                     articulo.getDemandaAnual(),
                     pa.getCostoPedido(),
-                    articulo.getCostoAlmacenamiento()
+                    pa.getCostoAlmacenamiento()
             );
             pa.setLoteOptimo(eoq);
 
@@ -54,6 +52,6 @@ public class CalculoService {
 
             proveedorArticuloRepository.save(pa);
         }
-        articuloRepository.save(articulo);*/
+        articuloRepository.save(articulo);
     }
 }

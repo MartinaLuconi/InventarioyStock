@@ -56,16 +56,9 @@ public class ArticuloController {
     }
     //crear articulo
     @PostMapping
-    public ResponseEntity<?> guardarArticulo(@RequestBody DTONuevoArticulo dtoNuevoArticulo)  throws Exception{
-        try {
-            //Articulo nuevoArticulo = articuloService.guardarArticulo(dtoNuevoArticulo);
-            //return new ResponseEntity<>(nuevoArticulo, HttpStatus.CREATED);
-            return ResponseEntity.status(HttpStatus.OK).body(articuloService.guardarArticulo(dtoNuevoArticulo));
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-
+    public ResponseEntity<Articulo> guardarArticulo(@RequestBody DTONuevoArticulo dtoNuevoArticulo)  throws Exception{
+        Articulo nuevoArticulo = articuloService.guardarArticulo(dtoNuevoArticulo);
+        return new ResponseEntity<>(nuevoArticulo, HttpStatus.CREATED);
     }
     // modificar articulo existente
     @PutMapping("/{codigoArticulo}")
@@ -115,23 +108,17 @@ public class ArticuloController {
     }
 
 // Calcular Punto de Pedido (CGI) para un artículo y proveedor específico
-@GetMapping("/{idArticulo}/proveedor/{idProveedorArticulo}/cgi")
-public double obtenerCGI(
-        @PathVariable int idArticulo,
-        @PathVariable int idProveedorArticulo,
-        @RequestParam int periodoRevision,
-        @RequestParam int demoraEntrega,
-        @RequestParam double desviacionEstandar,
-        @RequestParam double Z
-) throws Exception {
-    Articulo articulo = articuloRepository.findById(idArticulo)
-            .orElseThrow(() -> new Exception("Artículo no encontrado"));
-    ProveedorArticulo proveedorArticulo = proveedorArticuloRepository.findById(idProveedorArticulo)
-            .orElseThrow(() -> new Exception("ProveedorArticulo no encontrado"));
-    return articuloService.calcularCGIArticulo(
-            articulo, proveedorArticulo, periodoRevision, demoraEntrega, desviacionEstandar, Z
-    );
-}
+    @GetMapping("/{idArticulo}/proveedor/{idProveedorArticulo}/cgi")
+    public double obtenerCGI(
+            @PathVariable int idArticulo,
+            @PathVariable int idProveedorArticulo
+    ) throws Exception {
+        Articulo articulo = articuloRepository.findById(idArticulo)
+                .orElseThrow(() -> new Exception("Artículo no encontrado"));
+        ProveedorArticulo proveedorArticulo = proveedorArticuloRepository.findById(idProveedorArticulo)
+                .orElseThrow(() -> new Exception("ProveedorArticulo no encontrado"));
+        return articuloService.calcularCGIArticulo(articulo, proveedorArticulo);
+    }
 
 
     // EOQ para un artículo y proveedor

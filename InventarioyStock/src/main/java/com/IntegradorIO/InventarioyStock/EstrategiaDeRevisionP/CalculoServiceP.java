@@ -2,70 +2,51 @@
 package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionP;
 
 import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
-import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión.CalculosEstrRevisionContinua;
-import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
-import org.hibernate.mapping.Array;
-import org.hibernate.mapping.List;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 
 @Service
 public class CalculoServiceP {
-
-    public void recalcularYActualizar(Articulo articulo) {
-
-       /////////////////// MODIFIQUE ESTO
-       /*for (ProveedorArticulo pa : articulo.getProveedorArticuloList()) {
-
+/*
+    public void recalcularYActualizar(Articulo articulo, double periodoRevision) {
+        for (ProveedorArticulo pa : articulo.getProveedorArticuloList()) {
+            double Z = 1.65; // Nivel de servicio 95%
             int stockSeguridad = CalculosEstrRevisionPeriodica.calcularStockSeguridad(
-                    pa.getNivelDeServicio(),
+                    Z,
                     articulo.getDesviacionEstandar(),
-                    pa.getPeriodoRevision(),
+                    periodoRevision,
                     pa.getDemoraEntrega()
             );
             articulo.setStockSeguridadArticulo(stockSeguridad);
 
             int inventarioMaximo = CalculosEstrRevisionPeriodica.calcularInventarioMaximo(
                     articulo.getDemandaAnual(),
-                    pa.getPeriodoRevision(),
+                    periodoRevision,
                     pa.getDemoraEntrega(),
                     articulo.getDesviacionEstandar(),
-                    pa.getNivelDeServicio()
+                    Z
             );
-            pa.setInventarioMaximo(inventarioMaximo);
+            articulo.setInventarioMaximo(inventarioMaximo);
 
             double inventarioPromedio = CalculosEstrRevisionPeriodica.calcularInventarioPromedio(inventarioMaximo);
-            //pa.setInventarioPromedio(inventarioPromedio);
+            articulo.setInventarioPromedio(inventarioPromedio);
 
             double costoAnualMantener = CalculosEstrRevisionPeriodica.calcularCostoAnualMantener(
                     inventarioPromedio,
                     pa.getCostoMantenimiento()
             );
-            //pa.setCostoAnualMantener(costoAnualMantener);
+            pa.setCostoAnualMantener(costoAnualMantener);
 
-            int q = CalculosEstrRevisionPeriodica.calcularCantidadAPedir(
+            int cantidadAPedir = CalculosEstrRevisionPeriodica.calcularCantidadAPedir(
                     articulo.getDemandaAnual(),
-                    pa.getPeriodoRevision(),
+                    periodoRevision,
                     pa.getDemoraEntrega(),
                     articulo.getDesviacionEstandar(),
-                    pa.getNivelDeServicio(),
-                    articulo.getStockActualArticulo()
+                    Z,
+                    articulo.getInventarioDisponible()
             );
-         //   pa.setCantidadAPedir(cantidadAPedir);
-
-            double cgi = CalculosEstrRevisionContinua.calcularCGI(
-                    articulo.getDemandaAnual(),
-                    q,
-                    pa.getCostoPedido(),
-                    pa.getCostoUnitario(),
-                    pa.getCostoMantenimiento()
-            );
-            pa.setCGIProveedorArticulo((float) cgi);
-        } */
+            pa.setCantidadAPedir(cantidadAPedir);
+        }
     }
-
-    public void recalcularYActualizar(ProveedorArticulo proveedorArticulo) {
-    }
+*/
 }
