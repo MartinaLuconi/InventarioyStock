@@ -1,4 +1,4 @@
-package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionPeriodica;
+package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionP;
 
 public class CGIModelP {
     private int demandaAnual;

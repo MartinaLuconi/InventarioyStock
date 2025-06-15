@@ -1,5 +1,5 @@
 // java/com/IntegradorIO/InventarioyStock/EstrategiaDeRevisión/ArticuloListener.java
-package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisiónContinua;
+package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión;
 
 import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
 import org.springframework.beans.factory.annotation.Autowired;

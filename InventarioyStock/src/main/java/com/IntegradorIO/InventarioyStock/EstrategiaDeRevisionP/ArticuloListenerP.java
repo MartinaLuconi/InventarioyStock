@@ -1,4 +1,4 @@
-package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionPeriodica;
+package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionP;
 
 import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
 import org.springframework.beans.factory.annotation.Autowired;

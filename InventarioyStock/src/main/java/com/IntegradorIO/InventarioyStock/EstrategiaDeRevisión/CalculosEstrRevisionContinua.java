@@ -1,4 +1,4 @@
-package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisiónContinua;
+package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión;
 
 
 public class CalculosEstrRevisionContinua {
