@@ -1,10 +1,8 @@
 // java/com/IntegradorIO/InventarioyStock/EstrategiaDeRevisión/CalculoService.java
-package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión;
+package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisiónContinua;
 
 import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
 import com.IntegradorIO.InventarioyStock.Articulo.ArticuloRepository;
-import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
-import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
