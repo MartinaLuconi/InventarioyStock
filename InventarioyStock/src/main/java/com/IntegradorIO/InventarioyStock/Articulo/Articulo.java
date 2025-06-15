@@ -1,20 +1,15 @@
 package com.IntegradorIO.InventarioyStock.Articulo;
-import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 
 @jakarta.persistence.EntityListeners({
-        com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionP.ArticuloListenerP.class,
-        com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión.ArticuloListener.class
+        com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionPeriodica.ArticuloListenerP.class,
+        com.IntegradorIO.InventarioyStock.EstrategiaDeRevisiónContinua.ArticuloListener.class
 })
 
 @Getter

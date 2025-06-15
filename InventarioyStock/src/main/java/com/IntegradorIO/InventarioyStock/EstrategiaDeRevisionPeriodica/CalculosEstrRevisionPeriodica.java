@@ -1,4 +1,4 @@
-package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionP;
+package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionPeriodica;
 
 public class CalculosEstrRevisionPeriodica {
 

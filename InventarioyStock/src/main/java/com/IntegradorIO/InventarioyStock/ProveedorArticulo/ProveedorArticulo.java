@@ -1,12 +1,10 @@
 package com.IntegradorIO.InventarioyStock.ProveedorArticulo;
 
 import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
-import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.engine.internal.Cascade;
 
 import java.sql.Timestamp;
 
@@ -16,8 +14,8 @@ import java.sql.Timestamp;
 
 
 @jakarta.persistence.EntityListeners({
-        com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionP.ProveedorArticuloListenerP.class,
-        com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión.ProveedorArticuloListener.class
+        com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionPeriodica.ProveedorArticuloListenerP.class,
+        com.IntegradorIO.InventarioyStock.EstrategiaDeRevisiónContinua.ProveedorArticuloListener.class
 })
 
 public class ProveedorArticulo {
