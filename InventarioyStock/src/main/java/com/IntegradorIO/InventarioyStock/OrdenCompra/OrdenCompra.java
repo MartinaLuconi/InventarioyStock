@@ -24,13 +24,11 @@ public class OrdenCompra {
     @JoinColumn(name = "proveedor_id")
     private Proveedor proveedor;
 
-    //@ManyToOne
-    //@JoinColumn(name = "estado_orden_compra_id")
-    //private EstadoOrdenCompra estadoOrdenCompra;
+    @ManyToOne
+    @JoinColumn(name = "estado_orden_compra_id")
+    private EstadoOrdenCompra estadoOrdenCompra;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "estado_orden_compra")
-    private EstadoOrdencCompra estadoOrdenCompra;
+
 
     @OneToMany(mappedBy = "ordenCompra", cascade = CascadeType.ALL)
     private List<OrdenCompraArticulo> listaOrdenCompraArticulo;

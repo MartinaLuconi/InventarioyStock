@@ -6,9 +6,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+
+@Entity
 @Getter
 @Setter
-@Entity
 public class EstadoOrdenCompra {
 
     @Id

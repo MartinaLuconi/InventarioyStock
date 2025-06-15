@@ -177,11 +177,6 @@ public class ProveedorService {
             throw new IllegalArgumentException("Debe proporcionar al menos una asociación con artículo");
         }
 
-        // 1) Crear Proveedor
-        Proveedor p = new Proveedor();
-        p.setNombreProveedor(req.getNombreProveedor());
-        p.setActivo(true);
-        Proveedor guardado = proveedorRepository.save(p);
 
         // 2) Crear asociaciones
         List<ProveedorArticulo> lista = new ArrayList<>();
@@ -191,7 +186,6 @@ public class ProveedorService {
                             "Artículo no encontrado: " + paReq.getCodigoArticulo()));
 
             ProveedorArticulo pa = new ProveedorArticulo();
-            pa.setProveedor(guardado);
             pa.setArticulo(art);
             pa.setDemoraEntrega(paReq.getDemoraEntrega());
             pa.setPrecioUnitProveedorArticulo(paReq.getPrecioUnitProveedorArticulo());
@@ -203,7 +197,14 @@ public class ProveedorService {
         }
         proveedorArticuloRepository.saveAll(lista);
 
-        guardado.setProveedorArticulos(lista);
+        // 1) Crear Proveedor
+        Proveedor p = new Proveedor();
+        p.setNombreProveedor(req.getNombreProveedor());
+        p.setActivo(true);
+        p.setProveedorArticulos(lista);
+        Proveedor guardado = proveedorRepository.save(p);
+
+
         return guardado;
     }
 
