@@ -12,6 +12,8 @@ import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOOrdenCompra;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOTablaOrdenCompra;
 import com.IntegradorIO.InventarioyStock.OrdenCompraArticulo.OrdenCompraArticulo;
 import com.IntegradorIO.InventarioyStock.OrdenCompraArticulo.OrdenCompraArticuloRepository;
+import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
+import com.IntegradorIO.InventarioyStock.Proveedor.ProveedorRepository;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,9 @@ public class OrdenCompraService {
     private  EstadoOrdenCompraRepository estadoOrdenCompraRepository;
     @Autowired
     private OrdenCompraArticuloRepository ordenCompraArticuloRepository;
+
+    @Autowired
+    private  ProveedorRepository proveedorRepository;
 
     @Autowired
     private ArticuloRepository articuloRepository;
@@ -82,6 +87,24 @@ public class OrdenCompraService {
         OrdenCompra oc = new OrdenCompra();
             oc.setNombreOrdenCompra(dtoOC.getNombreOC());
             oc.setNumeroOrdenCompra(dtoOC.getNroOrden());
+            //ASIGNAR OC A PROVEEDOR
+            //busco el proveedor asignado
+        Proveedor p = proveedorRepository.obtenerProveedor(dtoOC.getCodProveedor());
+        if (p.getNombreProveedor()==dtoOC.getNombreProveedor()) {
+            for (ProveedorArticulo pa : p.getProveedorArticulos()) { //leo las intermedias del proveedor
+                int codArticulo = pa.getArticulo().getCodigoArticulo(); //leo el cod articulo de intermedia
+                List<DTODetalleOC> dtoDetalleOCList = dtoOC.getDetallesOC();//leo detalles de la orden q estoy creando
+                for (DTODetalleOC detalleOC : dtoDetalleOCList) { //por cada detalle busco el articulo correspondiente por codigo
+                    if (codArticulo == detalleOC.getCodArticulo()) { //verifica que el proveedor sea de ese articulo
+                        oc.setProveedor(p); //si lo es lo asigna  a la oc
+                    } else {
+                        throw new Exception("Este proveedor no distribuye el articulo seleccionado.Intente nuevamente");
+                    }
+                }
+
+            }
+        }
+
             //verifica que no exista el codigo
             if(ordenCompraRepository.existsById(dtoOC.getNroOrden())){
                 throw new Exception("Ya existe una orden de compra con este numero de orden");

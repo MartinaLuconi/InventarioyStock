@@ -1,10 +1,6 @@
 package com.IntegradorIO.InventarioyStock.OrdenCompra;
 
-import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
-import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTODetalleArticulo;
-import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOModificarArticulo;
-import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTONuevoArticulo;
-import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOTablaArticulos;
+
 import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOOrdenCompra;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOTablaOrdenCompra;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ordenCompra")
+@RequestMapping("/api/ordenCompra")
 @CrossOrigin(origins ="*")
+
 public class OrdenCompraController {
 
     @Autowired
