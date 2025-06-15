@@ -1,4 +1,4 @@
-package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión;
+package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisiónContinua;
 
 
 public class CGIModel {

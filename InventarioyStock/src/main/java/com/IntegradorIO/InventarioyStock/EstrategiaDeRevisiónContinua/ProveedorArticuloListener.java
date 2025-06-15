@@ -1,5 +1,5 @@
 // java/com/IntegradorIO/InventarioyStock/EstrategiaDeRevisión/ProveedorArticuloListener.java
-package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisión;
+package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisiónContinua;
 
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import org.springframework.beans.factory.annotation.Autowired;

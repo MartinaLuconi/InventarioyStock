@@ -1,5 +1,5 @@
 // src/main/java/com/IntegradorIO/InventarioyStock/EstrategiaDeRevisionP/CalculoServiceP.java
-package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionP;
+package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionPeriodica;
 
 import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
