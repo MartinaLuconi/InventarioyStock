@@ -139,11 +139,11 @@ public class ArticuloService  {
                 Articulo articulo = articuloOptional.get();
 
                 // Verificar órdenes de compra pendientes o enviadas
-                boolean tieneOrdenPendienteOEnviada = estadoOrdenCompraRepository
+               /* boolean tieneOrdenPendienteOEnviada = estadoOrdenCompraRepository
                         .existsByArticuloAndNombreEstadoIn(articulo, List.of(EstadoOrdencCompra.PENDIENTE, EstadoOrdencCompra.ENVIADA));
                 if (tieneOrdenPendienteOEnviada) {
                     throw new Exception("No se puede dar de baja el artículo porque tiene órdenes de compra pendientes o enviadas.");
-                }
+                }*/
 
                 // Verificar stock
                 if (articulo.getStockActualArticulo() > 0) {

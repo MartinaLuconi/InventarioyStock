@@ -20,15 +20,15 @@ public class EstadoOrdenCompra {
     private Timestamp fechaHoraBajaEstadoOC;
     //private String nombreEstadoOC;
 
-    @ManyToOne
-    @JoinColumn(name = "codigo_articulo")
-    private Articulo articulo;
+    //@ManyToOne
+    //@JoinColumn(name = "codigo_articulo")
+   // private Articulo articulo;
 
-    public Articulo getArticulo() {
+    /*public Articulo getArticulo() {
         return articulo;
     }
 
     public void setArticulo(Articulo articulo) {
         this.articulo = articulo;
-    }
+    }*/
 }

@@ -87,8 +87,8 @@ public class OrdenCompraService {
                 throw new Exception("Ya existe una orden de compra con este numero de orden");
             }
             oc.setEstadoOrdenCompra(estadoOrdenCompra); //relacion con estado
-        ordenCompraRepository.save(oc);
 
+        List<OrdenCompraArticulo> ocaList = new ArrayList<>();
         List<DTODetalleOC> detallesOCList = dtoOC.getDetallesOC(); //aca vienen los datos de los articulos
         for (DTODetalleOC detalle : detallesOCList){
             //busco articulos que vienen en la orden de compra
@@ -107,14 +107,15 @@ public class OrdenCompraService {
             //creo clase que tiene el detalle
             OrdenCompraArticulo ordenCompraArticulo = new OrdenCompraArticulo();
             ordenCompraArticulo.setArticulo(articulo); //reliono el articulo
-            ordenCompraArticulo.setOrdenCompra(oc); //relaciono con la OC
+           // ordenCompraArticulo.setOrdenCompra(oc); //relaciono con la OC
             ordenCompraArticulo.setCantidadOCA(detalle.getCantidadArticulo()); //lote
             ordenCompraArticulo.setFechaDesdeOCA(new Timestamp(System.currentTimeMillis())); //fecha de creación
             ordenCompraArticulo.setFechaHastaOCA(null);
-
+            ocaList.add(ordenCompraArticulo);
             ordenCompraArticuloRepository.save(ordenCompraArticulo);
         }
-
+            oc.setListaOrdenCompraArticulo(ocaList);
+            ordenCompraRepository.save(oc);
         return  oc;
     }
 
@@ -135,7 +136,7 @@ public class OrdenCompraService {
                 if (detalleOC.getCodArticulo() == oca.getArticulo().getCodigoArticulo()) {
                     oca.setCantidadOCA(detalleOC.getCantidadArticulo());
                     oca.setArticulo(articuloRepository.obtenerArticulo(detalleOC.getCodArticulo()));
-                    oca.setOrdenCompra(ocModificada);
+                    //oca.setOrdenCompra(ocModificada);
                     ordenCompraArticuloRepository.save(oca);
                 }
             }

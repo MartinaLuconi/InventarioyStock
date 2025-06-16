@@ -28,9 +28,7 @@ public class OrdenCompra {
     @JoinColumn(name = "estado_orden_compra_id")
     private EstadoOrdenCompra estadoOrdenCompra;
 
-
-
-    @OneToMany(mappedBy = "ordenCompra", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<OrdenCompraArticulo> listaOrdenCompraArticulo;
 
 

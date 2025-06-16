@@ -24,8 +24,8 @@ public class OrdenCompraArticulo {
     @JoinColumn(name = "articulo_id")
     private Articulo articulo;
 
-    @ManyToOne
-    @JoinColumn(name = "orden_compra_id")
-    private OrdenCompra ordenCompra;
+    //@ManyToOne
+   // @JoinColumn(name = "orden_compra_id")
+    //private OrdenCompra ordenCompra;
 
 }
