@@ -209,10 +209,19 @@ public class ProveedorService {
      * - No permitir si hay órdenes PENDIENTE o CONFIRMADO.
      */
     public void bajaProveedor(Integer codigoProveedor) {
-        Proveedor p = proveedorRepository.findById(codigoProveedor)
+        Proveedor proveedor = proveedorRepository.findById(codigoProveedor)
                 .filter(Proveedor::isActivo)
                 .orElseThrow(() -> new IllegalArgumentException("Proveedor no encontrado o ya inactivo"));
 
+        // 2️⃣ Validación: verificar si es predeterminado en algún artículo
+        boolean esPredeterminadoEnAlguno = proveedor.getProveedorArticulos()
+                .stream()
+                .anyMatch(ProveedorArticulo::isEsPredeterminado);
+
+        if (esPredeterminadoEnAlguno) {
+            throw new IllegalStateException(
+                    "No se puede dar de baja: proveedor predeterminado en algún artículo");
+        }
         // 1) Verificar predeterminado
         //ProveedorArticulo pred = proveedorArticuloRepository
        /* List<ProveedorArticulo> pred = proveedorArticuloRepository
@@ -239,9 +248,9 @@ public class ProveedorService {
         }
 
         // 3) Marcar baja lógica
-        p.setActivo(false);
-        p.setFechaHoraBajaProveedor(new Timestamp(System.currentTimeMillis()));
-        proveedorRepository.save(p);
+        proveedor.setActivo(false);
+        proveedor.setFechaHoraBajaProveedor(new Timestamp(System.currentTimeMillis()));
+        proveedorRepository.save(proveedor);
     }
 
     /** Listar asociaciones Proveedor–Artículo por proveedor */
