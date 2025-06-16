@@ -9,6 +9,8 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 public class Proveedor {
 
     @Id
@@ -17,7 +19,8 @@ public class Proveedor {
 
     private String nombreProveedor;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "proveedor_id")  // ← así le decimos que use esta FK
     private List<ProveedorArticulo> proveedorArticulos;
 
 
@@ -28,40 +31,5 @@ public class Proveedor {
 
     public Proveedor() {}
 
-    public Integer getCodigoProveedor() {
-        return codigoProveedor;
-    }
-    public void setCodigoProveedor(Integer codigoProveedor) {
-        this.codigoProveedor = codigoProveedor;
-    }
 
-    public String getNombreProveedor() {
-        return nombreProveedor;
-    }
-    public void setNombreProveedor(String nombreProveedor) {
-        this.nombreProveedor = nombreProveedor;
-    }
-
-    public Timestamp getFechaHoraBajaProveedor() {
-        return fechaHoraBajaProveedor;
-    }
-    public void setFechaHoraBajaProveedor(Timestamp fechaHoraBajaProveedor) {
-        this.fechaHoraBajaProveedor = fechaHoraBajaProveedor;
-    }
-
-    public boolean isActivo() {
-        return activo;
-    }
-    public void setActivo(boolean activo) {
-        this.activo = activo;
-    }
-
-
-    public List<ProveedorArticulo> getProveedorArticulos() {
-        return proveedorArticulos;
-    }
-
-    public void setProveedorArticulos(List<ProveedorArticulo> proveedorArticulos) {
-        this.proveedorArticulos = proveedorArticulos;
-    }
 }

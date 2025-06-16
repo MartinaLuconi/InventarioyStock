@@ -10,27 +10,24 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 public class DTOTablaProveedor {
+
     private int codigoProveedor;
     private String nombreProveedor;
     private boolean activo;
-    private List<DTODetalleProveedorArticulo> articulos;
+    private List<DTOArticuloTablaProveedor> articulos;
 
+    public DTOTablaProveedor() {}
 
     public DTOTablaProveedor(Proveedor proveedor) {
         this.codigoProveedor = proveedor.getCodigoProveedor();
         this.nombreProveedor = proveedor.getNombreProveedor();
         this.activo = proveedor.isActivo();
+
         this.articulos = proveedor.getProveedorArticulos().stream().map(pa -> {
-            DTODetalleProveedorArticulo dto = new DTODetalleProveedorArticulo();
+            DTOArticuloTablaProveedor dto = new DTOArticuloTablaProveedor();
             dto.setCodigoArticulo(pa.getArticulo().getCodigoArticulo());
-            dto.setDemoraEntrega(pa.getDemoraEntrega());
-            dto.setPrecioUnitProveedorArticulo(pa.getCostoPedido());
-            dto.setCostoPedido(pa.getCostoPedido());
-            //dto.setCargoProveedorPedido(pa.getCargoProveedorPedido());
-            dto.setEsPredeterminado(pa.isEsPredeterminado());
+            dto.setNombreArticulo(pa.getArticulo().getNombreArticulo());
             return dto;
         }).collect(Collectors.toList());
     }
-
 }
-
