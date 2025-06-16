@@ -85,6 +85,7 @@ public class ProveedorController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }*/
+
     public ResponseEntity<List<Articulo>> listarArticulosPorProveedor(
             @PathVariable Integer codigoProveedor) {
         try {

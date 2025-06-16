@@ -12,6 +12,8 @@ import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOOrdenCompra;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOTablaOrdenCompra;
 import com.IntegradorIO.InventarioyStock.OrdenCompraArticulo.OrdenCompraArticulo;
 import com.IntegradorIO.InventarioyStock.OrdenCompraArticulo.OrdenCompraArticuloRepository;
+import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
+import com.IntegradorIO.InventarioyStock.Proveedor.ProveedorRepository;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,9 @@ public class OrdenCompraService {
     private  EstadoOrdenCompraRepository estadoOrdenCompraRepository;
     @Autowired
     private OrdenCompraArticuloRepository ordenCompraArticuloRepository;
+    @Autowired
+    private ProveedorRepository proveedorRepository;
+
 
     @Autowired
     private ArticuloRepository articuloRepository;
@@ -72,18 +77,23 @@ public class OrdenCompraService {
     }
 
     //alta OC
-    public OrdenCompra crearOrdenCompra(DTOOrdenCompra dtoOC) throws Exception{
+   /* Metodo anterior que usaba el Nro de Orden de Compra (lo dejo por las dudas)
+   public OrdenCompra crearOrdenCompra(DTOOrdenCompra dtoOC) throws Exception{
 
         EstadoOrdenCompra estadoOrdenCompra = new EstadoOrdenCompra();
         estadoOrdenCompra.setFechaHoraBajaEstadoOC(null);
         estadoOrdenCompra.setNombreEstado(EstadoOrdencCompra.PENDIENTE); //todas empiezan en pendiente
         estadoOrdenCompraRepository.save(estadoOrdenCompra);
+        // Buscar proveedor por código
+        Proveedor proveedor = proveedorRepository.findById(dtoOC.getCodProveedor())
+                .orElseThrow(() -> new Exception("Proveedor no encontrado con ID: " + dtoOC.getCodProveedor()));
+
 
         OrdenCompra oc = new OrdenCompra();
             oc.setNombreOrdenCompra(dtoOC.getNombreOC());
-            oc.setNumeroOrdenCompra(dtoOC.getNroOrden());
+           oc.setNumeroOrdenCompra(dtoOC.getNroOrden());
             //verifica que no exista el codigo
-            if(ordenCompraRepository.existsById(dtoOC.getNroOrden())){
+          if(ordenCompraRepository.existsById(dtoOC.getNroOrden())){
                 throw new Exception("Ya existe una orden de compra con este numero de orden");
             }
             oc.setEstadoOrdenCompra(estadoOrdenCompra); //relacion con estado
@@ -117,7 +127,60 @@ public class OrdenCompraService {
             oc.setListaOrdenCompraArticulo(ocaList);
             ordenCompraRepository.save(oc);
         return  oc;
+    }*/
+    //metodo que agrego Caro para que ande el Alta de la OC
+    public OrdenCompra crearOrdenCompra(DTOOrdenCompra dtoOC) throws Exception {
+        // Buscar proveedor por ID
+        Optional<Proveedor> proveedorOptional = proveedorRepository.findById(dtoOC.getCodProveedor());
+        if (proveedorOptional.isEmpty()) {
+            throw new Exception("No se encontró el proveedor con código: " + dtoOC.getCodProveedor());
+        }
+        Proveedor proveedor = proveedorOptional.get();
+
+        // Crear estado "PENDIENTE"
+        EstadoOrdenCompra estadoOC = new EstadoOrdenCompra();
+        estadoOC.setNombreEstado(EstadoOrdencCompra.PENDIENTE);
+        estadoOC.setFechaHoraBajaEstadoOC(null);
+        estadoOrdenCompraRepository.save(estadoOC);
+
+        // Crear la orden de compra
+        OrdenCompra oc = new OrdenCompra();
+        oc.setNombreOrdenCompra(dtoOC.getNombreOC());
+        oc.setProveedor(proveedor);
+        oc.setEstadoOrdenCompra(estadoOC);
+
+        // Lista de detalles
+        List<OrdenCompraArticulo> ocaList = new ArrayList<>();
+        for (DTODetalleOC detalle : dtoOC.getDetallesOC()) {
+            Articulo articulo = articuloRepository.obtenerArticulo(detalle.getCodArticulo());
+
+            // Validación si es lote fijo
+            if (articulo.getModeloInventario() == ModeloInventario.LOTE_FIJO) {
+                int cantidad = detalle.getCantidadArticulo();
+                int stockTotal = articulo.getStockActualArticulo() + cantidad;
+                if (stockTotal < articulo.getPuntoPedido()) {
+                    throw new Exception("La cantidad pedida del artículo '" + articulo.getNombreArticulo() + "' no supera el punto de pedido.");
+                }
+            }
+
+            // Crear relación artículo <-> orden
+            OrdenCompraArticulo oca = new OrdenCompraArticulo();
+            oca.setArticulo(articulo);
+            oca.setCantidadOCA(detalle.getCantidadArticulo());
+            oca.setFechaDesdeOCA(new Timestamp(System.currentTimeMillis()));
+            oca.setFechaHastaOCA(null);
+            ocaList.add(oca);
+        }
+
+        // Asociar lista de artículos a la orden
+        oc.setListaOrdenCompraArticulo(ocaList);
+
+        // Guardar la orden (se guarda todo por cascade)
+        ordenCompraRepository.save(oc);
+
+        return oc;
     }
+
 
     //modificar la orden
     public OrdenCompra modificarOrdenCompra(int nroOrden,DTOOrdenCompra dtoOC) throws Exception{

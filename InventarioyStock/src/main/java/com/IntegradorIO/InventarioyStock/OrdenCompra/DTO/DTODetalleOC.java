@@ -12,4 +12,5 @@ public class DTODetalleOC {
     private String nombreArticulo;
     private  int codArticulo;
     //private  float precioUnitarioArticulo;
+
 }
