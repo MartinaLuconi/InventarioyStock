@@ -19,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,7 +27,7 @@ public class OrdenCompraService {
     @Autowired
     private OrdenCompraRepository ordenCompraRepository;
     @Autowired
-    private  EstadoOrdenCompraRepository estadoOrdenCompraRepository;
+    private EstadoOrdenCompraRepository estadoOrdenCompraRepository;
     @Autowired
     private OrdenCompraArticuloRepository ordenCompraArticuloRepository;
     @Autowired
@@ -39,27 +36,28 @@ public class OrdenCompraService {
 
     @Autowired
     private ArticuloRepository articuloRepository;
-    public List<DTOTablaOrdenCompra> obtenerOrdenesCompra() throws Exception{
+
+    public List<DTOTablaOrdenCompra> obtenerOrdenesCompra() throws Exception {
         List<DTOTablaOrdenCompra> tablaOC = new ArrayList<>();
-        try{
+        try {
             List<OrdenCompra> ordenCompraList = ordenCompraRepository.findAll();
-            for (OrdenCompra oc : ordenCompraList){
+            for (OrdenCompra oc : ordenCompraList) {
                 DTOTablaOrdenCompra dtoFilaTabla = new DTOTablaOrdenCompra();
                 dtoFilaTabla.setNroOrdenCompra(oc.getNumeroOrdenCompra());
                 dtoFilaTabla.setNombreOC(oc.getNombreOrdenCompra());
                 dtoFilaTabla.setNombreProveedor(oc.getProveedor().getNombreProveedor());
                 dtoFilaTabla.setEstadoOC(oc.getEstadoOrdenCompra().getNombreEstado());
                 List<OrdenCompraArticulo> ocaList = oc.getListaOrdenCompraArticulo();
-               //encuentra la orden actual relacionada
-                    OrdenCompraArticulo oca = ocaList.stream()
-                            .max(Comparator.comparing(OrdenCompraArticulo::getFechaDesdeOCA))
-                            .orElse(null);
-                    dtoFilaTabla.setFechaOrden(oca.getFechaDesdeOCA());
-                    tablaOC.add(dtoFilaTabla);
+                //encuentra la orden actual relacionada
+                OrdenCompraArticulo oca = ocaList.stream()
+                        .max(Comparator.comparing(OrdenCompraArticulo::getFechaDesdeOCA))
+                        .orElse(null);
+                dtoFilaTabla.setFechaOrden(oca.getFechaDesdeOCA());
+                tablaOC.add(dtoFilaTabla);
 
             }
-            return  tablaOC;
-        }catch (Exception e){
+            return tablaOC;
+        } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
 
@@ -181,9 +179,9 @@ public class OrdenCompraService {
         return oc;
     }
 
-
+    //con este bloque solo actualiza el codigo pero si cambiabas el nombre por ejemplo no (en vez de pedir caramelos, chocolates)
     //modificar la orden
-    public OrdenCompra modificarOrdenCompra(int nroOrden,DTOOrdenCompra dtoOC) throws Exception{
+    /*public OrdenCompra modificarOrdenCompra(int nroOrden,DTOOrdenCompra dtoOC) throws Exception{
 
         OrdenCompra ocModificada = obtenerOC(nroOrden);
 
@@ -211,7 +209,45 @@ public class OrdenCompraService {
             throw new Exception("No se puede modificar la orden. Ya no se encuentra  PENDIENTE");
         }
         return  ocModificada;
+    }*/
+    //Modificacion Caro, para que se pudadiese modificar el articulo, y se actualicen bien los datos
+    public OrdenCompra modificarOrdenCompra(int nroOrden, DTOOrdenCompra dtoOC) throws Exception {
+        OrdenCompra ocModificada = obtenerOC(nroOrden);
+
+        if (ocModificada.getEstadoOrdenCompra().getNombreEstado() != EstadoOrdencCompra.PENDIENTE) {
+            throw new Exception("No se puede modificar la orden. Ya no se encuentra PENDIENTE");
+        }
+
+        // Cambiar nombre
+        ocModificada.setNombreOrdenCompra(dtoOC.getNombreOC());
+
+        // Eliminar detalles viejos
+        List<OrdenCompraArticulo> detallesViejos = ocModificada.getListaOrdenCompraArticulo();
+        for (OrdenCompraArticulo detalle : detallesViejos) {
+            ordenCompraArticuloRepository.delete(detalle);
+        }
+
+        // Crear nuevos detalles
+        List<OrdenCompraArticulo> nuevosDetalles = new ArrayList<>();
+        for (DTODetalleOC detalleDTO : dtoOC.getDetallesOC()) {
+            Articulo articulo = articuloRepository.obtenerArticulo(detalleDTO.getCodArticulo());
+
+            OrdenCompraArticulo nuevoDetalle = new OrdenCompraArticulo();
+            nuevoDetalle.setArticulo(articulo);
+            nuevoDetalle.setCantidadOCA(detalleDTO.getCantidadArticulo());
+            nuevoDetalle.setFechaDesdeOCA(new Timestamp(System.currentTimeMillis()));
+            nuevoDetalle.setFechaHastaOCA(null);
+            ordenCompraArticuloRepository.save(nuevoDetalle);
+            nuevosDetalles.add(nuevoDetalle);
+        }
+
+        // Asociar nuevos detalles
+        ocModificada.setListaOrdenCompraArticulo(nuevosDetalles);
+        ordenCompraRepository.save(ocModificada);
+
+        return ocModificada;
     }
+
 
     public DTOOrdenCompra mostrarDatosOC(int nroOrden) throws Exception {
         DTOOrdenCompra datosOrdenCompra = new DTOOrdenCompra();
@@ -221,21 +257,21 @@ public class OrdenCompraService {
         //lleno el dto
         datosOrdenCompra.setNroOrden(nroOrden);
         datosOrdenCompra.setNombreOC(ordenCompra.getNombreOrdenCompra());
-        List <OrdenCompraArticulo> listaDetalles = ordenCompra.getListaOrdenCompraArticulo();
-        List <DTODetalleOC> detalleOCS=new ArrayList<>();
-        for (OrdenCompraArticulo oca : listaDetalles){
+        List<OrdenCompraArticulo> listaDetalles = ordenCompra.getListaOrdenCompraArticulo();
+        List<DTODetalleOC> detalleOCS = new ArrayList<>();
+        for (OrdenCompraArticulo oca : listaDetalles) {
             DTODetalleOC detalleOC = new DTODetalleOC();
             detalleOC.setCantidadArticulo(oca.getCantidadOCA());
-            detalleOC.setNombreArticulo(detalleOC.getNombreArticulo());
-            detalleOC.setCodArticulo(detalleOC.getCodArticulo());
+            detalleOC.setNombreArticulo(oca.getArticulo().getNombreArticulo());
+            detalleOC.setCodArticulo(oca.getArticulo().getCodigoArticulo());
             detalleOCS.add(detalleOC);
         }
-
+        datosOrdenCompra.setDetallesOC(detalleOCS);
         return datosOrdenCompra;
     }
 
     //sugerir proveedor predeterminado
-    public void sugerirProveedorPredetertminado(){
+    public void sugerirProveedorPredetertminado() {
 
     }
 
@@ -246,22 +282,24 @@ public class OrdenCompraService {
     //cancelar solo si esta en estado pendiente
     public void cancelarOC(int nroOrden) throws Exception {
         OrdenCompra oc = obtenerOC(nroOrden); //buscarla por id
-            EstadoOrdenCompra estadoActual = oc.getEstadoOrdenCompra();//buscar el estado actual relacionado
-            EstadoOrdencCompra nombreEstado= estadoActual.getNombreEstado() ;
+        EstadoOrdenCompra estadoActual = oc.getEstadoOrdenCompra();//buscar el estado actual relacionado
+        EstadoOrdencCompra nombreEstado = estadoActual.getNombreEstado();
 
-            if (nombreEstado == EstadoOrdencCompra.PENDIENTE){
-                estadoActual.setNombreEstado(EstadoOrdencCompra.CANCELADO);
-                //se ponerle fecha baja
-            }else {
-                throw new Exception("No se puede cancelar la orden porque está en estado:"+nombreEstado);
-            }
+        if (nombreEstado == EstadoOrdencCompra.PENDIENTE) {
+            estadoActual.setNombreEstado(EstadoOrdencCompra.CANCELADO);
+            //se ponerle fecha baja
+            estadoOrdenCompraRepository.save(estadoActual); // guardar cambio
+        } else {
+            throw new Exception("No se puede cancelar la orden porque está en estado:" + nombreEstado);
+        }
 
     }
+
     //envio manual de la OC
-    public void enviarOC(int nroOrden)throws Exception{
+    public void enviarOC(int nroOrden) throws Exception {
         OrdenCompra oc = obtenerOC(nroOrden); //buscarla por id
         EstadoOrdenCompra estadoActual = oc.getEstadoOrdenCompra(); //lee el estado actual
-        if (estadoActual.getNombreEstado() == EstadoOrdencCompra.PENDIENTE){ //mira q sea pendiente
+        if (estadoActual.getNombreEstado() == EstadoOrdencCompra.PENDIENTE) { //mira q sea pendiente
             //cambiar estado a enviada
             oc.getEstadoOrdenCompra().setNombreEstado(EstadoOrdencCompra.ENVIADA);
             estadoOrdenCompraRepository.save(estadoActual);
@@ -272,7 +310,7 @@ public class OrdenCompraService {
 
     //finalizar la OC
 
-    public void finalizarOC(int nroOrden) throws Exception{
+    public void finalizarOC(int nroOrden) throws Exception {
         OrdenCompra oc = obtenerOC(nroOrden); //buscarla por id
         EstadoOrdenCompra estadoActual = oc.getEstadoOrdenCompra(); //lee el estado actual
 
@@ -289,21 +327,22 @@ public class OrdenCompraService {
         }
         // actualizar el inventario
 
-        int ingresoArticulos= oc.getCantidadOrdenCompra();
+        int ingresoArticulos = oc.getCantidadOrdenCompra();
         //busco el articulo de la OC y ahí hago stockActual+ingresoArticulos, dsp guardo
-        List< OrdenCompraArticulo > detallesListOC = oc.getListaOrdenCompraArticulo();
-        for (OrdenCompraArticulo detalle :detallesListOC ){
+        List<OrdenCompraArticulo> detallesListOC = oc.getListaOrdenCompraArticulo();
+        for (OrdenCompraArticulo detalle : detallesListOC) {
             Articulo articuloPedido = detalle.getArticulo(); //busco el articulo de la OC
-            int stockActual= articuloPedido.getStockActualArticulo();//leo stock actual
-            int nuevoStock= stockActual+ingresoArticulos; //calculo nuevo stock con el reingreso
+            int stockActual = articuloPedido.getStockActualArticulo();//leo stock actual
+            int nuevoStock = stockActual + ingresoArticulos; //calculo nuevo stock con el reingreso
             detalle.getArticulo().setStockActualArticulo(nuevoStock); //se piso el stock viejo
             articuloRepository.save(articuloPedido);//guardo el cambio
         }
 
 
-
     }
-
-
-
 }
+
+
+
+
+

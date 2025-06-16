@@ -15,7 +15,7 @@ public class DTOOrdenCompra {
     private  String nombreOC;
     private List<DTODetalleOC> detallesOC;
     private int codProveedor;
-    //falta proveedor y tamaño del lote --> datos sugeridos
+    //falta tamaño del lote --> datos sugeridos
     public int getCodProveedor() {
         return codProveedor;
     }

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/ordenCompra")
@@ -22,7 +23,7 @@ public class OrdenCompraController {
         List<DTOTablaOrdenCompra> ordenes = ordenCompraService.obtenerOrdenesCompra();
         return ResponseEntity.ok(ordenes);
     }
-    @GetMapping("/{numeroOrdenCompra}")
+    @GetMapping("/{nroOrden}")
     public ResponseEntity<OrdenCompra> obtenerOC(@PathVariable int nroOrden) throws Exception {
         OrdenCompra oc = ordenCompraService.obtenerOC(nroOrden);
         return new ResponseEntity<>(oc,HttpStatus.OK);
@@ -33,33 +34,34 @@ public class OrdenCompraController {
         return new ResponseEntity<>(nuevaOC,HttpStatus.CREATED);
     }
 
-    @PutMapping("/{numeroOrdenCompra}/modificar")
+    @PutMapping("/{nroOrden}/modificar")
     public ResponseEntity<OrdenCompra> modificarOrdenCompra(@PathVariable int nroOrden, @RequestBody DTOOrdenCompra dtoOC) throws Exception{
         OrdenCompra ocActualizada= ordenCompraService.modificarOrdenCompra(nroOrden,dtoOC);
         return new ResponseEntity<>(ocActualizada,HttpStatus.OK);
     }
-    @GetMapping("/{numeroOrdenCompra}/datos")
+    @GetMapping("/{nroOrden}/datos")
     public ResponseEntity<DTOOrdenCompra> mostrarDatosOC(@PathVariable int nroOrden) throws Exception {
         DTOOrdenCompra dtoOrdenCompra = ordenCompraService.mostrarDatosOC(nroOrden);
         return new ResponseEntity<>(dtoOrdenCompra, HttpStatus.OK);
     }
 
 
-    @PutMapping("/{numeroOrdenCompra}/cancelar")
+    @PutMapping("/{nroOrden}/cancelar")
     public ResponseEntity<Void> cancelarOC(@PathVariable int nroOrden) throws Exception {
         ordenCompraService.cancelarOC(nroOrden);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @PutMapping("/{numeroOrdenCompra}/enviar")
+    @PutMapping("/{nroOrden}/enviar")
     public ResponseEntity<Void> enviarOC( @PathVariable int nroOrden)throws Exception{
         ordenCompraService.enviarOC(nroOrden);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @PutMapping("/{numeroOrdenCompra}/finalizar")
-    public ResponseEntity<Void> finalizarOC(@PathVariable int nroOrden) throws Exception{
-        ordenCompraService.finalizarOC(nroOrden);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+   @PutMapping("/{nroOrden}/finalizar")
+    public ResponseEntity<Void> finalizarOC(@PathVariable int nroOrden) throws Exception {
+       ordenCompraService.finalizarOC(nroOrden);
+       return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+   }
 
 
 }

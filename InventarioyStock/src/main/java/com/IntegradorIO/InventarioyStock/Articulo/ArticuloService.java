@@ -188,7 +188,7 @@ public class ArticuloService  {
 
     //listar productos faltantes
 
-    public List<DTOTablaArticulos> listarArticulosFaltantes () throws Exception{
+    /*public List<DTOTablaArticulos> listarArticulosFaltantes () throws Exception{
         List<Articulo> articulosFaltantes = new ArrayList<>();
         List<DTOTablaArticulos> articulosFaltantesDTO = new ArrayList<>();
         //busco todos los articulos
@@ -215,7 +215,28 @@ public class ArticuloService  {
         }
         return articulosFaltantesDTO;
 
+    }*/
+    public List<DTOTablaArticulos> listarArticulosFaltantes() {
+        List<DTOTablaArticulos> articulosFaltantesDTO = new ArrayList<>();
+
+        //busco todos los articulos
+        List<Articulo> aList = articuloRepository.obtenerArticulos();
+        for (Articulo a : aList) {
+            int stockActual = a.getStockActualArticulo();
+            int stockSeguridad = a.getStockSeguridadArticulo();
+            if (stockActual < stockSeguridad) {
+                DTOTablaArticulos dto = new DTOTablaArticulos(a);
+                dto.setCodigoArticulo(a.getCodigoArticulo());
+                dto.setNombreArticulo(a.getNombreArticulo());
+                dto.setDescripcion(a.getDescripcion());
+                dto.setFechaHoraBajaArticulo(a.getFechaHoraBajaArticulo());
+                articulosFaltantesDTO.add(dto);
+            }
+        }
+
+        return articulosFaltantesDTO; // aunque esté vacío, es un array válido
     }
+
 
     //listar productos a reponer
 
