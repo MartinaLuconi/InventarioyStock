@@ -1,5 +1,6 @@
 package com.IntegradorIO.InventarioyStock.Proveedor;
 
+import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
 import com.IntegradorIO.InventarioyStock.Proveedor.dto.DTOModificarProveedor;
 import com.IntegradorIO.InventarioyStock.Proveedor.dto.DTONuevoProveedor;
 import com.IntegradorIO.InventarioyStock.Proveedor.dto.DTOTablaProveedor;
@@ -73,10 +74,21 @@ public class ProveedorController {
     }
 
     @GetMapping("/{codigoProveedor}/articulos")
-    public ResponseEntity<List<ProveedorArticulo>> listarArticulosPorProveedor(
+    /*public ResponseEntity<List<ProveedorArticulo>> listarArticulosPorProveedor(
             @PathVariable Integer codigoProveedor) {
         try {
             List<ProveedorArticulo> lista =
+                    proveedorService.obtenerArticulosPorProveedor(codigoProveedor);
+            return new ResponseEntity<>(lista, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            // Proveedor no existe o está inactivo
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }*/
+    public ResponseEntity<List<Articulo>> listarArticulosPorProveedor(
+            @PathVariable Integer codigoProveedor) {
+        try {
+            List<Articulo> lista =
                     proveedorService.obtenerArticulosPorProveedor(codigoProveedor);
             return new ResponseEntity<>(lista, HttpStatus.OK);
         } catch (IllegalArgumentException e) {

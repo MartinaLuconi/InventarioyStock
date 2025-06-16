@@ -11,12 +11,12 @@ public class ProveedorArticuloService {
     @Autowired
     private ProveedorArticuloRepository proveedorArticuloRepository;
 
-    public List<ProveedorArticulo> obtenerRelacionesPorArticulo(int codigoArticulo) throws Exception {
+   /* public List<ProveedorArticulo> obtenerRelacionesPorArticulo(int codigoArticulo) throws Exception {
         try {
             return proveedorArticuloRepository.findByArticulo_CodigoArticulo(codigoArticulo);
         } catch (Exception e) {
             throw new Exception("Error al obtener proveedores del artículo: " + e.getMessage());
         }
-    }
+    } */
 
 }

@@ -106,18 +106,23 @@ public class ArticuloController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
-
-// Calcular Punto de Pedido (CGI) para un artículo y proveedor específico
+    // Calcular Punto de Pedido (CGI) para un artículo y proveedor específico
     @GetMapping("/{idArticulo}/proveedor/{idProveedorArticulo}/cgi")
     public double obtenerCGI(
             @PathVariable int idArticulo,
-            @PathVariable int idProveedorArticulo
+            @PathVariable int idProveedorArticulo,
+            @RequestParam int periodoRevision,
+            @RequestParam int demoraEntrega,
+            @RequestParam double desviacionEstandar,
+            @RequestParam double Z
     ) throws Exception {
         Articulo articulo = articuloRepository.findById(idArticulo)
                 .orElseThrow(() -> new Exception("Artículo no encontrado"));
         ProveedorArticulo proveedorArticulo = proveedorArticuloRepository.findById(idProveedorArticulo)
                 .orElseThrow(() -> new Exception("ProveedorArticulo no encontrado"));
-        return articuloService.calcularCGIArticulo(articulo, proveedorArticulo);
+        return articuloService.calcularCGIArticulo(
+                articulo, proveedorArticulo, periodoRevision, demoraEntrega, desviacionEstandar, Z
+        );
     }
 
 
@@ -148,9 +153,5 @@ public class ArticuloController {
     ) {
         return articuloService.calcularROP(demandaPromedio, stockSeguridad, l);
     }
-
-    @GetMapping("/articulos")
-    public ResponseEntity<List<Articulo>> listarArticulosActivos() {
-        return ResponseEntity.ok(articuloRepository.findByFechaHoraBajaArticuloIsNull());
-    }
 }
+

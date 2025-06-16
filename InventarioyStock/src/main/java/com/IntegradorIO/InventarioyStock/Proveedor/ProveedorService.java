@@ -42,18 +42,12 @@ public class ProveedorService {
     }
 
     public Proveedor guardarProveedor(DTONuevoProveedor dto) {
-        // 1) Convertir el dto en entidad Proveedor
-        Proveedor entidad = new Proveedor();
-        entidad.setNombreProveedor(dto.getNombreProveedor());
-        entidad.setActivo(true);
-        // (asigna aquí otros campos de Proveedor si tu DTO los trae)
 
-        // 2) Persistir primero la entidad Proveedor para que obtenga un ID
-        Proveedor guardado = proveedorRepository.save(entidad);
 
         // 3) Si el dto trae asociaciones a artículos, crearlas ahora
+        List<ProveedorArticulo> listaPA = new ArrayList<>();
         if (dto.getAsociaciones() != null && !dto.getAsociaciones().isEmpty()) {
-            List<ProveedorArticulo> listaPA = new ArrayList<>();
+
             for (DTODetalleProveedorArticulo detalle : dto.getAsociaciones()) {
                 // 3.1) Buscar el Artículo correspondiente
                 Articulo art = articuloRepository.findById(detalle.getCodigoArticulo())
@@ -65,7 +59,6 @@ public class ProveedorService {
 
                 // 3.2) Crear y poblar la entidad ProveedorArticulo
                 ProveedorArticulo pa = new ProveedorArticulo();
-                pa.setProveedor(guardado);
                 pa.setArticulo(art);
                 pa.setDemoraEntrega(detalle.getDemoraEntrega());
                 pa.setPrecioUnitProveedorArticulo(detalle.getPrecioUnitProveedorArticulo());
@@ -74,17 +67,27 @@ public class ProveedorService {
                 pa.setEsPredeterminado(detalle.isEsPredeterminado());
 
                 listaPA.add(pa);
-            }
-            // 3.3) Guardar todas las asociaciones de golpe
-            proveedorArticuloRepository.saveAll(listaPA);
 
-            // 3.4) Asociar la lista al proveedor (opcional, si tu relación es bidireccional)
-            guardado.setProveedorArticulos(listaPA);
+                // 3.3) Guardar todas las asociaciones de golpe
+                proveedorArticuloRepository.saveAll(listaPA);
+            }
         }
 
-        // 4) Devolver el proveedor ya persistido (con su ID y sus asociaciones)
-        return guardado;
+            // 1) Convertir el dto en entidad Proveedor
+            Proveedor entidad = new Proveedor();
+            entidad.setNombreProveedor(dto.getNombreProveedor());
+            entidad.setActivo(true);
+            entidad.setProveedorArticulos(listaPA); // 3.4) Asociar la lista al proveedor (opcional, si tu relación es bidireccional)
+            // (asigna aquí otros campos de Proveedor si tu DTO los trae)
+
+            // 2) Persistir primero la entidad Proveedor para que obtenga un ID
+            Proveedor guardado = proveedorRepository.save(entidad);
+
+            // 4) Devolver el proveedor ya persistido (con su ID y sus asociaciones)
+            return guardado;
+
     }
+
 
     public Proveedor modificarProveedor(Integer codigoProveedor, DTOModificarProveedor dto) {
         // 1) Recuperar proveedor
@@ -97,8 +100,8 @@ public class ProveedorService {
         // (Si tuvieras más campos en Proveedor, asignarlos aquí)
 
         // 3) Cargar asociaciones actuales desde BD
-        List<ProveedorArticulo> asociadasActuales =
-                proveedorArticuloRepository.findByProveedorCodigoProveedor(codigoProveedor);
+        List<ProveedorArticulo> asociadasActuales = existente.getProveedorArticulos();
+               // proveedorArticuloRepository.findByProveedorCodigoProveedor(codigoProveedor);
 
         // 4) Construir un mapa para “buscar por código de artículo” rápidamente
         //    Clave: codigoArticulo; Valor: ProveedorArticulo existente
@@ -138,7 +141,6 @@ public class ProveedorService {
             } else {
                 // 5c) No existía: creamos un nuevo ProveedorArticulo
                 ProveedorArticulo nuevo = new ProveedorArticulo();
-                nuevo.setProveedor(existente);
                 nuevo.setArticulo(art);
                 nuevo.setDemoraEntrega(detalle.getDemoraEntrega());
                 nuevo.setPrecioUnitProveedorArticulo(detalle.getPrecioUnitProveedorArticulo());
@@ -220,14 +222,15 @@ public class ProveedorService {
 
         // 1) Verificar predeterminado
         //ProveedorArticulo pred = proveedorArticuloRepository
-        List<ProveedorArticulo> pred = proveedorArticuloRepository
+       /* List<ProveedorArticulo> pred = proveedorArticuloRepository
                 .findByProveedorCodigoProveedorAndEsPredeterminadoTrue(codigoProveedor);
+
         //if (pred != null) {
         if (!pred.isEmpty()) {
             throw new IllegalStateException(
                     "No se puede dar de baja: proveedor predeterminado en un artículo"
             );
-        }
+        }*/
 
         // 2) Verificar órdenes activas (PENDIENTE o CONFIRMADO)
         boolean tieneOrdenesActivas = ordenCompraRepository
@@ -249,12 +252,19 @@ public class ProveedorService {
     }
 
     /** Listar asociaciones Proveedor–Artículo por proveedor */
-    public List<ProveedorArticulo> obtenerArticulosPorProveedor(Integer codigoProveedor) {
+    public List<Articulo> obtenerArticulosPorProveedor(Integer codigoProveedor) {
+        List<Articulo> articulosProveedorList = new ArrayList<>();
         Proveedor p = proveedorRepository.findById(codigoProveedor)
                 .filter(Proveedor::isActivo)
                 .orElseThrow(() -> new IllegalArgumentException("Proveedor no encontrado o inactivo"));
 
-        return proveedorArticuloRepository.findArticulosConArticuloPorProveedor(codigoProveedor);
+        List<ProveedorArticulo> paList = p.getProveedorArticulos();
+        for (ProveedorArticulo pa : paList){
+            Articulo articuloDelProveedor= pa.getArticulo();
+            articulosProveedorList.add(articuloDelProveedor);
+        }
+        return  articulosProveedorList;
+        //return proveedorArticuloRepository.findArticulosConArticuloPorProveedor(codigoProveedor);
 
     }
 }

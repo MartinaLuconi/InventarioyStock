@@ -15,7 +15,7 @@ public class ProveedorArticuloController {
     @Autowired
     private ProveedorArticuloService proveedorArticuloService;
 
-    @GetMapping("/articulo/{codigoArticulo}")
+    /*@GetMapping("/articulo/{codigoArticulo}")
     public ResponseEntity<List<ProveedorArticulo>> obtenerProveedoresPorArticulo(@PathVariable int codigoArticulo) {
         try {
             List<ProveedorArticulo> relaciones = proveedorArticuloService.obtenerRelacionesPorArticulo(codigoArticulo);
@@ -24,5 +24,5 @@ public class ProveedorArticuloController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
-    }
+    }*/
 }
