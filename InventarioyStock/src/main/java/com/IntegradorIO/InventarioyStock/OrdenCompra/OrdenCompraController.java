@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ordenCompra")
+@RequestMapping("/api/ordenCompra")
 @CrossOrigin(origins ="*")
 public class OrdenCompraController {
 

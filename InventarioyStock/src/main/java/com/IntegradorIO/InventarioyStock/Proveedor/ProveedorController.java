@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/proveedor")
+@RequestMapping("/api/proveedores")
 @CrossOrigin(origins = "*")
 public class ProveedorController {
 
@@ -37,7 +37,7 @@ public class ProveedorController {
 
     // Crear un nuevo proveedor (siempre activo)
     @PostMapping
-    public ResponseEntity<Proveedor> guardarProveedor(@RequestBody DTONuevoProveedor dtonuevoproveedor) {
+    public ResponseEntity<Proveedor> guardarProveedor(@RequestBody DTONuevoProveedor dtonuevoproveedor) throws Exception {
         Proveedor nuevoProveedor = proveedorService.guardarProveedor(dtonuevoproveedor);
         return new ResponseEntity<>(nuevoProveedor, HttpStatus.CREATED);
     }

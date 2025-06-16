@@ -41,50 +41,44 @@ public class ProveedorService {
                 .filter(Proveedor::isActivo);
     }
 
-    public Proveedor guardarProveedor(DTONuevoProveedor dto) {
-
+    public Proveedor guardarProveedor(DTONuevoProveedor dto) throws Exception{
+        // 1) Convertir el dto en entidad Proveedor
+        Proveedor entidad = new Proveedor();
+        entidad.setNombreProveedor(dto.getNombreProveedor());
+        entidad.setActivo(true);
+        proveedorRepository.save(entidad);
 
         // 3) Si el dto trae asociaciones a artículos, crearlas ahora
-        List<ProveedorArticulo> listaPA = new ArrayList<>();
-        if (dto.getAsociaciones() != null && !dto.getAsociaciones().isEmpty()) {
+
 
             for (DTODetalleProveedorArticulo detalle : dto.getAsociaciones()) {
+                List<ProveedorArticulo> proveedorArticuloList = new ArrayList<>();
                 // 3.1) Buscar el Artículo correspondiente
-                Articulo art = articuloRepository.findById(detalle.getCodigoArticulo())
-                        .orElseThrow(() ->
-                                new IllegalArgumentException(
-                                        "Artículo no encontrado: " + detalle.getCodigoArticulo()
-                                )
-                        );
+                Articulo art = articuloRepository.obtenerArticulo(detalle.getCodigoArticulo());
+
 
                 // 3.2) Crear y poblar la entidad ProveedorArticulo
                 ProveedorArticulo pa = new ProveedorArticulo();
-                pa.setArticulo(art);
+                pa.setArticulo(art); //relacion a articulo
                 pa.setDemoraEntrega(detalle.getDemoraEntrega());
-                pa.setPrecioUnitProveedorArticulo(detalle.getPrecioUnitProveedorArticulo());
+                pa.setCostoUnitario(detalle.getPrecioUnitProveedorArticulo());
                 pa.setCostoPedido(detalle.getCostoPedido());
-                pa.setCargoProveedorPedido(detalle.getCargoProveedorPedido());
                 pa.setEsPredeterminado(detalle.isEsPredeterminado());
-
-                listaPA.add(pa);
-
-                // 3.3) Guardar todas las asociaciones de golpe
-                proveedorArticuloRepository.saveAll(listaPA);
+                pa.setCostoPedido(detalle.getCostoPedido());
+                pa.setFechaDesdePA(new Timestamp(System.currentTimeMillis()));
+                pa.setFechaHastaPA(null);
+                pa.setLoteOptimo(detalle.getLoteOptimo());
+                pa.setCostoMantenimiento(detalle.getCostoMantenimiento());
+                proveedorArticuloRepository.save(pa);
+                proveedorArticuloList.add(pa);
+                entidad.setProveedorArticulos(proveedorArticuloList);
             }
-        }
 
-            // 1) Convertir el dto en entidad Proveedor
-            Proveedor entidad = new Proveedor();
-            entidad.setNombreProveedor(dto.getNombreProveedor());
-            entidad.setActivo(true);
-            entidad.setProveedorArticulos(listaPA); // 3.4) Asociar la lista al proveedor (opcional, si tu relación es bidireccional)
-            // (asigna aquí otros campos de Proveedor si tu DTO los trae)
+            proveedorRepository.save(entidad);
 
-            // 2) Persistir primero la entidad Proveedor para que obtenga un ID
-            Proveedor guardado = proveedorRepository.save(entidad);
 
             // 4) Devolver el proveedor ya persistido (con su ID y sus asociaciones)
-            return guardado;
+            return entidad;
 
     }
 
@@ -127,9 +121,8 @@ public class ProveedorService {
                 ProveedorArticulo paExistente = mapaActuales.get(codigoArt);
 
                 paExistente.setDemoraEntrega(detalle.getDemoraEntrega());
-                paExistente.setPrecioUnitProveedorArticulo(detalle.getPrecioUnitProveedorArticulo());
+                paExistente.setCostoUnitario(detalle.getPrecioUnitProveedorArticulo());
                 paExistente.setCostoPedido(detalle.getCostoPedido());
-                paExistente.setCargoProveedorPedido(detalle.getCargoProveedorPedido());
                 paExistente.setEsPredeterminado(detalle.isEsPredeterminado());
 
                 // La guardamos en la lista final para no borrarla posteriormente
@@ -143,9 +136,9 @@ public class ProveedorService {
                 ProveedorArticulo nuevo = new ProveedorArticulo();
                 nuevo.setArticulo(art);
                 nuevo.setDemoraEntrega(detalle.getDemoraEntrega());
-                nuevo.setPrecioUnitProveedorArticulo(detalle.getPrecioUnitProveedorArticulo());
+                nuevo.setCostoUnitario(detalle.getPrecioUnitProveedorArticulo());
                 nuevo.setCostoPedido(detalle.getCostoPedido());
-                nuevo.setCargoProveedorPedido(detalle.getCargoProveedorPedido());
+                nuevo.setCostoPedido(detalle.getCargoProveedorPedido());
                 nuevo.setEsPredeterminado(detalle.isEsPredeterminado());
 
                 listaFinal.add(nuevo);
@@ -190,9 +183,9 @@ public class ProveedorService {
             ProveedorArticulo pa = new ProveedorArticulo();
             pa.setArticulo(art);
             pa.setDemoraEntrega(paReq.getDemoraEntrega());
-            pa.setPrecioUnitProveedorArticulo(paReq.getPrecioUnitProveedorArticulo());
+            pa.setCostoUnitario(paReq.getPrecioUnitProveedorArticulo());
             pa.setCostoPedido(paReq.getCostoPedido());
-            pa.setCargoProveedorPedido(paReq.getCargoProveedorPedido());
+            pa.setCostoPedido(paReq.getCargoProveedorPedido());
             pa.setEsPredeterminado(paReq.isEsPredeterminado());
 
             lista.add(pa);

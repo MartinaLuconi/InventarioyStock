@@ -24,9 +24,9 @@ public class DTOTablaProveedor {
             DTODetalleProveedorArticulo dto = new DTODetalleProveedorArticulo();
             dto.setCodigoArticulo(pa.getArticulo().getCodigoArticulo());
             dto.setDemoraEntrega(pa.getDemoraEntrega());
-            dto.setPrecioUnitProveedorArticulo(pa.getPrecioUnitProveedorArticulo());
+            dto.setPrecioUnitProveedorArticulo(pa.getCostoPedido());
             dto.setCostoPedido(pa.getCostoPedido());
-            dto.setCargoProveedorPedido(pa.getCargoProveedorPedido());
+            //dto.setCargoProveedorPedido(pa.getCargoProveedorPedido());
             dto.setEsPredeterminado(pa.isEsPredeterminado());
             return dto;
         }).collect(Collectors.toList());

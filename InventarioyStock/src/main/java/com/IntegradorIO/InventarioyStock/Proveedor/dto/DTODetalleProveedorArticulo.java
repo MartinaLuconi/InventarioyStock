@@ -10,6 +10,8 @@ public class DTODetalleProveedorArticulo {
     private int demoraEntrega;
     private float precioUnitProveedorArticulo;
     private float costoPedido;
+    private  int loteOptimo;
+    private int costoMantenimiento;
     private int cargoProveedorPedido;
     private boolean esPredeterminado;
 }
