@@ -4,10 +4,7 @@ import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
 import com.IntegradorIO.InventarioyStock.Articulo.ArticuloRepository;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.OrdenCompraRepository;
-import com.IntegradorIO.InventarioyStock.Proveedor.dto.DTODetalleProveedorArticulo;
-import com.IntegradorIO.InventarioyStock.Proveedor.dto.DTOModificarProveedor;
-import com.IntegradorIO.InventarioyStock.Proveedor.dto.DTONuevoProveedor;
-import com.IntegradorIO.InventarioyStock.Proveedor.dto.DTOTablaProveedor;
+import com.IntegradorIO.InventarioyStock.Proveedor.dto.*;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +25,35 @@ public class ProveedorService {
 
     /** Listar solo proveedores activos */
     public List<DTOTablaProveedor> obtenerProveedores() {
-
-        //return proveedorRepository.findByActivoTrue()
-        return proveedorRepository.findAll()
-                .stream()
+        return proveedorRepository.findAll().stream()
                 .map(DTOTablaProveedor::new)
                 .collect(Collectors.toList());
     }
+
+
+//    public List<DTOTablaProveedor> obtenerProveedores() {
+//        List<Proveedor> proveedores = proveedorRepository.findAll();
+//
+//        return proveedores.stream().map(proveedor -> {
+//            DTOTablaProveedor dto = new DTOTablaProveedor();
+//            dto.setCodigoProveedor(proveedor.getCodigoProveedor());
+//            dto.setNombreProveedor(proveedor.getNombreProveedor());
+//            dto.setActivo(proveedor.isActivo());
+//
+//            // Armamos la lista de artículos resumida:
+//            List<DTOArticuloTablaProveedor> articulosDTO = proveedor.getProveedorArticulos().stream().map(pa -> {
+//                DTOArticuloTablaProveedor detalle = new DTOArticuloTablaProveedor();
+//                detalle.setCodigoArticulo(pa.getArticulo().getCodigoArticulo());
+//                detalle.setNombreArticulo(pa.getArticulo().getNombreArticulo());
+//                return detalle;
+//            }).collect(Collectors.toList());
+//
+//            dto.setArticulos(articulosDTO);
+//            return dto;
+//
+//        }).collect(Collectors.toList());
+//    }
+
 
     public Optional<Proveedor> obtenerProveedor(Integer codigoProveedor) {
         return proveedorRepository.findById(codigoProveedor)
