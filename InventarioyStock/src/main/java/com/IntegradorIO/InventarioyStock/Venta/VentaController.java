@@ -1,7 +1,7 @@
 package com.IntegradorIO.InventarioyStock.Venta;
 
+import com.IntegradorIO.InventarioyStock.Venta.dto.DTOTablaVentas;
 import com.IntegradorIO.InventarioyStock.Venta.dto.VentaRequest;
-package com.IntegradorIO.InventarioyStock.Venta.dto.DTOTablaVentas;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -7,6 +7,7 @@ import com.IntegradorIO.InventarioyStock.Articulo.ArticuloRepository;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.OrdenCompraService;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloRepository;
+import com.IntegradorIO.InventarioyStock.Venta.dto.DTOTablaVentas;
 import com.IntegradorIO.InventarioyStock.VentaArticulo.VentaArticulo;
 import com.IntegradorIO.InventarioyStock.VentaArticulo.VentaArticuloRepository;
 import com.IntegradorIO.InventarioyStock.Venta.dto.VentaArticuloRequest;
@@ -15,10 +16,10 @@ import com.IntegradorIO.InventarioyStock.Articulo.ModeloInventario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class VentaService {
@@ -105,4 +106,16 @@ public class VentaService {
         ventaGuardada.setCantidadVenta(totalCantidad);
         return ventaRepository.save(ventaGuardada);
     }
+
+    public List<DTOTablaVentas> obtenerVentas() throws Exception {
+        try {
+            List<Venta> ventas = ventaRepository.findAll();
+            return ventas.stream()
+                    .map(DTOTablaVentas::new)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
 }
