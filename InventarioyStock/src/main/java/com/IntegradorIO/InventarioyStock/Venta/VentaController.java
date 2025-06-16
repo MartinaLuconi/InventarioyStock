@@ -1,6 +1,7 @@
 package com.IntegradorIO.InventarioyStock.Venta;
 
 import com.IntegradorIO.InventarioyStock.Venta.dto.VentaRequest;
+package com.IntegradorIO.InventarioyStock.Venta.dto.DTOTablaVentas;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,23 +21,27 @@ public class VentaController {
     private VentaRepository ventaRepository;
 
     /** Listar todas las ventas */
-    @GetMapping
-    public ResponseEntity<List<Venta>> listarVentas() {
-        List<Venta> ventas = ventaRepository.findAll();
-        return new ResponseEntity<>(ventas, HttpStatus.OK);
+    @GetMapping("/tabla")
+    public ResponseEntity<List<DTOTablaVentas>> listarVentasTabla() {
+        try {
+            List<DTOTablaVentas> ventas = ventaService.obtenerVentas();
+            return new ResponseEntity<>(ventas, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    /** Alta de venta según MVP */
+
+    /** Alta de venta (con validación completa de stock) */
     @PostMapping
-    public ResponseEntity<Venta> crearVenta(@RequestBody VentaRequest req) {
+    public ResponseEntity<?> crearVenta(@RequestBody VentaRequest req) {
         try {
             Venta v = ventaService.guardarVentaConArticulos(req);
             return new ResponseEntity<>(v, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (IllegalStateException e) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
 }
+
 

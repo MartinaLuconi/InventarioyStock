@@ -9,6 +9,7 @@ import lombok.Setter;
 import com.IntegradorIO.InventarioyStock.VentaArticulo.VentaArticulo;
 import jakarta.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -18,8 +19,10 @@ public class Venta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int nroVenta;
-    private double DNIcliente;
-    private Timestamp fechaHoraVenta;
+    private double DniCliente;
+    private String NombreCliente;
+    private String ApellidoCliente;
+    private LocalDateTime FechaVenta;
     private int cantidadVenta;
 
     @OneToMany(

@@ -3,23 +3,27 @@ package com.IntegradorIO.InventarioyStock.Venta.dto;
 public class VentaArticuloRequest {
 
     /** Código del artículo a vender */
-    private Integer codigoArticulo;
-    /** Cantidad de unidades vendidas */
-    private int cantidadVA;
+        private Integer codigoArticulo;
 
-    public VentaArticuloRequest() {}
+        /** Cantidad de unidades vendidas */
+        private int cantidadVA;
 
-    public Integer getCodigoArticulo() {
-        return codigoArticulo;
-    }
-    public void setCodigoArticulo(Integer codigoArticulo) {
-        this.codigoArticulo = codigoArticulo;
+        public VentaArticuloRequest() {}
+
+        public Integer getCodigoArticulo() {
+            return codigoArticulo;
+        }
+
+        public void setCodigoArticulo(Integer codigoArticulo) {
+            this.codigoArticulo = codigoArticulo;
+        }
+
+        public int getCantidadVA() {
+            return cantidadVA;
+        }
+
+        public void setCantidadVA(int cantidadVA) {
+            this.cantidadVA = cantidadVA;
+        }
     }
 
-    public int getCantidadVA() {
-        return cantidadVA;
-    }
-    public void setCantidadVA(int cantidadVA) {
-        this.cantidadVA = cantidadVA;
-    }
-}
