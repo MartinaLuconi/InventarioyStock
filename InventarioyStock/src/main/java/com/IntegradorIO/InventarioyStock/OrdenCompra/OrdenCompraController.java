@@ -29,9 +29,13 @@ public class OrdenCompraController {
         return new ResponseEntity<>(oc,HttpStatus.OK);
     }
     @PostMapping
-    public ResponseEntity<OrdenCompra> crearOrdenCompra(@RequestBody DTOOrdenCompra dtoOC) throws Exception{
-        OrdenCompra nuevaOC = ordenCompraService.crearOrdenCompra(dtoOC);
-        return new ResponseEntity<>(nuevaOC,HttpStatus.CREATED);
+    public ResponseEntity<?> crearOC(@RequestBody DTOOrdenCompra dtoOC) {
+        try {
+            Map<String, Object> resultado = ordenCompraService.crearOrdenCompra(dtoOC);
+            return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @PutMapping("/{nroOrden}/modificar")

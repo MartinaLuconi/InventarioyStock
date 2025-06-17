@@ -127,7 +127,7 @@ public class OrdenCompraService {
         return  oc;
     }*/
     //metodo que agrego Caro para que ande el Alta de la OC
-    public OrdenCompra crearOrdenCompra(DTOOrdenCompra dtoOC) throws Exception {
+    public Map<String, Object> crearOrdenCompra(DTOOrdenCompra dtoOC) throws Exception {
         // Buscar proveedor por ID
         Optional<Proveedor> proveedorOptional = proveedorRepository.findById(dtoOC.getCodProveedor());
         if (proveedorOptional.isEmpty()) {
@@ -147,6 +147,7 @@ public class OrdenCompraService {
         oc.setProveedor(proveedor);
         oc.setEstadoOrdenCompra(estadoOC);
 
+        boolean advertencia = false;
         // Lista de detalles
         List<OrdenCompraArticulo> ocaList = new ArrayList<>();
         for (DTODetalleOC detalle : dtoOC.getDetallesOC()) {
@@ -157,7 +158,7 @@ public class OrdenCompraService {
                 int cantidad = detalle.getCantidadArticulo();
                 int stockTotal = articulo.getStockActualArticulo() + cantidad;
                 if (stockTotal < articulo.getPuntoPedido()) {
-                    throw new Exception("La cantidad pedida del artículo '" + articulo.getNombreArticulo() + "' no supera el punto de pedido.");
+                    advertencia = true; // ⚠️ Marcar advertencia, pero no interrumpir
                 }
             }
 
@@ -176,7 +177,10 @@ public class OrdenCompraService {
         // Guardar la orden (se guarda todo por cascade)
         ordenCompraRepository.save(oc);
 
-        return oc;
+        Map<String, Object> respuesta = new HashMap<>();
+        respuesta.put("orden", oc);
+        respuesta.put("advertencia", advertencia);
+        return respuesta;
     }
 
     //con este bloque solo actualiza el codigo pero si cambiabas el nombre por ejemplo no (en vez de pedir caramelos, chocolates)
@@ -259,6 +263,7 @@ public class OrdenCompraService {
         datosOrdenCompra.setNombreOC(ordenCompra.getNombreOrdenCompra());
         List<OrdenCompraArticulo> listaDetalles = ordenCompra.getListaOrdenCompraArticulo();
         List<DTODetalleOC> detalleOCS = new ArrayList<>();
+
         for (OrdenCompraArticulo oca : listaDetalles) {
             DTODetalleOC detalleOC = new DTODetalleOC();
             detalleOC.setCantidadArticulo(oca.getCantidadOCA());

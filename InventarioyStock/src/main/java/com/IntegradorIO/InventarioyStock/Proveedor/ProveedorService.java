@@ -273,7 +273,7 @@ public class ProveedorService {
     }
 
     /** Listar asociaciones Proveedor–Artículo por proveedor */
-    public List<Articulo> obtenerArticulosPorProveedor(Integer codigoProveedor) {
+   /* public List<Articulo> obtenerArticulosPorProveedor(Integer codigoProveedor) {
         List<Articulo> articulosProveedorList = new ArrayList<>();
         Proveedor p = proveedorRepository.findById(codigoProveedor)
                 .filter(Proveedor::isActivo)
@@ -287,5 +287,36 @@ public class ProveedorService {
         return  articulosProveedorList;
         //return proveedorArticuloRepository.findArticulosConArticuloPorProveedor(codigoProveedor);
 
+    }*/
+    //El front espera un dto
+    public List<DTODetalleProveedorArticulo> obtenerArticulosPorProveedor(Integer codigoProveedor) {
+        List<DTODetalleProveedorArticulo> dtoList = new ArrayList<>();
+
+        Proveedor proveedor = proveedorRepository.findById(codigoProveedor)
+                .filter(Proveedor::isActivo)
+                .orElseThrow(() -> new IllegalArgumentException("Proveedor no encontrado o inactivo"));
+
+        List<ProveedorArticulo> paList = proveedor.getProveedorArticulos();
+
+        for (ProveedorArticulo pa : paList) {
+            Articulo articulo = pa.getArticulo();
+
+            DTODetalleProveedorArticulo dto = new DTODetalleProveedorArticulo();
+            dto.setCodigoArticulo(articulo.getCodigoArticulo());
+            dto.setDemoraEntrega(pa.getDemoraEntrega());
+            dto.setPrecioUnitProveedorArticulo(pa.getCostoUnitario());
+            dto.setCostoPedido(pa.getCostoPedido());
+            dto.setLoteOptimo(pa.getLoteOptimo());
+            dto.setCostoMantenimiento((int) pa.getCostoMantenimiento()); // si es double y el DTO lo espera como int
+            dto.setEsPredeterminado(pa.isEsPredeterminado());
+
+
+            dtoList.add(dto);
+        }
+
+        return dtoList;
     }
+
+
+
 }

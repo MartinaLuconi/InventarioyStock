@@ -1,6 +1,7 @@
 package com.IntegradorIO.InventarioyStock.Proveedor;
 
 import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
+import com.IntegradorIO.InventarioyStock.Proveedor.dto.DTODetalleProveedorArticulo;
 import com.IntegradorIO.InventarioyStock.Proveedor.dto.DTOModificarProveedor;
 import com.IntegradorIO.InventarioyStock.Proveedor.dto.DTONuevoProveedor;
 import com.IntegradorIO.InventarioyStock.Proveedor.dto.DTOTablaProveedor;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -73,7 +75,7 @@ public class ProveedorController {
         }
     }
 
-    @GetMapping("/{codigoProveedor}/articulos")
+   // @GetMapping("/{codigoProveedor}/articulos")
     /*public ResponseEntity<List<ProveedorArticulo>> listarArticulosPorProveedor(
             @PathVariable Integer codigoProveedor) {
         try {
@@ -86,7 +88,7 @@ public class ProveedorController {
         }
     }*/
 
-    public ResponseEntity<List<Articulo>> listarArticulosPorProveedor(
+    /*public ResponseEntity<List<Articulo>> listarArticulosPorProveedor(
             @PathVariable Integer codigoProveedor) {
         try {
             List<Articulo> lista =
@@ -95,6 +97,17 @@ public class ProveedorController {
         } catch (IllegalArgumentException e) {
             // Proveedor no existe o está inactivo
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }*/
+    //Uso el DTO por lo que espera el front 
+    @GetMapping("/{codigoProveedor}/articulos")
+    public ResponseEntity<List<DTODetalleProveedorArticulo>> obtenerArticulosPorProveedor(
+            @PathVariable Integer codigoProveedor) {
+        try {
+            List<DTODetalleProveedorArticulo> articulos = proveedorService.obtenerArticulosPorProveedor(codigoProveedor);
+            return ResponseEntity.ok(articulos);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
         }
     }
 }
