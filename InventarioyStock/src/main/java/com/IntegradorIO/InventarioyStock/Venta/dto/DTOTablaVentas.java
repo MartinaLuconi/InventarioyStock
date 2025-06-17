@@ -15,7 +15,7 @@ public class DTOTablaVentas {
     private int nroVenta;
     private String nombreCliente;
     private String apellidoCliente;
-    private double dniCliente;
+    private double DNIcliente;
     private LocalDateTime fechaVenta;
     private int cantidadVenta;
 
@@ -23,7 +23,7 @@ public class DTOTablaVentas {
         this.nroVenta = venta.getNroVenta();
         this.nombreCliente = venta.getNombreCliente();
         this.apellidoCliente = venta.getApellidoCliente();
-        this.dniCliente = venta.getDniCliente();
+        this.DNIcliente = venta.getDNIcliente();
         this.fechaVenta = venta.getFechaVenta();
         this.cantidadVenta = venta.getCantidadVenta();
     }

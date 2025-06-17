@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import com.IntegradorIO.InventarioyStock.VentaArticulo.VentaArticulo;
 import jakarta.persistence.*;
-import java.sql.Timestamp;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class Venta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int nroVenta;
-    private double DniCliente;
+    private double DNIcliente;
     private String NombreCliente;
     private String ApellidoCliente;
     private LocalDateTime FechaVenta;

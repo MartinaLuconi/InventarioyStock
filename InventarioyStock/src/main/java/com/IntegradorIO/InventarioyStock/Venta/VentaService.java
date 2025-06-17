@@ -5,14 +5,12 @@ import com.IntegradorIO.InventarioyStock.Articulo.ArticuloRepository;
 //import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTODetalleOC;
 //import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOOrdenCompra;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.OrdenCompraService;
-import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloRepository;
 import com.IntegradorIO.InventarioyStock.Venta.dto.DTOTablaVentas;
 import com.IntegradorIO.InventarioyStock.VentaArticulo.VentaArticulo;
 import com.IntegradorIO.InventarioyStock.VentaArticulo.VentaArticuloRepository;
 import com.IntegradorIO.InventarioyStock.Venta.dto.VentaArticuloRequest;
 import com.IntegradorIO.InventarioyStock.Venta.dto.VentaRequest;
-import com.IntegradorIO.InventarioyStock.Articulo.ModeloInventario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +35,7 @@ public class VentaService {
         }
 
         Venta v = new Venta();
-        v.setDniCliente(req.getDNIcliente());
+        v.setDNIcliente(req.getDNIcliente());
         v.setFechaVenta(LocalDateTime.now());
         v.setCantidadVenta(0);
         Venta ventaGuardada = ventaRepository.save(v);
