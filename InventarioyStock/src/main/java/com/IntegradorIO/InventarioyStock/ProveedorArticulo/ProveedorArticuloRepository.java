@@ -1,5 +1,6 @@
 package com.IntegradorIO.InventarioyStock.ProveedorArticulo;
 
+import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +11,7 @@ import java.util.List;
 @Repository
 public interface ProveedorArticuloRepository
         extends JpaRepository<ProveedorArticulo, Integer> {
-
+    List<ProveedorArticulo> findByArticulo(Articulo articulo);
     // Opcional: buscar todas las asociaciones de un proveedor
     //List<ProveedorArticulo> findByProveedorCodigoProveedor(Integer codigoProveedor);
 
