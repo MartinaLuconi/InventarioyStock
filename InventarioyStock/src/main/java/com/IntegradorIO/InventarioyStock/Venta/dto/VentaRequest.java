@@ -15,7 +15,7 @@ public class VentaRequest {
     private String apellidoCliente;
 
     /** DNI del cliente */
-    private Long DNIcliente;
+    private Long dniCliente;
 
     /** Fecha de la venta */
     private LocalDateTime fechaVenta;
@@ -49,12 +49,12 @@ public class VentaRequest {
         this.apellidoCliente = apellidoCliente;
     }
 
-    public Long getDNIcliente() {
-        return DNIcliente;
+    public Long getDniCliente() {
+        return dniCliente;
     }
 
-    public void setDNIcliente(Long DNIcliente) {
-        this.DNIcliente = DNIcliente;
+    public void setDniCliente(Long dniCliente) {
+        this.dniCliente = dniCliente;
     }
 
     public LocalDateTime getFechaVenta() {

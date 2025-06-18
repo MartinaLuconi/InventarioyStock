@@ -35,7 +35,7 @@ public class VentaService {
         }
 
         Venta v = new Venta();
-        v.setDNIcliente(req.getDNIcliente());
+        v.setDniCliente(req.getDniCliente());
         v.setFechaVenta(LocalDateTime.now());
         v.setCantidadVenta(0);
         Venta ventaGuardada = ventaRepository.save(v);

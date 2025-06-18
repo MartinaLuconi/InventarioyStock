@@ -19,10 +19,10 @@ public class Venta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int nroVenta;
-    private double DNIcliente;
-    private String NombreCliente;
-    private String ApellidoCliente;
-    private LocalDateTime FechaVenta;
+    private Long dniCliente;
+    private String nombreCliente;
+    private String apellidoCliente;
+    private LocalDateTime fechaVenta;
     private int cantidadVenta;
 
     @OneToMany(
