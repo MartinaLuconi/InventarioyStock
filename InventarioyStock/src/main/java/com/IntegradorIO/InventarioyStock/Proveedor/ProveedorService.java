@@ -3,6 +3,7 @@ package com.IntegradorIO.InventarioyStock.Proveedor;
 import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
 import com.IntegradorIO.InventarioyStock.Articulo.ArticuloRepository;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
+import com.IntegradorIO.InventarioyStock.OrdenCompra.OrdenCompra;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.OrdenCompraRepository;
 import com.IntegradorIO.InventarioyStock.Proveedor.dto.*;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
@@ -229,10 +230,12 @@ public class ProveedorService {
      */
     public void bajaProveedor(Integer codigoProveedor) {
         Proveedor proveedor = proveedorRepository.findById(codigoProveedor)
-                .filter(Proveedor::isActivo)
                 .orElseThrow(() -> new IllegalArgumentException("Proveedor no encontrado o ya inactivo"));
+        if (!proveedor.isActivo()){
+            throw new IllegalArgumentException("El proveedor ya está inactivo");
+        }
 
-        // 2️⃣ Validación: verificar si es predeterminado en algún artículo
+        // Validación: verificar si es predeterminado en algún artículo
         boolean esPredeterminadoEnAlguno = proveedor.getProveedorArticulos()
                 .stream()
                 .anyMatch(ProveedorArticulo::isEsPredeterminado);
@@ -241,26 +244,50 @@ public class ProveedorService {
             throw new IllegalStateException(
                     "No se puede dar de baja: proveedor predeterminado en algún artículo");
         }
-        // 1) Verificar predeterminado
-        //ProveedorArticulo pred = proveedorArticuloRepository
-       /* List<ProveedorArticulo> pred = proveedorArticuloRepository
-                .findByProveedorCodigoProveedorAndEsPredeterminadoTrue(codigoProveedor);
+        //1) Verificar predeterminado
+       /* ProveedorArticulo pred = proveedorArticuloRepository
+       List<ProveedorArticulo> pred = proveedorArticuloRepository
+                .findByProveedorCodigoProveedorAndEsPredeterminadoTrue(codigoProveedor);*/
 
         //if (pred != null) {
-        if (!pred.isEmpty()) {
+       /* List<ProveedorArticulo> paList = proveedor.getProveedorArticulos();
+        for (ProveedorArticulo pa : paList){
+            if (pa.isEsPredeterminado()){ //verifica q no sea predeterminado
+                // if (!pred.isEmpty()) {
+                throw new IllegalStateException(
+                        "No se puede dar de baja: proveedor predeterminado en un artículo"
+                );
+            }
+        } */
+
+
+        // 2) Verificar órdenes activas (PENDIENTE o CONFIRMADO)
+       /* boolean tieneOrdenesActivas = ordenCompraRepository
+                .existsByProveedorCodigoProveedorAndEstadoOrdenCompraIn(
+                        codigoProveedor,
+                        List.of(EstadoOrdencCompra.PENDIENTE, EstadoOrdencCompra.CONFIRMADO)
+                );
+
+
+        if (tieneOrdenesActivas) {
             throw new IllegalStateException(
-                    "No se puede dar de baja: proveedor predeterminado en un artículo"
+                    "No se puede dar de baja: existen Órdenes de Compra pendientes o confirmadas"
             );
         }*/
 
-        // 2) Verificar órdenes activas (PENDIENTE o CONFIRMADO)
-        boolean tieneOrdenesActivas = ordenCompraRepository
-                .existsByProveedorCodigoProveedorAndEstadoOrdenCompraIn(
-                        codigoProveedor,
-                        Arrays.asList(EstadoOrdencCompra.PENDIENTE, EstadoOrdencCompra.CONFIRMADO)  // <- usa EstadoOrden
-                );
+        List<OrdenCompra> ocList = ordenCompraRepository.obtenerOrdenesCompra();
+        List<OrdenCompra> ocPendientesConfirmadas=new ArrayList<>();
+        for (OrdenCompra oc: ocList){
+            if (oc.getProveedor().getCodigoProveedor() ==proveedor.getCodigoProveedor()){
+                EstadoOrdencCompra estadoActual = oc.getEstadoOrdenCompra().getNombreEstado();
+                if (estadoActual==EstadoOrdencCompra.PENDIENTE || estadoActual==EstadoOrdencCompra.CONFIRMADO){
+                    ocPendientesConfirmadas.add(oc); //armar una lista con las ordenes P o C
+                }
+            }
 
-        if (tieneOrdenesActivas) {
+        }
+
+        if (!ocPendientesConfirmadas.isEmpty()){
             throw new IllegalStateException(
                     "No se puede dar de baja: existen Órdenes de Compra pendientes o confirmadas"
             );
@@ -273,21 +300,6 @@ public class ProveedorService {
     }
 
     /** Listar asociaciones Proveedor–Artículo por proveedor */
-   /* public List<Articulo> obtenerArticulosPorProveedor(Integer codigoProveedor) {
-        List<Articulo> articulosProveedorList = new ArrayList<>();
-        Proveedor p = proveedorRepository.findById(codigoProveedor)
-                .filter(Proveedor::isActivo)
-                .orElseThrow(() -> new IllegalArgumentException("Proveedor no encontrado o inactivo"));
-
-        List<ProveedorArticulo> paList = p.getProveedorArticulos();
-        for (ProveedorArticulo pa : paList){
-            Articulo articuloDelProveedor= pa.getArticulo();
-            articulosProveedorList.add(articuloDelProveedor);
-        }
-        return  articulosProveedorList;
-        //return proveedorArticuloRepository.findArticulosConArticuloPorProveedor(codigoProveedor);
-
-    }*/
     //El front espera un dto
     public List<DTODetalleProveedorArticulo> obtenerArticulosPorProveedor(Integer codigoProveedor) {
         List<DTODetalleProveedorArticulo> dtoList = new ArrayList<>();
