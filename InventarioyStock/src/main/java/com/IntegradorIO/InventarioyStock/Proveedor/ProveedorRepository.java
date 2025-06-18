@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface ProveedorRepository extends JpaRepository<Proveedor, Integer> {
     /** Solo los proveedores activos */
-    @Query("SELECT p FROM Proveedor p")
+   // @Query("SELECT p FROM Proveedor p")
     List<Proveedor> findByActivoTrue();
 }

@@ -12,6 +12,5 @@ public class DTODetalleProveedorArticulo {
     private float costoPedido;
     private  int loteOptimo;
     private int costoMantenimiento;
-    private int cargoProveedorPedido;
     private boolean esPredeterminado;
 }

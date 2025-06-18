@@ -69,9 +69,9 @@ public class ProveedorService {
 
         // 3) Si el dto trae asociaciones a artículos, crearlas ahora
 
-
+        List<ProveedorArticulo> proveedorArticuloList = new ArrayList<>();
             for (DTODetalleProveedorArticulo detalle : dto.getAsociaciones()) {
-                List<ProveedorArticulo> proveedorArticuloList = new ArrayList<>();
+
                 // 3.1) Buscar el Artículo correspondiente
                 Articulo art = articuloRepository.obtenerArticulo(detalle.getCodigoArticulo());
 
@@ -83,16 +83,16 @@ public class ProveedorService {
                 pa.setCostoUnitario(detalle.getPrecioUnitProveedorArticulo());
                 pa.setCostoPedido(detalle.getCostoPedido());
                 pa.setEsPredeterminado(detalle.isEsPredeterminado());
-                pa.setCostoPedido(detalle.getCostoPedido());
                 pa.setFechaDesdePA(new Timestamp(System.currentTimeMillis()));
                 pa.setFechaHastaPA(null);
                 pa.setLoteOptimo(detalle.getLoteOptimo());
                 pa.setCostoMantenimiento(detalle.getCostoMantenimiento());
-                proveedorArticuloRepository.save(pa);
                 proveedorArticuloList.add(pa);
-                entidad.setProveedorArticulos(proveedorArticuloList);
-            }
+                proveedorArticuloRepository.save(pa);
 
+
+            }
+            entidad.setProveedorArticulos(proveedorArticuloList);
             proveedorRepository.save(entidad);
 
 
@@ -157,7 +157,7 @@ public class ProveedorService {
                 nuevo.setDemoraEntrega(detalle.getDemoraEntrega());
                 nuevo.setCostoUnitario(detalle.getPrecioUnitProveedorArticulo());
                 nuevo.setCostoPedido(detalle.getCostoPedido());
-                nuevo.setCostoPedido(detalle.getCargoProveedorPedido());
+                nuevo.setCostoPedido(detalle.getCostoPedido());
                 nuevo.setEsPredeterminado(detalle.isEsPredeterminado());
 
                 listaFinal.add(nuevo);
@@ -204,7 +204,7 @@ public class ProveedorService {
             pa.setDemoraEntrega(paReq.getDemoraEntrega());
             pa.setCostoUnitario(paReq.getPrecioUnitProveedorArticulo());
             pa.setCostoPedido(paReq.getCostoPedido());
-            pa.setCostoPedido(paReq.getCargoProveedorPedido());
+           // pa.setCostoPedido(paReq.getCostoPedido());
             pa.setEsPredeterminado(paReq.isEsPredeterminado());
 
             lista.add(pa);
