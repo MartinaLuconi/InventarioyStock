@@ -1,24 +1,51 @@
 package com.IntegradorIO.InventarioyStock.Venta;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+import com.IntegradorIO.InventarioyStock.Venta.dto.DTOTablaVentas;
+import com.IntegradorIO.InventarioyStock.Venta.dto.VentaRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+
 @RestController
-@RequestMapping("/venta")
+@RequestMapping("/api/ventas")
+@CrossOrigin(origins = "http://localhost:5173")
 public class VentaController {
+
+
+    @Autowired
+    private VentaService ventaService;
+
 
     @Autowired
     private VentaRepository ventaRepository;
 
-    @GetMapping
-    public List<Venta> listar() {
-        return ventaRepository.findAll();
+
+    /** Listar todas las ventas */
+    @GetMapping("/tabla")
+    public ResponseEntity<List<DTOTablaVentas>> listarVentasTabla() {
+        try {
+            List<DTOTablaVentas> ventas = ventaService.obtenerVentas();
+            return new ResponseEntity<>(ventas, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
+
+
+
+    /** Alta de venta (con validación completa de stock) */
     @PostMapping
-    public Venta guardar(@RequestBody Venta venta) {
-        return ventaRepository.save(venta);
+    public ResponseEntity<?> crearVenta(@RequestBody VentaRequest req) {
+        try {
+            Venta v = ventaService.guardarVentaConArticulos(req);
+            return new ResponseEntity<>(v, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
     }
 }

@@ -1,4 +1,6 @@
 package com.IntegradorIO.InventarioyStock.Venta.dto;
+
+
 import com.IntegradorIO.InventarioyStock.Venta.Venta;
 import lombok.Data;
 import lombok.Getter;
