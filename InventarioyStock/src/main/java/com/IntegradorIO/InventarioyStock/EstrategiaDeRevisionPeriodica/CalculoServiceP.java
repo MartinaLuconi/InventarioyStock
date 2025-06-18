@@ -1,18 +1,24 @@
-// src/main/java/com/IntegradorIO/InventarioyStock/EstrategiaDeRevisionP/CalculoServiceP.java
 package com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionPeriodica;
 
 import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
+import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloRepository;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class CalculoServiceP {
 
+    private final ProveedorArticuloRepository proveedorArticuloRepository;
+
+    public CalculoServiceP(ProveedorArticuloRepository proveedorArticuloRepository) {
+        this.proveedorArticuloRepository = proveedorArticuloRepository;
+    }
+
     public void recalcularYActualizar(Articulo articulo) {
+        List<ProveedorArticulo> proveedores = proveedorArticuloRepository.findByArticulo(articulo);
 
-        /////////////////// MODIFIQUE ESTO
-       /*for (ProveedorArticulo pa : articulo.getProveedorArticuloList()) {
-
+        for (ProveedorArticulo pa : proveedores) {
             int stockSeguridad = CalculosEstrRevisionPeriodica.calcularStockSeguridad(
                     pa.getNivelDeServicio(),
                     articulo.getDesviacionEstandar(),
@@ -31,13 +37,11 @@ public class CalculoServiceP {
             pa.setInventarioMaximo(inventarioMaximo);
 
             double inventarioPromedio = CalculosEstrRevisionPeriodica.calcularInventarioPromedio(inventarioMaximo);
-            //pa.setInventarioPromedio(inventarioPromedio);
 
             double costoAnualMantener = CalculosEstrRevisionPeriodica.calcularCostoAnualMantener(
                     inventarioPromedio,
                     pa.getCostoMantenimiento()
             );
-            //pa.setCostoAnualMantener(costoAnualMantener);
 
             int q = CalculosEstrRevisionPeriodica.calcularCantidadAPedir(
                     articulo.getDemandaAnual(),
@@ -47,9 +51,8 @@ public class CalculoServiceP {
                     pa.getNivelDeServicio(),
                     articulo.getStockActualArticulo()
             );
-         //   pa.setCantidadAPedir(cantidadAPedir);
 
-            double cgi = CalculosEstrRevisionContinua.calcularCGI(
+            double cgi = CalculosEstrRevisionPeriodica.calcularCGI(
                     articulo.getDemandaAnual(),
                     q,
                     pa.getCostoPedido(),
@@ -57,9 +60,10 @@ public class CalculoServiceP {
                     pa.getCostoMantenimiento()
             );
             pa.setCGIProveedorArticulo((float) cgi);
-        } */
+        }
     }
 
     public void recalcularYActualizar(ProveedorArticulo proveedorArticulo) {
+        // Implementar si es necesario
     }
 }
