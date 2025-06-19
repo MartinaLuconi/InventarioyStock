@@ -5,7 +5,6 @@ public enum EstadoOrdencCompra {
     CONFIRMADO,
     CANCELADO,
     ENVIADA,
-
     FINALIZADO //es cuando recibis la OC
 
 }

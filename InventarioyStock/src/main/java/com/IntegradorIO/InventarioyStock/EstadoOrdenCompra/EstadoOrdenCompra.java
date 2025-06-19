@@ -15,7 +15,8 @@ public class EstadoOrdenCompra {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int codigoEstadoOrdenCompra;
-
+    @Enumerated(EnumType.STRING)
+    @Column(name = "nombre_estado")
     private EstadoOrdencCompra nombreEstado;
     private Timestamp fechaHoraBajaEstadoOC;
     //private String nombreEstadoOC;

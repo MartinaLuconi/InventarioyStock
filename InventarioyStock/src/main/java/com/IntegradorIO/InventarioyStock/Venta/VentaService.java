@@ -14,6 +14,7 @@ import com.IntegradorIO.InventarioyStock.Venta.dto.VentaRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class VentaService {
 
         Venta v = new Venta();
         v.setDniCliente(req.getDniCliente());
-        v.setFechaVenta(LocalDateTime.now());
+        v.setFechaVenta(new Timestamp(System.currentTimeMillis()));
         v.setCantidadVenta(0);
         Venta ventaGuardada = ventaRepository.save(v);
 
@@ -79,6 +80,7 @@ public class VentaService {
 
 
             totalCantidad += lar.getCantidadVA();
+
 /*
            // Lógica de generación automática de OC:
            if (art.getModeloInventario() == ModeloInventario.LOTE_FIJO &&
@@ -118,10 +120,16 @@ public class VentaService {
 
 
         }
-
+        //buscar COSTO UNITARIO PARA CALCULAR EL TOTAL DE LA VENTA EN LA INTERMEDIA DEL ARTICULO
+        float costoUnitarioArt=1;
+        float totalVenta = totalCantidad*costoUnitarioArt;
 
         ventaGuardada.setArticulos(lineas);
         ventaGuardada.setCantidadVenta(totalCantidad);
+        ventaGuardada.setTotalVenta(totalVenta);
+        ventaGuardada.setDniCliente(req.getDniCliente());
+        ventaGuardada.setApellidoCliente(req.getApellidoCliente());
+        ventaGuardada.setNombreCliente(req.getNombreCliente());
         return ventaRepository.save(ventaGuardada);
     }
 

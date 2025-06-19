@@ -1,6 +1,8 @@
 package com.IntegradorIO.InventarioyStock.OrdenCompra.DTO;
 
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +17,7 @@ public class DTOTablaOrdenCompra {
     private String nombreOC;
     private Timestamp fechaOrden; //agregar FD Y FH DESDE INTERMEDIA
     private String nombreProveedor;
+    @Enumerated(EnumType.STRING)
     private EstadoOrdencCompra estadoOC;
     //se podría agregar el total tmb
 

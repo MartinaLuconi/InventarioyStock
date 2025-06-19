@@ -8,7 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+
+import java.sql.Timestamp;
 import java.util.List;
 
 
@@ -22,8 +23,9 @@ public class Venta {
     private Long dniCliente;
     private String nombreCliente;
     private String apellidoCliente;
-    private LocalDateTime fechaVenta;
+    private Timestamp fechaVenta;
     private int cantidadVenta;
+    private float totalVenta;
 
 
     @OneToMany(

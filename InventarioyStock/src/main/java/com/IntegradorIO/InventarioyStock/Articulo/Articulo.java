@@ -23,7 +23,9 @@ public class Articulo {
     private Timestamp fechaHoraBajaArticulo;
     private int stockActualArticulo;
     private int stockSeguridadArticulo;
+    @Enumerated(EnumType.STRING)
     private EstadoArticulo estadoArticulo;
+    @Enumerated(EnumType.STRING)
     private ModeloInventario modeloInventario;
     private int demandaAnual;
     private int puntoPedido;
@@ -34,8 +36,8 @@ public class Articulo {
    // @JsonIgnore
    // private List<ProveedorArticulo> proveedorArticuloList = new ArrayList<>();
 
-    public Articulo() {
-    }
+   // public Articulo() {
+   // }
 
 
 }

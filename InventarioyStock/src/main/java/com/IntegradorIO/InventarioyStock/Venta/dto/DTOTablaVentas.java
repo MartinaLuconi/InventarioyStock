@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 
@@ -20,7 +21,7 @@ public class DTOTablaVentas {
     private String nombreCliente;
     private String apellidoCliente;
     private Long dniCliente;
-    private LocalDateTime fechaVenta;
+    private Timestamp fechaVenta;
     private int cantidadVenta;
 
 

@@ -18,7 +18,7 @@ public class OrdenCompra {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int numeroOrdenCompra;
     private String nombreOrdenCompra;
-    private int cantidadOrdenCompra;
+    //private int cantidadOrdenCompra;
 
     @ManyToOne
     @JoinColumn(name = "proveedor_id")

@@ -9,6 +9,7 @@ import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompraRepo
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTODetalleOC;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOOrdenCompra;
+import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOProveedorPredet;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOTablaOrdenCompra;
 import com.IntegradorIO.InventarioyStock.OrdenCompraArticulo.OrdenCompraArticulo;
 import com.IntegradorIO.InventarioyStock.OrdenCompraArticulo.OrdenCompraArticuloRepository;
@@ -55,6 +56,35 @@ public class OrdenCompraService {
                 dtoFilaTabla.setFechaOrden(oca.getFechaDesdeOCA());
                 tablaOC.add(dtoFilaTabla);
 
+            }
+            return tablaOC;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+
+
+    }
+    //BUSCAR ORDENES FINALIZADAS
+    public List<DTOTablaOrdenCompra> obtenerOrdenesCompraFinalizadas() throws Exception {
+        List<DTOTablaOrdenCompra> tablaOC = new ArrayList<>();
+        try {
+            List<OrdenCompra> ordenCompraList = ordenCompraRepository.findAll();
+            for (OrdenCompra oc : ordenCompraList) {
+                if (oc.getEstadoOrdenCompra().getNombreEstado()==EstadoOrdencCompra.FINALIZADO) {
+
+                    DTOTablaOrdenCompra dtoFilaTabla = new DTOTablaOrdenCompra();
+                    dtoFilaTabla.setNroOrdenCompra(oc.getNumeroOrdenCompra());
+                    dtoFilaTabla.setNombreOC(oc.getNombreOrdenCompra());
+                    dtoFilaTabla.setNombreProveedor(oc.getProveedor().getNombreProveedor());
+                    dtoFilaTabla.setEstadoOC(oc.getEstadoOrdenCompra().getNombreEstado());
+                    List<OrdenCompraArticulo> ocaList = oc.getListaOrdenCompraArticulo();
+                    //encuentra la orden actual relacionada
+                    OrdenCompraArticulo oca = ocaList.stream()
+                            .max(Comparator.comparing(OrdenCompraArticulo::getFechaDesdeOCA))
+                            .orElse(null);
+                    dtoFilaTabla.setFechaOrden(oca.getFechaDesdeOCA());
+                    tablaOC.add(dtoFilaTabla);
+                }
             }
             return tablaOC;
         } catch (Exception e) {
@@ -133,6 +163,7 @@ public class OrdenCompraService {
         if (proveedorOptional.isEmpty()) {
             throw new Exception("No se encontró el proveedor con código: " + dtoOC.getCodProveedor());
         }
+
         Proveedor proveedor = proveedorOptional.get();
 
         // Crear estado "PENDIENTE"
@@ -152,7 +183,8 @@ public class OrdenCompraService {
         List<OrdenCompraArticulo> ocaList = new ArrayList<>();
         for (DTODetalleOC detalle : dtoOC.getDetallesOC()) {
             Articulo articulo = articuloRepository.obtenerArticulo(detalle.getCodArticulo());
-
+            //llamada a funcion sugerencia
+            sugerirProveedorPredetertminado(articulo.getCodigoArticulo());
             // Validación si es lote fijo
             if (articulo.getModeloInventario() == ModeloInventario.LOTE_FIJO) {
                 int cantidad = detalle.getCantidadArticulo();
@@ -276,11 +308,48 @@ public class OrdenCompraService {
     }
 
     //sugerir proveedor predeterminado
-    public void sugerirProveedorPredetertminado() {
+    public DTOProveedorPredet sugerirProveedorPredetertminado(int codArticulo) {
+        //busca los que estan activos
+        List<Proveedor> proveedorList = proveedorRepository.findByActivoTrue();
+        //por cada activo lee q articulo da
+        for (Proveedor p :proveedorList){
+            List<ProveedorArticulo> paList = p.getProveedorArticulos(); //para leer el articulo va por la intermedia
+            for (ProveedorArticulo pa : paList){
+                if (pa.getArticulo().getCodigoArticulo() == codArticulo) { //ve que sea el articulo seleccionado
+                    if (pa.isEsPredeterminado()) { //mira que sea el predeterminado
+                        DTOProveedorPredet proveedorPredet = new DTOProveedorPredet();
+                        proveedorPredet.setNombreProveedorPredeterminado(p.getNombreProveedor());
+                        return  proveedorPredet;
+                       // System.out.println("El proveedor prederterminado es " + p.getNombreProveedor()); //lanza un mensaje
+                    }
+                }
+            }
 
+        }
+        return  null;
+    }
+
+    //filtrar proveedores por articulo y activos para desplegable
+    public List<DTOProveedorPredet> filtrarProveedorParaArticulos(int codArticulo) {
+        List<Proveedor> proveedorList = proveedorRepository.findByActivoTrue(); // que este dado de alta
+        List<DTOProveedorPredet> listProveedoresPorArticulo = new ArrayList<>();
+        //por cada activo lee q articulo da
+        for (Proveedor p : proveedorList) {
+            List<ProveedorArticulo> paList = p.getProveedorArticulos(); //para leer el articulo va por la intermedia
+            for (ProveedorArticulo pa : paList) {
+                if (pa.getArticulo().getCodigoArticulo() == codArticulo) { //verifica que le pertenezca el articulo
+                    DTOProveedorPredet dtoProveedorPredet = new DTOProveedorPredet();
+                    dtoProveedorPredet.setNombreProveedorPredeterminado(p.getNombreProveedor());
+                    listProveedoresPorArticulo.add(dtoProveedorPredet);
+                }
+            }
+        }
+        return listProveedoresPorArticulo;
     }
 
     //sugerir lote
+
+
 
     //GESTION DE ESTADOS
 
@@ -329,18 +398,22 @@ public class OrdenCompraService {
                     .orElse(null);
             ocaActual.setFechaHastaOCA(new Timestamp(System.currentTimeMillis())); //le ponemos fin fecha hasta
             ordenCompraArticuloRepository.save(ocaActual);
-        }
-        // actualizar el inventario
 
-        int ingresoArticulos = oc.getCantidadOrdenCompra();
-        //busco el articulo de la OC y ahí hago stockActual+ingresoArticulos, dsp guardo
-        List<OrdenCompraArticulo> detallesListOC = oc.getListaOrdenCompraArticulo();
-        for (OrdenCompraArticulo detalle : detallesListOC) {
-            Articulo articuloPedido = detalle.getArticulo(); //busco el articulo de la OC
-            int stockActual = articuloPedido.getStockActualArticulo();//leo stock actual
-            int nuevoStock = stockActual + ingresoArticulos; //calculo nuevo stock con el reingreso
-            detalle.getArticulo().setStockActualArticulo(nuevoStock); //se piso el stock viejo
-            articuloRepository.save(articuloPedido);//guardo el cambio
+
+            // actualizar el inventario
+
+           // int ingresoArticulos = oc.getCantidadOrdenCompra();
+            //busco el articulo de la OC y ahí hago stockActual+ingresoArticulos, dsp guardo
+            List<OrdenCompraArticulo> detallesListOC = oc.getListaOrdenCompraArticulo();
+            for (OrdenCompraArticulo detalle : detallesListOC) {
+                Articulo articuloPedido = detalle.getArticulo(); //busco el articulo de la OC
+                int ingresoArticulos = detalle.getCantidadOCA();
+                int stockActual = articuloPedido.getStockActualArticulo();//leo stock actual
+                int nuevoStock = stockActual + ingresoArticulos; //calculo nuevo stock con el reingreso
+                articuloPedido.setStockActualArticulo(nuevoStock); //se piso el stock viejo
+                articuloRepository.save(articuloPedido);//guardo el cambio
+            }
+
         }
 
 

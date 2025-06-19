@@ -96,7 +96,7 @@ public class ArticuloService  {
                 articulo.setDemandaAnual(dtoNuevoArticulo.getDemandaAnual());
                 articulo.setDesviacionEstandar(dtoNuevoArticulo.getDesviacionEstandar());
                 articulo.setCostoAlmacenamiento(dtoNuevoArticulo.getCostoAlmacenamiento());
-               // articulo.setProveedorArticuloList(null);
+                articulo.setEstadoArticulo(EstadoArticulo.A_REPONER);
             articuloRepository.save(articulo);
 
             return articulo;
@@ -121,6 +121,7 @@ public class ArticuloService  {
             articulo.setDemandaAnual(articuloModificado.getDemandaAnual());
             articulo.setDesviacionEstandar(articuloModificado.getDesviacionEstandar());
             articulo.setCostoAlmacenamiento(articuloModificado.getCostoAlmacenamiento());
+            articulo.setEstadoArticulo(EstadoArticulo.A_REPONER);
             articuloRepository.save(articulo);
 
             return articulo;

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ArticuloListenerP {
+/*
+
 
     private static CalculoServiceP calculoServiceP;
 
@@ -21,4 +23,6 @@ public class ArticuloListenerP {
             calculoServiceP.recalcularYActualizar(articulo);
         }
     }
+
+ */
 }

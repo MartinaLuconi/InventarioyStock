@@ -17,7 +17,7 @@ public class VentaArticulo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codVentaArticulo;
-    private int cantidadVA;
+    private int cantidadVA; //cantidadVentaArticulo
 
     @ManyToOne
     @JoinColumn(name = "articulo_id")

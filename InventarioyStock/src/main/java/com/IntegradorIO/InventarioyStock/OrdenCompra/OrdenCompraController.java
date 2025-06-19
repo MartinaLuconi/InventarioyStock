@@ -2,7 +2,9 @@ package com.IntegradorIO.InventarioyStock.OrdenCompra;
 
 
 import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOOrdenCompra;
+import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOProveedorPredet;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOTablaOrdenCompra;
+import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,11 @@ public class OrdenCompraController {
     @GetMapping
     public ResponseEntity<List<DTOTablaOrdenCompra>>  obtenerOrdenesCompra() throws Exception{
         List<DTOTablaOrdenCompra> ordenes = ordenCompraService.obtenerOrdenesCompra();
+        return ResponseEntity.ok(ordenes);
+    }
+    @GetMapping("/finalizadas")
+    public ResponseEntity<List<DTOTablaOrdenCompra>> obtenerOrdenesCompraFinalizadas() throws Exception {
+        List<DTOTablaOrdenCompra> ordenes = ordenCompraService.obtenerOrdenesCompraFinalizadas();
         return ResponseEntity.ok(ordenes);
     }
     @GetMapping("/{nroOrden}")
@@ -65,6 +72,22 @@ public class OrdenCompraController {
        ordenCompraService.finalizarOC(nroOrden);
        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
+   }
+
+   //sugerir proveedor
+   @GetMapping("/ProvPredeterminado/{codArticulo}")
+   public ResponseEntity<DTOProveedorPredet> sugerirProveedorPredetertminado(@PathVariable int codArticulo) {
+       DTOProveedorPredet proveedor = ordenCompraService.sugerirProveedorPredetertminado(codArticulo);
+       return ResponseEntity.ok(proveedor);
+       //return new ResponseEntity<>(HttpStatus.OK);
+       //return ResponseEntity.ok(new DTOProveedorPredet(proveedor));
+   }
+
+   //armar seleccionable
+   @GetMapping("/ProvedoresPorArticulo/{codArticulo}")
+   public ResponseEntity<List<DTOProveedorPredet>> filtrarProveedorParaArticulos(@PathVariable int codArticulo) {
+       List<DTOProveedorPredet> desplegableProveedores = ordenCompraService.filtrarProveedorParaArticulos(codArticulo);
+       return ResponseEntity.ok(desplegableProveedores);
    }
 
 

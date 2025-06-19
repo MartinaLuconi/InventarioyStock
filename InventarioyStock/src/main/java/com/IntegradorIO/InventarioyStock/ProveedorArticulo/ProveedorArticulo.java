@@ -38,6 +38,7 @@ public class ProveedorArticulo {
 
     @ManyToOne
     @JoinColumn(name = "articulo_id")
+    @JsonBackReference
     private Articulo articulo;
 
 
