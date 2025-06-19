@@ -7,10 +7,7 @@ import com.IntegradorIO.InventarioyStock.Articulo.ModeloInventario;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompra;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompraRepository;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
-import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTODetalleOC;
-import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOOrdenCompra;
-import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOProveedorPredet;
-import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOTablaOrdenCompra;
+import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.*;
 import com.IntegradorIO.InventarioyStock.OrdenCompraArticulo.OrdenCompraArticulo;
 import com.IntegradorIO.InventarioyStock.OrdenCompraArticulo.OrdenCompraArticuloRepository;
 import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
@@ -184,7 +181,7 @@ public class OrdenCompraService {
         for (DTODetalleOC detalle : dtoOC.getDetallesOC()) {
             Articulo articulo = articuloRepository.obtenerArticulo(detalle.getCodArticulo());
             //llamada a funcion sugerencia
-            sugerirProveedorPredetertminado(articulo.getCodigoArticulo());
+            //sugerirProveedorPredetertminado(articulo.getCodigoArticulo());
             // Validación si es lote fijo
             if (articulo.getModeloInventario() == ModeloInventario.LOTE_FIJO) {
                 int cantidad = detalle.getCantidadArticulo();
@@ -192,6 +189,20 @@ public class OrdenCompraService {
                 if (stockTotal < articulo.getPuntoPedido()) {
                     advertencia = true; // ⚠️ Marcar advertencia, pero no interrumpir
                 }
+            }
+
+            //validar que el articulo pertenezca a los del proveedor
+
+           List<ProveedorArticulo> palist= proveedor.getProveedorArticulos(); //leo intemedias del proveedor seleccionado
+           List <Articulo> artRelacionados = new ArrayList<>();
+            for (ProveedorArticulo pa: palist){//por cada intermedia
+                Articulo artRelacionadoProv = pa.getArticulo(); //leo el articulo de la intermedia
+                if (artRelacionadoProv.getCodigoArticulo() == detalle.getCodArticulo()){ //comparo cod de intermedia y dto
+                    artRelacionados.add(artRelacionadoProv);
+                }
+            }
+            if (artRelacionados.isEmpty()){
+                throw new Exception("No hay articulos relacionados para este proveedor");
             }
 
             // Crear relación artículo <-> orden
@@ -319,14 +330,29 @@ public class OrdenCompraService {
                     if (pa.isEsPredeterminado()) { //mira que sea el predeterminado
                         DTOProveedorPredet proveedorPredet = new DTOProveedorPredet();
                         proveedorPredet.setNombreProveedorPredeterminado(p.getNombreProveedor());
+                        proveedorPredet.setCodigoProveedor(p.getCodigoProveedor());
                         return  proveedorPredet;
-                       // System.out.println("El proveedor prederterminado es " + p.getNombreProveedor()); //lanza un mensaje
+                        //System.out.println("El proveedor prederterminado es " + proveedorPredet.getNombreProveedorPredeterminado()); //lanza un mensaje
                     }
                 }
             }
 
         }
         return  null;
+    }
+    public List<DTOArticulosDelProveedor> ArticulosPorProveedor(int codProveedor){
+        Optional<Proveedor> p = proveedorRepository.findById(codProveedor);
+        List<ProveedorArticulo> paList= p.get().getProveedorArticulos();
+
+        List<DTOArticulosDelProveedor> articuloList = new ArrayList<>();
+        for (ProveedorArticulo pa:paList){
+            DTOArticulosDelProveedor aDTO = new DTOArticulosDelProveedor();
+            aDTO.setCodArticulo(pa.getArticulo().getCodigoArticulo());
+            aDTO.setNombreArticulo(pa.getArticulo().getNombreArticulo());
+            articuloList.add(aDTO);
+        }
+        return articuloList;
+
     }
 
     //filtrar proveedores por articulo y activos para desplegable
@@ -340,6 +366,7 @@ public class OrdenCompraService {
                 if (pa.getArticulo().getCodigoArticulo() == codArticulo) { //verifica que le pertenezca el articulo
                     DTOProveedorPredet dtoProveedorPredet = new DTOProveedorPredet();
                     dtoProveedorPredet.setNombreProveedorPredeterminado(p.getNombreProveedor());
+                    dtoProveedorPredet.setCodigoProveedor(p.getCodigoProveedor());
                     listProveedoresPorArticulo.add(dtoProveedorPredet);
                 }
             }

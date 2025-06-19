@@ -1,6 +1,7 @@
 package com.IntegradorIO.InventarioyStock.OrdenCompra;
 
 
+import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOArticulosDelProveedor;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOOrdenCompra;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOProveedorPredet;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOTablaOrdenCompra;
@@ -77,17 +78,25 @@ public class OrdenCompraController {
    //sugerir proveedor
    @GetMapping("/ProvPredeterminado/{codArticulo}")
    public ResponseEntity<DTOProveedorPredet> sugerirProveedorPredetertminado(@PathVariable int codArticulo) {
+       System.out.println("🟡 codArticulo recibido: " + codArticulo);
        DTOProveedorPredet proveedor = ordenCompraService.sugerirProveedorPredetertminado(codArticulo);
        return ResponseEntity.ok(proveedor);
-       //return new ResponseEntity<>(HttpStatus.OK);
-       //return ResponseEntity.ok(new DTOProveedorPredet(proveedor));
+
    }
 
    //armar seleccionable
-   @GetMapping("/ProvedoresPorArticulo/{codArticulo}")
+   @GetMapping("/ProveedoresPorArticulo/{codArticulo}")
    public ResponseEntity<List<DTOProveedorPredet>> filtrarProveedorParaArticulos(@PathVariable int codArticulo) {
        List<DTOProveedorPredet> desplegableProveedores = ordenCompraService.filtrarProveedorParaArticulos(codArticulo);
        return ResponseEntity.ok(desplegableProveedores);
+   }
+
+   //filtrar lista de articulo por proveedor seleccionado
+    @GetMapping("/ArticulosPorProveedor/{codProveedor}")
+
+   public ResponseEntity<List<DTOArticulosDelProveedor>> ArticulosPorProveedor(@PathVariable int codProveedor){
+        List<DTOArticulosDelProveedor> desplegableArticulos = ordenCompraService.ArticulosPorProveedor(codProveedor);
+        return ResponseEntity.ok(desplegableArticulos);
    }
 
 

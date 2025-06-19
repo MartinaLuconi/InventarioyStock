@@ -7,7 +7,7 @@ import lombok.Setter;
 @Data
 @Getter
 @Setter
-public class DTOProveedorPredet {
-    private String nombreProveedorPredeterminado;
-    private int codigoProveedor;
+public class DTOArticulosDelProveedor {
+    private  int codArticulo;
+    private String nombreArticulo;
 }
