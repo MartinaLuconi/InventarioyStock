@@ -304,6 +304,7 @@ public class OrdenCompraService {
         //lleno el dto
         datosOrdenCompra.setNroOrden(nroOrden);
         datosOrdenCompra.setNombreOC(ordenCompra.getNombreOrdenCompra());
+        datosOrdenCompra.setCodProveedor(ordenCompra.getProveedor().getCodigoProveedor());
         List<OrdenCompraArticulo> listaDetalles = ordenCompra.getListaOrdenCompraArticulo();
         List<DTODetalleOC> detalleOCS = new ArrayList<>();
 
@@ -312,6 +313,7 @@ public class OrdenCompraService {
             detalleOC.setCantidadArticulo(oca.getCantidadOCA());
             detalleOC.setNombreArticulo(oca.getArticulo().getNombreArticulo());
             detalleOC.setCodArticulo(oca.getArticulo().getCodigoArticulo());
+
             detalleOCS.add(detalleOC);
         }
         datosOrdenCompra.setDetallesOC(detalleOCS);
