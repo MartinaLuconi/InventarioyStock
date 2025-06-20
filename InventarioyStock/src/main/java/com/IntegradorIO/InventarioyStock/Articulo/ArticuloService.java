@@ -1,9 +1,6 @@
 package com.IntegradorIO.InventarioyStock.Articulo;
 
-import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTODetalleArticulo;
-import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOModificarArticulo;
-import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTONuevoArticulo;
-import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOTablaArticulos;
+import com.IntegradorIO.InventarioyStock.Articulo.DTO.*;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompraRepository;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
 import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionPeriodica.CGIModelP;
@@ -12,6 +9,8 @@ import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisiónContinua.CGIModel;
 import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisiónContinua.CalculoService;
 import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisiónContinua.CalculosEstrRevisionContinua;
 import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
+import com.IntegradorIO.InventarioyStock.Proveedor.ProveedorRepository;
+import com.IntegradorIO.InventarioyStock.Proveedor.ProveedorService;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +38,9 @@ public class ArticuloService  {
 
     @Autowired
     private CalculoService calculoService;
+
+    @Autowired
+    private ProveedorRepository proveedorRepository;
 
     //lista los articulos
     public List<DTOTablaArticulos> obtenerArticulos() throws Exception {
@@ -195,25 +197,33 @@ public class ArticuloService  {
 
     //listar proveedores de un articulo
 
-    public List<Proveedor> listarProveedores(int codArticulo) throws Exception{
-       // try {
+    public List<DTOProveedoresPorArticulo> listarProveedores(int codArticulo) throws Exception{
 
-            List<Proveedor> listaProveedores = new ArrayList<>();
+            List<DTOProveedoresPorArticulo> listaProveedoresPorArticulo = new ArrayList<>();
 
             //busco el articulo
-        //    Articulo a = articuloRepository.obtenerArticulo(codArticulo);
+            Articulo a = articuloRepository.obtenerArticulo(codArticulo);
 
-            //leo intermedias de ese articulo
-         //   List<ProveedorArticulo> palist = a.getProveedorArticuloList();
-         //   for (ProveedorArticulo pa : palist) {
-                //meto proveedores en lista
-          //      listaProveedores.add(pa.getProveedor());
-         //   }
+            //busco todos los proveedores
+            List<Proveedor> proveedorList = proveedorRepository.findAll();
+            for (Proveedor p:proveedorList){ //por cada proveedor
+                //leer las instancias intermedias para acceder al articulo
+                List<ProveedorArticulo> paList = p.getProveedorArticulos();
+                for (ProveedorArticulo pa: paList){ //por cada intermedia
+                    Articulo artRelacionado = pa.getArticulo(); //lee el relacionado
+                    if (artRelacionado.getCodigoArticulo()==codArticulo){
+                        DTOProveedoresPorArticulo dtoProveedoresPorArticulo=new DTOProveedoresPorArticulo();
+                        dtoProveedoresPorArticulo.setCodProveedor(p.getCodigoProveedor());
+                        dtoProveedoresPorArticulo.setNombreProveedor(p.getNombreProveedor());
+                        boolean esProvPredeterminado = pa.isEsPredeterminado();
+                        dtoProveedoresPorArticulo.setPredeterminado(esProvPredeterminado);
+                        listaProveedoresPorArticulo.add(dtoProveedoresPorArticulo);
+                    }
+                }
+            }
 
-            return listaProveedores;
-       // }catch (Exception e){
-      //      throw new Exception(e.getMessage());
-      //  }
+            return listaProveedoresPorArticulo;
+
     }
 
     //listar productos faltantes

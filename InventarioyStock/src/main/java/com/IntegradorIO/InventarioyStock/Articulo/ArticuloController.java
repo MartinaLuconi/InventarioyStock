@@ -1,9 +1,6 @@
 package com.IntegradorIO.InventarioyStock.Articulo;
 
-import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTODetalleArticulo;
-import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOModificarArticulo;
-import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTONuevoArticulo;
-import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOTablaArticulos;
+import com.IntegradorIO.InventarioyStock.Articulo.DTO.*;
 import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloRepository;
@@ -93,10 +90,11 @@ public class ArticuloController {
     }
 
     //listar proveedores de un articulo
-    @GetMapping("/{codigoArticulo}/proveedores")
-    public ResponseEntity<List<Proveedor>> listarProveedores(@PathVariable int codigoArticulo) throws Exception{
-        articuloService.listarProveedores(codigoArticulo);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @GetMapping("/{codigoArticulo}/proveedoresPorArticulo")
+
+    public ResponseEntity<List<DTOProveedoresPorArticulo>> listarProveedores(@PathVariable int codigoArticulo) throws Exception{
+        List<DTOProveedoresPorArticulo> dtoProveedoresPorArticuloList = articuloService.listarProveedores(codigoArticulo);
+        return new ResponseEntity<>(dtoProveedoresPorArticuloList, HttpStatus.OK);
     }
 
     //listar articulos faltantes
