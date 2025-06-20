@@ -23,6 +23,10 @@ public class DTOOrdenCompra {
     public void setCodProveedor(int codProveedor) {
         this.codProveedor = codProveedor;
     }
+//necesito poner esto para generar la oc automatica-belu
+public void setDetallesOC(List<DTODetalleOC> detallesOC) {
+    this.detallesOC = detallesOC;
+}
 
 
 }
