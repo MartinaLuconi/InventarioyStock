@@ -13,4 +13,5 @@ public class DTODetalleProveedorArticulo {
     private  int loteOptimo;
     private int costoMantenimiento;
     private boolean esPredeterminado;
+    private float nivelDeServicio;
 }
