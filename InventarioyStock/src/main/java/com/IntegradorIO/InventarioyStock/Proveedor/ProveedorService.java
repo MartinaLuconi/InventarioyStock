@@ -293,10 +293,19 @@ public class ProveedorService {
             );
         }
 
+        ProveedorArticulo ultimaIntermedia = proveedor.getProveedorArticulos().stream()
+                .max(Comparator.comparing(ProveedorArticulo::getFechaDesdePA))
+                .orElse(null);
+
+        ultimaIntermedia.setFechaHastaPA(new Timestamp(System.currentTimeMillis()));
+       proveedorArticuloRepository.save(ultimaIntermedia);
         // 3) Marcar baja lógica
         proveedor.setActivo(false);
         proveedor.setFechaHoraBajaProveedor(new Timestamp(System.currentTimeMillis()));
         proveedorRepository.save(proveedor);
+
+
+
     }
 
     /** Listar asociaciones Proveedor–Artículo por proveedor */
