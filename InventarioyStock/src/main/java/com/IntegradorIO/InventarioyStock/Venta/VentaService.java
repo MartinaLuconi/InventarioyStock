@@ -29,109 +29,60 @@ public class VentaService {
     @Autowired private ProveedorArticuloRepository proveedorArticuloRepository;
     @Autowired private OrdenCompraService ordenCompraService;
 
-
-    public Venta guardarVentaConArticulos(VentaRequest req) {
-
-
-        if (req.getArticulos() == null || req.getArticulos().isEmpty()) {
-            throw new IllegalArgumentException("Debe incluir al menos un artículo");
-        }
-
-
-        Venta v = new Venta();
-        v.setDniCliente(req.getDniCliente());
-        v.setFechaVenta(new Timestamp(System.currentTimeMillis()));
-        v.setCantidadVenta(0);
-        Venta ventaGuardada = ventaRepository.save(v);
-
-
-
-
-        int totalCantidad = 0;
-        List<VentaArticulo> lineas = new ArrayList<>();
-
-
-        for (VentaArticuloRequest lar : req.getArticulos()) {
-
-
-            Articulo art = articuloRepository.findById(lar.getCodigoArticulo())
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "Artículo no encontrado: " + lar.getCodigoArticulo()));
-
-
-            if (lar.getCantidadVA() > art.getStockActualArticulo()) {
-                throw new IllegalStateException(
-                        "Stock insuficiente para artículo " + art.getCodigoArticulo());
-            }
-
-
-            // Descontar stock
-            art.setStockActualArticulo(art.getStockActualArticulo() - lar.getCantidadVA());
-            articuloRepository.save(art);
-
-
-            // Crear línea de venta
-            VentaArticulo va = new VentaArticulo();
-            //va.setVenta(ventaGuardada);
-            va.setArticulo(art);
-            va.setCantidadVA(lar.getCantidadVA());
-            ventaArticuloRepository.save(va);
-            lineas.add(va);
-
-
-            totalCantidad += lar.getCantidadVA();
-
-/*
-           // Lógica de generación automática de OC:
-           if (art.getModeloInventario() == ModeloInventario.LOTE_FIJO &&
-                   art.getStockActualArticulo() <= art.getPuntoPedido()) {
-
-
-               // Buscar proveedor predeterminado
-               ProveedorArticulo proveedorArticulo = proveedorArticuloRepository
-                       .findByArticuloAndEsPredeterminadoTrue(art)
-                       .orElseThrow(() -> new RuntimeException(
-                               "No se encontró proveedor predeterminado para el artículo: " + art.getCodigoArticulo()));
-
-
-               // Generar DTO de orden de compra
-               DTOOrdenCompra dtoOC = new DTOOrdenCompra();
-               dtoOC.setNombreOC("Reposición automática artículo: " + art.getCodigoArticulo());
-               dtoOC.setIdProveedor(proveedorArticulo.getProveedor().getIdProveedor());
-
-
-               DTODetalleOC detalleOC = new DTODetalleOC();
-               detalleOC.setCodArticulo(art.getCodigoArticulo());
-               detalleOC.setNombreArticulo(art.getNombreArticulo());
-               detalleOC.setCantidadArticulo(proveedorArticulo.getEoq());  // <-- usamos el eoq
-
-
-               dtoOC.setDetallesOC(List.of(detalleOC));
-
-
-               // Llamada final al servicio de OrdenCompra
-               ordenCompraService.crearOrdenCompra(dtoOC);
-
-
-
-
-           }
-           */
-
-
-        }
-        //PORCENTAJE PARA CALCULAR EL TOTAL DE LA VENTA EN LA INTERMEDIA DEL ARTICULO
-        float porcentajeVenta = 1.02F;
-        float totalVenta = totalCantidad*porcentajeVenta;
-
-        ventaGuardada.setArticulos(lineas);
-        ventaGuardada.setCantidadVenta(totalCantidad);
-        ventaGuardada.setTotalVenta(totalVenta);
-        ventaGuardada.setDniCliente(req.getDniCliente());
-        ventaGuardada.setApellidoCliente(req.getApellidoCliente());
-        ventaGuardada.setNombreCliente(req.getNombreCliente());
-        return ventaRepository.save(ventaGuardada);
+public Venta guardarVentaConArticulos(VentaRequest req) {
+    if (req.getArticulos() == null || req.getArticulos().isEmpty()) {
+        throw new IllegalArgumentException("Debe incluir al menos un artículo");
     }
+
+    int totalCantidad = 0;
+    List<VentaArticulo> lineas = new ArrayList<>();
+
+    // Validación + armado de objetos
+    for (VentaArticuloRequest lar : req.getArticulos()) {
+        Articulo art = articuloRepository.findById(lar.getCodigoArticulo())
+                .orElseThrow(() -> new IllegalArgumentException("Artículo no encontrado: " + lar.getCodigoArticulo()));
+
+        if (lar.getCantidadVA() > art.getStockActualArticulo()) {
+            throw new IllegalStateException("Stock insuficiente para artículo " + art.getCodigoArticulo());
+        }
+
+        // Descontar stock
+        art.setStockActualArticulo(art.getStockActualArticulo() - lar.getCantidadVA());
+        articuloRepository.save(art);
+
+        // Crear línea de venta
+        VentaArticulo va = new VentaArticulo();
+        va.setArticulo(art);
+        va.setCantidadVA(lar.getCantidadVA());
+        lineas.add(va);
+
+        totalCantidad += lar.getCantidadVA();
+    }
+
+    // Solo en este punto guardamos la venta y los artículos
+    Venta v = new Venta();
+    v.setDniCliente(req.getDniCliente());
+    v.setApellidoCliente(req.getApellidoCliente());
+    v.setNombreCliente(req.getNombreCliente());
+    v.setFechaVenta(new Timestamp(System.currentTimeMillis()));
+    v.setCantidadVenta(totalCantidad);
+
+    float porcentajeVenta = 1.02F;
+    float totalVenta = totalCantidad * porcentajeVenta;
+    v.setTotalVenta(totalVenta);
+
+    v.setArticulos(lineas);
+
+//    // Guardar artículos con FK ya válida
+//    for (VentaArticulo va : lineas) {
+//        ventaArticuloRepository.save(va);
+//    }
+    // Guardar venta primero (porque los artículos tienen FK a venta)
+    Venta ventaGuardada = ventaRepository.save(v);
+    ventaGuardada.setArticulos(lineas);
+    return ventaGuardada;
+}
+
 
 
     public List<DTOTablaVentas> obtenerVentas() throws Exception {
