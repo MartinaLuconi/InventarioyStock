@@ -7,7 +7,9 @@ import com.IntegradorIO.InventarioyStock.Articulo.DTO.DTOTablaArticulos;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdenCompraRepository;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
 import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionPeriodica.CGIModelP;
+import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionPeriodica.CalculoServiceP;
 import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisiónContinua.CGIModel;
+import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisiónContinua.CalculoService;
 import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisiónContinua.CalculosEstrRevisionContinua;
 import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
@@ -31,6 +33,12 @@ public class ArticuloService  {
 
     @Autowired
     private EstadoOrdenCompraRepository estadoOrdenCompraRepository;
+
+    @Autowired
+    private CalculoServiceP calculoServiceP;
+
+    @Autowired
+    private CalculoService calculoService;
 
     //lista los articulos
     public List<DTOTablaArticulos> obtenerArticulos() throws Exception {
@@ -130,6 +138,15 @@ public class ArticuloService  {
             articulo.setDesviacionEstandar(articuloModificado.getDesviacionEstandar());
             articulo.setCostoAlmacenamiento(articuloModificado.getCostoAlmacenamiento());
             articulo.setEstadoArticulo(EstadoArticulo.A_REPONER);
+
+            // Selecciona el servicio según el modelo de inventario y reclaacula los valores necesarios antes de guardar
+            if (articulo.getModeloInventario() == ModeloInventario.TIEMPO_FIJO) {
+                calculoServiceP.recalcularYActualizar(articulo);
+            } else if (articulo.getModeloInventario() == ModeloInventario.LOTE_FIJO) {
+                calculoService.recalcularYActualizar(articulo);
+            }
+
+
             articuloRepository.save(articulo);
 
             return articulo;
