@@ -160,6 +160,21 @@ public class OrdenCompraService {
         if (proveedorOptional.isEmpty()) {
             throw new Exception("No se encontró el proveedor con código: " + dtoOC.getCodProveedor());
         }
+        //Verificar que no exista una OC pendiente
+        List<OrdenCompra> ocList = ordenCompraRepository.obtenerOrdenesCompra();
+        for (OrdenCompra oca: ocList){
+            if (oca.getEstadoOrdenCompra().getNombreEstado()==EstadoOrdencCompra.PENDIENTE) {//veo que este pendiente
+                //si la orden esta pendiete, veo a que proveedor se la hace
+               int codProv= oca.getProveedor().getCodigoProveedor();
+                if (codProv==dtoOC.getCodProveedor()){ // si coincide el proveedor con el del dto
+                    System.out.println("Ya existe una orden de compra PENDIENTE hacia el proveedor "+oca.getProveedor().getNombreProveedor());
+                    throw new Exception("Ya existe una orden de compra PENDIENTE hacia el proveedor "+oca.getProveedor().getNombreProveedor()+"Modifique la orden número"+ oca.getNumeroOrdenCompra()+" para hacer el pedido");
+
+                }
+        }
+        }
+
+
 
         Proveedor proveedor = proveedorOptional.get();
 

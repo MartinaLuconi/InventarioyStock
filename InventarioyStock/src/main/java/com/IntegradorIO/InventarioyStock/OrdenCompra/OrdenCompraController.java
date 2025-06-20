@@ -42,7 +42,8 @@ public class OrdenCompraController {
             Map<String, Object> resultado = ordenCompraService.crearOrdenCompra(dtoOC);
             return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+            //throw ResponseStatusException(HttpStatus.CONFLICT.body(e.getMessage());
         }
     }
 
