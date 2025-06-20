@@ -72,7 +72,7 @@ public class VentaService {
 
             // Crear línea de venta
             VentaArticulo va = new VentaArticulo();
-            va.setVenta(ventaGuardada);
+            //va.setVenta(ventaGuardada);
             va.setArticulo(art);
             va.setCantidadVA(lar.getCantidadVA());
             ventaArticuloRepository.save(va);

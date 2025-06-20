@@ -29,11 +29,11 @@ public class Venta {
 
 
     @OneToMany(
-            mappedBy   = "venta",
-            cascade    = CascadeType.ALL,
+            cascade = CascadeType.ALL,
             orphanRemoval = true,
-            fetch      = FetchType.LAZY
+            fetch = FetchType.LAZY
     )
+    @JoinColumn(name = "venta_id")
     private List<VentaArticulo> articulos;
 
 
