@@ -57,6 +57,13 @@ public class ArticuloController {
         Articulo nuevoArticulo = articuloService.guardarArticulo(dtoNuevoArticulo);
         return new ResponseEntity<>(nuevoArticulo, HttpStatus.CREATED);
     }*/
+
+    //seleccionar predeterminado:
+    @PutMapping("/cambiar/predeterminado")
+    public ResponseEntity<Void> marcarPredeterminado(@RequestBody DTOProveedoresPorArticulo dto) {
+        articuloService.cambiarProveedorPredeterminado(dto);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
     @PostMapping
     public ResponseEntity<?> guardarArticulo(@RequestBody DTONuevoArticulo dtoNuevoArticulo)  throws Exception{
         try {
@@ -96,6 +103,7 @@ public class ArticuloController {
         List<DTOProveedoresPorArticulo> dtoProveedoresPorArticuloList = articuloService.listarProveedores(codigoArticulo);
         return new ResponseEntity<>(dtoProveedoresPorArticuloList, HttpStatus.OK);
     }
+
 
     //listar articulos faltantes
     @GetMapping("/articulosFaltantes")

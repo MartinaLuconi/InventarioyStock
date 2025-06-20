@@ -15,6 +15,7 @@ import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -215,6 +216,7 @@ public class ArticuloService  {
                         DTOProveedoresPorArticulo dtoProveedoresPorArticulo=new DTOProveedoresPorArticulo();
                         dtoProveedoresPorArticulo.setCodProveedor(p.getCodigoProveedor());
                         dtoProveedoresPorArticulo.setNombreProveedor(p.getNombreProveedor());
+                        dtoProveedoresPorArticulo.setCodigoArticulo(artRelacionado.getCodigoArticulo());
                         boolean esProvPredeterminado = pa.isEsPredeterminado();
                         dtoProveedoresPorArticulo.setPredeterminado(esProvPredeterminado);
                         listaProveedoresPorArticulo.add(dtoProveedoresPorArticulo);
@@ -225,6 +227,29 @@ public class ArticuloService  {
             return listaProveedoresPorArticulo;
 
     }
+
+    //cambiar proveedor a predeterminado desde articulo
+    public void cambiarProveedorPredeterminado( DTOProveedoresPorArticulo dtoProveedor){
+        //busco al proveedor que voy a modificar
+        Optional<Proveedor> p = proveedorRepository.findById(dtoProveedor.getCodProveedor());
+        Articulo articulo =  articuloRepository.obtenerArticulo(dtoProveedor.getCodigoArticulo());
+        //veo si es predeterminado
+        List<ProveedorArticulo> paList = proveedorArticuloRepository.findByArticulo(articulo); //lee intermedia
+
+        for (ProveedorArticulo pa : paList){
+
+            if (p.get().getCodigoProveedor()==dtoProveedor.getCodProveedor()) {
+                pa.setEsPredeterminado(true);
+            }else {
+                    pa.setEsPredeterminado(false);
+                }
+            proveedorArticuloRepository.save(pa);
+            }
+
+        }
+
+
+
 
     //listar productos faltantes
 

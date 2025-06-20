@@ -9,6 +9,7 @@ import lombok.Setter;
 @Getter
 public class DTOProveedoresPorArticulo {
     private String nombreProveedor;
-    private int codProveedor;
+    private Integer codProveedor;
     private boolean isPredeterminado;
+    private int codigoArticulo;
 }
