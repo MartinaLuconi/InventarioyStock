@@ -81,12 +81,15 @@ public class ArticuloController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
-    //borrar el articulo
+    
     @DeleteMapping("/{codigoArticulo}")
-    public ResponseEntity<Void> eliminarArticulo(@PathVariable int codigoArticulo)  throws Exception{
-        articuloService.eliminarArticulo(codigoArticulo);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<?> eliminarArticulo(@PathVariable int codigoArticulo) {
+        try {
+            articuloService.eliminarArticulo(codigoArticulo);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     //listar proveedores de un articulo
