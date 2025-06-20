@@ -65,6 +65,14 @@ public class ProveedorService {
         // 1) Convertir el dto en entidad Proveedor
         Proveedor entidad = new Proveedor();
         entidad.setNombreProveedor(dto.getNombreProveedor());
+        //verificar que no hay un proveedor que se llame igual
+        List<Proveedor> proveedorList=proveedorRepository.findAll();
+        for (Proveedor p : proveedorList){
+           String nombreExistenteProveedor= p.getNombreProveedor();
+           if (Objects.equals(dto.getNombreProveedor(), nombreExistenteProveedor)){
+               throw new Exception("El proveedor "+nombreExistenteProveedor+" ya existe. Ingrese otro nombre");
+           }
+        }
         entidad.setActivo(true);
         proveedorRepository.save(entidad);
 
