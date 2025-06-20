@@ -1,5 +1,6 @@
 package com.IntegradorIO.InventarioyStock.Venta;
 
+import com.IntegradorIO.InventarioyStock.OrdenCompra.DTO.DTOOrdenCompra;
 import org.springframework.web.bind.annotation.*;
 import com.IntegradorIO.InventarioyStock.Venta.dto.DTOTablaVentas;
 import com.IntegradorIO.InventarioyStock.Venta.dto.VentaRequest;
@@ -48,4 +49,11 @@ public class VentaController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
+
+    @GetMapping("/verDetalle/{nroVenta}")
+    public ResponseEntity<VentaRequest> mostrarDetalleVentas(@PathVariable int nroVenta) throws Exception {
+        VentaRequest dtoDetalles = ventaService.mostrarDetalleVentas(nroVenta);
+        return new ResponseEntity<>(dtoDetalles,HttpStatus.OK);
+    }
+
 }

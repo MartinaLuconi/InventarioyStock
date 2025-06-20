@@ -145,5 +145,28 @@ public class VentaService {
         }
     }
 
+    public VentaRequest mostrarDetalleVentas(int nroVenta) throws Exception {
+        VentaRequest dtoVenta = new VentaRequest();
+        Venta ventaDatos = ventaRepository.obtenerVenta(nroVenta);
+            dtoVenta.setNombreCliente(ventaDatos.getNombreCliente());
+            dtoVenta.setDniCliente(ventaDatos.getDniCliente());
+            dtoVenta.setApellidoCliente(ventaDatos.getApellidoCliente());
+
+            List<VentaArticulo> vaList = ventaDatos.getArticulos();
+            List<VentaArticuloRequest> dtoListaVA=new ArrayList<>();
+            for (VentaArticulo va : vaList){
+                VentaArticuloRequest dtoVA = new VentaArticuloRequest();
+                dtoVA.setCantidadVA(va.getCantidadVA());
+                dtoVA.setCodigoArticulo(va.getArticulo().getCodigoArticulo());
+                dtoVA.setNombreArticulo(va.getArticulo().getNombreArticulo());
+                dtoListaVA.add(dtoVA);
+            }
+        dtoVenta.setArticulos(dtoListaVA);
+
+        return dtoVenta;
+
+    }
+
+
 
 }

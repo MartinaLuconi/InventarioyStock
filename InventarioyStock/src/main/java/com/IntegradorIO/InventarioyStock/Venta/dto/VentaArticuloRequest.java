@@ -8,9 +8,11 @@ import lombok.Setter;
 public class VentaArticuloRequest {
 
     /** Código del artículo a vender */
-    private Integer codigoArticulo;
+    private int codigoArticulo;
+    private String nombreArticulo;
     /** Cantidad de unidades vendidas */
     private int cantidadVA;
+
 
     public VentaArticuloRequest() {}
 
