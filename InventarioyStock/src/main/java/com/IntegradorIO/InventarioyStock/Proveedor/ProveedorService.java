@@ -44,30 +44,7 @@ public class ProveedorService {
     }
 
 
-//    public List<DTOTablaProveedor> obtenerProveedores() {
-//        List<Proveedor> proveedores = proveedorRepository.findAll();
-//
-//        return proveedores.stream().map(proveedor -> {
-//            DTOTablaProveedor dto = new DTOTablaProveedor();
-//            dto.setCodigoProveedor(proveedor.getCodigoProveedor());
-//            dto.setNombreProveedor(proveedor.getNombreProveedor());
-//            dto.setActivo(proveedor.isActivo());
-//
-//            // Armamos la lista de artículos resumida:
-//            List<DTOArticuloTablaProveedor> articulosDTO = proveedor.getProveedorArticulos().stream().map(pa -> {
-//                DTOArticuloTablaProveedor detalle = new DTOArticuloTablaProveedor();
-//                detalle.setCodigoArticulo(pa.getArticulo().getCodigoArticulo());
-//                detalle.setNombreArticulo(pa.getArticulo().getNombreArticulo());
-//                return detalle;
-//            }).collect(Collectors.toList());
-//
-//            dto.setArticulos(articulosDTO);
-//            return dto;
-//
-//        }).collect(Collectors.toList());
-//    }
-
-
+    //encuentra solo proveedor activo
     public Optional<Proveedor> obtenerProveedor(Integer codigoProveedor) {
         return proveedorRepository.findById(codigoProveedor)
                 .filter(Proveedor::isActivo);
@@ -84,8 +61,19 @@ public class ProveedorService {
            if (Objects.equals(dto.getNombreProveedor(), nombreExistenteProveedor)){
                throw new Exception("El proveedor "+nombreExistenteProveedor+" ya existe. Ingrese otro nombre");
            }
+           //verifico que solo uno sea el predeterminado
+
+            //leo intermedias
+            List<ProveedorArticulo> paList= p.getProveedorArticulos();
+           for (ProveedorArticulo pa:paList){ //por cada intermedia lea el atributo
+              if(pa.isEsPredeterminado()){ //si existe una activa chau
+                  throw new Exception("Ya existe un proveedor predeterminado para este articulo");
+              }
+           }
         }
         entidad.setActivo(true);
+        //verificar que solo uno sea predeterminado
+
         proveedorRepository.save(entidad);
 
         // 3) Si el dto trae asociaciones a artículos, crearlas ahora
