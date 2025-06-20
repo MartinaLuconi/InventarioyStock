@@ -2,12 +2,16 @@ package com.IntegradorIO.InventarioyStock.Proveedor;
 
 import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
 import com.IntegradorIO.InventarioyStock.Articulo.ArticuloRepository;
+import com.IntegradorIO.InventarioyStock.Articulo.ModeloInventario;
 import com.IntegradorIO.InventarioyStock.EstadoOrdenCompra.EstadoOrdencCompra;
+import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionPeriodica.CalculoServiceP;
+import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisiónContinua.CalculoService;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.OrdenCompra;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.OrdenCompraRepository;
 import com.IntegradorIO.InventarioyStock.Proveedor.dto.*;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloRepository;
+import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +27,14 @@ public class ProveedorService {
     @Autowired private ProveedorArticuloRepository proveedorArticuloRepository;
     @Autowired private ArticuloRepository articuloRepository;
     @Autowired private OrdenCompraRepository ordenCompraRepository;
+
+
+
+    @Autowired
+    private CalculoServiceP calculoServiceP;
+
+    @Autowired
+    private CalculoService calculoService;
 
     /** Listar solo proveedores activos */
     public List<DTOTablaProveedor> obtenerProveedores() {
@@ -97,6 +109,19 @@ public class ProveedorService {
                 pa.setLoteOptimo(detalle.getLoteOptimo());
                 pa.setCostoMantenimiento(detalle.getCostoMantenimiento());
                 proveedorArticuloList.add(pa);
+
+                // Selecciona el servicio según el modelo de inventario y reclaacula los valores necesarios antes de guardar
+                ModeloInventario modelo = art.getModeloInventario();
+                if (modelo == ModeloInventario.LOTE_FIJO) {
+                    // Calcular y asignar valores específicos para la estrategia de revisión continua
+                    calculoService.recalcularYActualizar(pa.getArticulo());
+                } else if (modelo == ModeloInventario.TIEMPO_FIJO) {
+                    // Calcular y asignar valores específicos para la estrategia de revisión periódica
+                    calculoServiceP.recalcularYActualizar(pa);
+                }
+
+
+
                 proveedorArticuloRepository.save(pa);
 
 

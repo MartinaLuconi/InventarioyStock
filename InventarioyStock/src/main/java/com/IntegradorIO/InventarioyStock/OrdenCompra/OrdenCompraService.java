@@ -391,7 +391,27 @@ public class OrdenCompraService {
         return listProveedoresPorArticulo;
     }
 
-    //sugerir lote
+    //sugerir cantidad a pedir
+    public int sugerirCantidadAPedir(int codArticulo, int codProveedor) throws Exception {
+        //busco el articulo
+        Articulo articulo = articuloRepository.obtenerArticulo(codArticulo);
+        if (articulo == null) {
+            throw new Exception("No se encontró el artículo con código: " + codArticulo);
+        }
+        //busco el proveedor
+        Proveedor proveedor = proveedorRepository.findById(codProveedor)
+                .orElseThrow(() -> new Exception("No se encontró el proveedor con código: " + codProveedor));
+
+        //busco la relacion entre ambos
+        ProveedorArticulo pa = proveedor.getProveedorArticulos().stream()
+                .filter(p -> p.getArticulo().getCodigoArticulo() == codArticulo)
+                .findFirst()
+                .orElseThrow(() -> new Exception("No hay relación entre el artículo y el proveedor"));
+
+        //calculo cantidad a pedir
+        int cantidadAPedir = pa.getLoteOptimo();
+        return cantidadAPedir;
+    }
 
 
 
