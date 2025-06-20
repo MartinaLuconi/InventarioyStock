@@ -67,7 +67,7 @@ public class ArticuloController {
             //return new ResponseEntity<>(nuevoArticulo, HttpStatus.CREATED);
             return ResponseEntity.status(HttpStatus.OK).body(articuloService.guardarArticulo(dtoNuevoArticulo));
         }catch (Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 

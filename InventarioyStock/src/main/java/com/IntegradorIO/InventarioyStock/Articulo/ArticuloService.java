@@ -176,6 +176,10 @@ public class ArticuloService  {
                     throw new Exception("No se puede dar de baja el artículo porque tiene stock disponible.");
                 }
 
+                if (articulo.getFechaHoraBajaArticulo()!=null){
+                    throw new Exception("El artículo que intenta eliminar ya se encuentra eliminado");
+                }
+
                 // Realizar baja lógica
                 articulo.setEstadoArticulo(EstadoArticulo.NO_DISPONIBLE);
                 articulo.setFechaHoraBajaArticulo(new java.sql.Timestamp(System.currentTimeMillis()));
