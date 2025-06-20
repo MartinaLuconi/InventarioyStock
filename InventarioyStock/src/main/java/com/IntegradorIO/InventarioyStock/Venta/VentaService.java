@@ -120,9 +120,9 @@ public class VentaService {
 
 
         }
-        //buscar COSTO UNITARIO PARA CALCULAR EL TOTAL DE LA VENTA EN LA INTERMEDIA DEL ARTICULO
-        float costoUnitarioArt=1;
-        float totalVenta = totalCantidad*costoUnitarioArt;
+        //PORCENTAJE PARA CALCULAR EL TOTAL DE LA VENTA EN LA INTERMEDIA DEL ARTICULO
+        float porcentajeVenta = 1.02F;
+        float totalVenta = totalCantidad*porcentajeVenta;
 
         ventaGuardada.setArticulos(lineas);
         ventaGuardada.setCantidadVenta(totalCantidad);
