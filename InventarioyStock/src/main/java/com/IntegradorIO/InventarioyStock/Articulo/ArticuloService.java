@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -85,7 +86,14 @@ public class ArticuloService  {
         try {
             //paso datos del dto a las entidades
             Articulo articulo = new Articulo();
-
+            //verificar que no se cree con el mismo nombre
+            List<Articulo> articuloList = articuloRepository.obtenerArticulos();
+            for (Articulo a:articuloList){
+               String nombreExistente= a.getNombreArticulo();
+               if (Objects.equals(nombreExistente, dtoNuevoArticulo.getNombreArticulo())){
+                   throw new Exception("Ya existe un artículo con el nombre "+nombreExistente);
+               }
+            }
                 articulo.setDescripcion(dtoNuevoArticulo.getDescripcion());
                 articulo.setNombreArticulo(dtoNuevoArticulo.getNombreArticulo());
                 articulo.setStockActualArticulo(dtoNuevoArticulo.getStockReal());
