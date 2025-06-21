@@ -28,6 +28,7 @@ public class CalculoService {
                     articulo.getCostoAlmacenamiento()
             );
             pa.setLoteOptimo(eoq);
+            pa.setEoq(eoq);
 
             double cgi = CalculosEstrRevisionContinua.calcularCGI(
                     articulo.getDemandaAnual(),

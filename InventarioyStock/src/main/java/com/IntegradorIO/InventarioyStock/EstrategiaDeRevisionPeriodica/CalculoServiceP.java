@@ -51,6 +51,8 @@ public class CalculoServiceP {
                     pa.getNivelDeServicio(),
                     articulo.getStockActualArticulo()
             );
+            pa.setLoteOptimo(q);
+            pa.setEoq(q);
 
             double cgi = CalculosEstrRevisionPeriodica.calcularCGI(
                     articulo.getDemandaAnual(),
