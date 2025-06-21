@@ -8,6 +8,9 @@ import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionPeriodica.CalculoSe
 import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisiónContinua.CGIModel;
 import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisiónContinua.CalculoService;
 import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisiónContinua.CalculosEstrRevisionContinua;
+import com.IntegradorIO.InventarioyStock.OrdenCompra.OrdenCompra;
+import com.IntegradorIO.InventarioyStock.OrdenCompra.OrdenCompraRepository;
+import com.IntegradorIO.InventarioyStock.OrdenCompraArticulo.OrdenCompraArticulo;
 import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
 import com.IntegradorIO.InventarioyStock.Proveedor.ProveedorRepository;
 import com.IntegradorIO.InventarioyStock.Proveedor.ProveedorService;
@@ -33,6 +36,9 @@ public class ArticuloService  {
 
     @Autowired
     private EstadoOrdenCompraRepository estadoOrdenCompraRepository;
+
+    @Autowired
+    private OrdenCompraRepository ordenCompraRepository;
 
     @Autowired
     private CalculoServiceP calculoServiceP;
@@ -173,6 +179,21 @@ public class ArticuloService  {
                 if (tieneOrdenPendienteOEnviada) {
                     throw new Exception("No se puede dar de baja el artículo porque tiene órdenes de compra pendientes o enviadas.");
                 }*/
+
+                //TIENE UNA OC PENDIENTE O ENVIADA
+                List<OrdenCompra> ocList = ordenCompraRepository.findAll();
+                for (OrdenCompra oc : ocList){//por cada oc
+                    for ( OrdenCompraArticulo oca :oc.getListaOrdenCompraArticulo()){ //veo q se relacione con el articulo
+                        //veo si se relaciona con el articulo q voy a dar de baja
+                        int codArtOCA = oca.getArticulo().getCodigoArticulo();
+                        if (codigoArticulo==codArtOCA){ //si coincide, lee el estado de la oc
+                            if(oc.getEstadoOrdenCompra().getNombreEstado() == EstadoOrdencCompra.PENDIENTE
+                                    || oc.getEstadoOrdenCompra().getNombreEstado() == EstadoOrdencCompra.ENVIADA){
+                                throw new Exception("No se puede dar de baja el artículo porque tiene órdenes de compra pendientes o enviadas.");
+                            }
+                        }
+                    }
+                }
 
                 // Verificar stock
                 if (articulo.getStockActualArticulo() > 0) {
