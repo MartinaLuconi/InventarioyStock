@@ -14,4 +14,5 @@ public class DTODetalleProveedorArticulo {
     private int costoMantenimiento;
     private boolean esPredeterminado;
     private float nivelDeServicio;
+    private int periodoRevision;
 }
