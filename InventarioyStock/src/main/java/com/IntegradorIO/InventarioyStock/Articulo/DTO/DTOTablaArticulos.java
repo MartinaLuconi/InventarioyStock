@@ -1,6 +1,7 @@
 package com.IntegradorIO.InventarioyStock.Articulo.DTO;
 
 import com.IntegradorIO.InventarioyStock.Articulo.Articulo;
+import com.IntegradorIO.InventarioyStock.Articulo.ModeloInventario;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +19,7 @@ public class DTOTablaArticulos {
         private Timestamp fechaHoraBajaArticulo;
         private  int stockSeguridad;
         private  int stockActual;
-
+        private ModeloInventario modeloInventario;
 
 
         public DTOTablaArticulos(Articulo articulo) {
@@ -28,6 +29,7 @@ public class DTOTablaArticulos {
                 this.fechaHoraBajaArticulo = articulo.getFechaHoraBajaArticulo();
                 this.stockActual = articulo.getStockActualArticulo();
                 this.stockSeguridad = articulo.getStockSeguridadArticulo();
+                this.modeloInventario=articulo.getModeloInventario();
 
         }
 }
