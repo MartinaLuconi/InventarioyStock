@@ -99,17 +99,7 @@ public class OrdenCompraController {
         List<DTOArticulosDelProveedor> desplegableArticulos = ordenCompraService.ArticulosPorProveedor(codProveedor);
         return ResponseEntity.ok(desplegableArticulos);
    }
-    @GetMapping("/sugerirCantidad/{codArticulo}/{codProveedor}")
-    public ResponseEntity<?> sugerirCantidad(@PathVariable int codArticulo, @PathVariable int codProveedor) {
-        try {
-            int cantidadSugerida = ordenCompraService.sugerirCantidadAPedir(codArticulo, codProveedor);
-            return ResponseEntity.ok(cantidadSugerida);
-        } catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al calcular la cantidad sugerida: " + e.getMessage());
-        }
-    }
+
 
 
 

@@ -71,7 +71,8 @@ public class ProveedorService {
         // 3) Si el dto trae asociaciones a artículos, crearlas ahora
 
         List<ProveedorArticulo> proveedorArticuloList = new ArrayList<>();
-            for (DTODetalleProveedorArticulo detalle : dto.getAsociaciones()) {
+        List<DTODetalleProveedorArticulo> detallesList = dto.getAsociaciones();
+            for (DTODetalleProveedorArticulo detalle :detallesList ) {
 
                 // 3.1) Buscar el Artículo correspondiente
                 Articulo art = articuloRepository.obtenerArticulo(detalle.getCodigoArticulo());
@@ -141,8 +142,8 @@ public class ProveedorService {
         // 5) Procesar la lista que viene en el DTO
         //    Creamos una lista donde iremos guardando (o actualizando) las asociaciones finales
         List<ProveedorArticulo> listaFinal = new ArrayList<>();
-
-        for (DTODetalleProveedorArticulo detalle : dto.getAsociaciones()) {
+        List<DTODetalleProveedorArticulo> detalleList = dto.getAsociaciones();
+        for (DTODetalleProveedorArticulo detalle : detalleList) {
             Integer codigoArt = detalle.getCodigoArticulo();
 
             // 5a) Chequeo que el Artículo exista en BD
@@ -173,7 +174,7 @@ public class ProveedorService {
                 nuevo.setCostoUnitario(detalle.getPrecioUnitProveedorArticulo());
                 nuevo.setCostoPedido(detalle.getCostoPedido());
                 nuevo.setCostoPedido(detalle.getCostoPedido());
-               nuevo.setEsPredeterminado(false);
+                nuevo.setEsPredeterminado(false);
 
                 listaFinal.add(nuevo);
             }
