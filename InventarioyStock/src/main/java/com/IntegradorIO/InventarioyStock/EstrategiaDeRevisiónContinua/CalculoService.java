@@ -18,7 +18,7 @@ public class CalculoService {
     private ArticuloRepository articuloRepository;
 
     public void recalcularYActualizar(Articulo articulo) {
-        /*
+
         List<ProveedorArticulo> proveedores = proveedorArticuloRepository.findByArticulo(articulo);
 
         for (ProveedorArticulo pa : proveedores) {
@@ -54,6 +54,6 @@ public class CalculoService {
 
             proveedorArticuloRepository.save(pa);
         }
-        articuloRepository.save(articulo);*/
+        articuloRepository.save(articulo);
     }
 }
