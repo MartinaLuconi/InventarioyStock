@@ -118,7 +118,7 @@ public class ProveedorService {
     }
 
 
-    public Proveedor modificarProveedor(Integer codigoProveedor, DTOModificarProveedor dto) {
+   /* public Proveedor modificarProveedor(Integer codigoProveedor, DTOModificarProveedor dto) {
         // 1) Recuperar proveedor
         Proveedor existente = proveedorRepository.findById(codigoProveedor)
                 .filter(Proveedor::isActivo)
@@ -196,7 +196,70 @@ public class ProveedorService {
 
         // 9) Finalmente salvar el proveedor con sus cambios
         return proveedorRepository.save(existente);
+    }*/
+
+    public Proveedor modificarProveedor(Integer codigoProveedor, DTOModificarProveedor dto) {
+        Proveedor proveedorExistente = proveedorRepository.findById(codigoProveedor)
+                .filter(Proveedor::isActivo)
+                .orElseThrow(() -> new IllegalArgumentException("Proveedor no encontrado o inactivo"));
+        proveedorExistente.setNombreProveedor(dto.getNombreProveedor());
+        proveedorRepository.save(proveedorExistente);
+
+
+        //busco ultima instancia de PA (con mayor fecha desce = ultima cargada y le doy de baja)
+        ProveedorArticulo paModificada = proveedorExistente.getProveedorArticulos().stream()
+                .max(Comparator.comparing(ProveedorArticulo::getFechaDesdePA))
+                .orElse(null);
+        //doy de baja la instancia
+        paModificada.setFechaHastaPA(new Timestamp(System.currentTimeMillis()));
+        //guardo instancia
+        proveedorArticuloRepository.save(paModificada);
+
+        List<ProveedorArticulo> paListNuevos = new ArrayList<>();
+        List<ProveedorArticulo> paList = proveedorExistente.getProveedorArticulos();
+        List<DTODetalleProveedorArticulo> detallesList = dto.getAsociaciones();
+        for (DTODetalleProveedorArticulo detalle : detallesList) {
+            System.out.println("Buscando artículo con código: " + detalle.getCodigoArticulo());
+
+            // Buscar el Artículo correspondiente
+            Articulo art = articuloRepository.obtenerArticulo(detalle.getCodigoArticulo());
+
+            // creo nueva instancia
+            ProveedorArticulo pa = new ProveedorArticulo();
+            pa.setArticulo(art); //relacion a articulo
+            pa.setDemoraEntrega(detalle.getDemoraEntrega());
+            pa.setCostoUnitario(detalle.getPrecioUnitProveedorArticulo());
+            pa.setCostoPedido(detalle.getCostoPedido());
+            pa.setEsPredeterminado(false);
+            pa.setFechaDesdePA(new Timestamp(System.currentTimeMillis()));
+            pa.setFechaHastaPA(null);
+            pa.setLoteOptimo(detalle.getLoteOptimo());
+            pa.setCostoMantenimiento(detalle.getCostoMantenimiento());
+            pa.setNivelDeServicio(detalle.getNivelDeServicio());
+            paListNuevos.add(pa);
+
+            // Selecciona el servicio según el modelo de inventario y reclaacula los valores necesarios antes de guardar
+            ModeloInventario modelo = art.getModeloInventario();
+            if (modelo == ModeloInventario.LOTE_FIJO) {
+                // Calcular y asignar valores específicos para la estrategia de revisión continua
+                calculoService.recalcularYActualizar(pa.getArticulo());
+            } else if (modelo == ModeloInventario.TIEMPO_FIJO) {
+                // Calcular y asignar valores específicos para la estrategia de revisión periódica
+                calculoServiceP.recalcularYActualizar(pa);
+            }
+
+
+            proveedorArticuloRepository.save(pa);
+
+        }
+
+        proveedorExistente.setProveedorArticulos(paListNuevos);
+        proveedorRepository.save(proveedorExistente);
+        return proveedorExistente;
+
+
     }
+
 
     /**
      * Alta de proveedor con asociación mínima.
