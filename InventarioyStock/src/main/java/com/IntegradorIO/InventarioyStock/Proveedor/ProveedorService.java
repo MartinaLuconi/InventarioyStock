@@ -91,6 +91,7 @@ public class ProveedorService {
                 pa.setCostoMantenimiento(detalle.getCostoMantenimiento());
                 pa.setNivelDeServicio(detalle.getNivelDeServicio());
                 pa.setPeriodoRevision(detalle.getPeriodoRevision());
+                pa.setInventarioMaximo(detalle.getInventarioMaximo());
                 proveedorArticuloList.add(pa);
 
                 // Selecciona el servicio según el modelo de inventario y reclaacula los valores necesarios antes de guardar
@@ -163,6 +164,7 @@ public class ProveedorService {
                 paExistente.setPeriodoRevision(detalle.getPeriodoRevision());
                 paExistente.setLoteOptimo(detalle.getLoteOptimo());
                 paExistente.setNivelDeServicio(detalle.getNivelDeServicio());
+                paExistente.setInventarioMaximo(detalle.getInventarioMaximo());
                 //paExistente.setEsPredeterminado(detalle.isEsPredeterminado());
 
                 // La guardamos en la lista final para no borrarla posteriormente
@@ -183,6 +185,7 @@ public class ProveedorService {
                 nuevo.setLoteOptimo(detalle.getLoteOptimo());
                 nuevo.setPeriodoRevision(detalle.getPeriodoRevision());
                 nuevo.setCostoMantenimiento(detalle.getCostoMantenimiento());
+                nuevo.setInventarioMaximo(detalle.getInventarioMaximo());
                 nuevo.setEsPredeterminado(false);
 
                 listaFinal.add(nuevo);
@@ -236,6 +239,7 @@ public class ProveedorService {
             pa.setNivelDeServicio(paReq.getNivelDeServicio());
             pa.setPeriodoRevision(paReq.getPeriodoRevision());
             pa.setLoteOptimo(paReq.getLoteOptimo());
+            pa.setInventarioMaximo(pa.getInventarioMaximo());
 
             lista.add(pa);
         }

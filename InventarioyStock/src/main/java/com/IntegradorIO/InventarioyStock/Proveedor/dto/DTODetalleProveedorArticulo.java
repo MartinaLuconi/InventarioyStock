@@ -17,4 +17,5 @@ public class DTODetalleProveedorArticulo {
     private boolean esPredeterminado;
     private float nivelDeServicio;
     private int periodoRevision;
+    private int inventarioMaximo;
 }
