@@ -149,11 +149,15 @@ public class VentaService {
                         .findFirst();
 
                 if (proveedorArticuloOpt.isPresent()) {
-                    int eoq = proveedorArticuloOpt.get().getEoq();
-                    detalleOC.setCantidadArticulo(eoq);
+                    int loteOptimo = proveedorArticuloOpt.get().getLoteOptimo();
+                    detalleOC.setCantidadArticulo(loteOptimo);
+                    System.out.println("🔎 Lote óptimo para artículo " + art.getCodigoArticulo() + ": " + loteOptimo);
+
+
                 } else {
                     throw new RuntimeException("No se encontró proveedor-artículo predeterminado para el artículo " + art.getCodigoArticulo());
                 }
+
 
 
                 detalleOC.setSuperaPuntoPedido(true);
