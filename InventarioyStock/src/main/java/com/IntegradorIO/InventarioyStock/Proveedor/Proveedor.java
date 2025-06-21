@@ -19,7 +19,7 @@ public class Proveedor {
 
     private String nombreProveedor;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "proveedor_id")  // ← así le decimos que use esta FK
     private List<ProveedorArticulo> proveedorArticulos;
 

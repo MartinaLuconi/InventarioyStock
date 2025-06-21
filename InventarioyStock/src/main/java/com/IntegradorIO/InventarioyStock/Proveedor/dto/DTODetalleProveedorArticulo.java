@@ -1,10 +1,12 @@
 package com.IntegradorIO.InventarioyStock.Proveedor.dto;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Data
 public class DTODetalleProveedorArticulo {
     private Integer codigoArticulo;
     private int demoraEntrega;
