@@ -10,7 +10,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/proveedorArticulo")
 @CrossOrigin(origins = "*")
-public class ProveedorArticuloController {
+public class
+ProveedorArticuloController {
 
     @Autowired
     private ProveedorArticuloService proveedorArticuloService;

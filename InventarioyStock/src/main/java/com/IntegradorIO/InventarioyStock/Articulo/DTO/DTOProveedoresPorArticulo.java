@@ -12,4 +12,5 @@ public class DTOProveedoresPorArticulo {
     private Integer codProveedor;
     private boolean isPredeterminado;
     private int codigoArticulo;
+    private int codProveedorArticulo;
 }

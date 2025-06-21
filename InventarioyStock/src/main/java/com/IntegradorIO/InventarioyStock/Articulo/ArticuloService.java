@@ -214,6 +214,7 @@ public class ArticuloService  {
                     Articulo artRelacionado = pa.getArticulo(); //lee el relacionado
                     if (artRelacionado.getCodigoArticulo()==codArticulo){
                         DTOProveedoresPorArticulo dtoProveedoresPorArticulo=new DTOProveedoresPorArticulo();
+                        dtoProveedoresPorArticulo.setCodProveedorArticulo(pa.getCodProveedorArticulo());
                         dtoProveedoresPorArticulo.setCodProveedor(p.getCodigoProveedor());
                         dtoProveedoresPorArticulo.setNombreProveedor(p.getNombreProveedor());
                         dtoProveedoresPorArticulo.setCodigoArticulo(artRelacionado.getCodigoArticulo());
@@ -229,7 +230,7 @@ public class ArticuloService  {
     }
 
     //cambiar proveedor a predeterminado desde articulo
-    public void cambiarProveedorPredeterminado( DTOProveedoresPorArticulo dtoProveedor){
+   /* public void cambiarProveedorPredeterminado( DTOProveedoresPorArticulo dtoProveedor){
         //busco al proveedor que voy a modificar
         Optional<Proveedor> p = proveedorRepository.findById(dtoProveedor.getCodProveedor());
         Articulo articulo =  articuloRepository.obtenerArticulo(dtoProveedor.getCodigoArticulo());
@@ -247,6 +248,19 @@ public class ArticuloService  {
             }
 
         }
+*/
+    public void cambiarProveedorPredeterminado(DTOProveedoresPorArticulo dto) {
+        Articulo articulo = articuloRepository.obtenerArticulo(dto.getCodigoArticulo());
+        List<ProveedorArticulo> relaciones = proveedorArticuloRepository.findByArticulo(articulo);
+
+        for (ProveedorArticulo pa : relaciones) {
+            boolean esSeleccionado = pa.getCodProveedorArticulo() == dto.getCodProveedorArticulo();
+            pa.setEsPredeterminado(esSeleccionado);
+        }
+
+        proveedorArticuloRepository.saveAll(relaciones);
+    }
+
 
 
 

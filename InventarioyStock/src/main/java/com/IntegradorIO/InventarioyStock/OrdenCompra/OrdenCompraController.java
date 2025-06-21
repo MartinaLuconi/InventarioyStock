@@ -100,5 +100,16 @@ public class OrdenCompraController {
         return ResponseEntity.ok(desplegableArticulos);
    }
 
+   //sugerencia de cantidad a pedir
+    @GetMapping("/sugerenciaCantidad")
+    public ResponseEntity<Integer> sugerirCantidad(@RequestParam int codArticulo, @RequestParam int codProveedor) {
+        try {
+            int sugerencia = ordenCompraService.sugerirCantidadAPedir(codArticulo, codProveedor);
+            return ResponseEntity.ok(sugerencia);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 
 }
