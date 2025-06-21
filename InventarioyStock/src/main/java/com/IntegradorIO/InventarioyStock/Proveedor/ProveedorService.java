@@ -237,6 +237,7 @@ public class ProveedorService {
             pa.setLoteOptimo(detalle.getLoteOptimo());
             pa.setCostoMantenimiento(detalle.getCostoMantenimiento());
             pa.setNivelDeServicio(detalle.getNivelDeServicio());
+            pa.setPeriodoRevision(detalle.getPeriodoRevision());
             paListNuevos.add(pa);
 
             // Selecciona el servicio según el modelo de inventario y reclaacula los valores necesarios antes de guardar
