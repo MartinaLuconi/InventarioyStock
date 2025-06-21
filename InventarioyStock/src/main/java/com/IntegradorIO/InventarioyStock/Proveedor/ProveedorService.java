@@ -61,15 +61,7 @@ public class ProveedorService {
            if (Objects.equals(dto.getNombreProveedor(), nombreExistenteProveedor)){
                throw new Exception("El proveedor "+nombreExistenteProveedor+" ya existe. Ingrese otro nombre");
            }
-           //verifico que solo uno sea el predeterminado
 
-            //leo intermedias
-            List<ProveedorArticulo> paList= p.getProveedorArticulos();
-           for (ProveedorArticulo pa:paList){ //por cada intermedia lea el atributo
-              if(pa.isEsPredeterminado()){ //si existe una activa chau
-                  throw new Exception("Ya existe un proveedor predeterminado para este articulo");
-              }
-           }
         }
         entidad.setActivo(true);
         //verificar que solo uno sea predeterminado
@@ -91,7 +83,7 @@ public class ProveedorService {
                 pa.setDemoraEntrega(detalle.getDemoraEntrega());
                 pa.setCostoUnitario(detalle.getPrecioUnitProveedorArticulo());
                 pa.setCostoPedido(detalle.getCostoPedido());
-                pa.setEsPredeterminado(detalle.isEsPredeterminado());
+                pa.setEsPredeterminado(false);
                 pa.setFechaDesdePA(new Timestamp(System.currentTimeMillis()));
                 pa.setFechaHastaPA(null);
                 pa.setLoteOptimo(detalle.getLoteOptimo());
@@ -165,7 +157,7 @@ public class ProveedorService {
                 paExistente.setDemoraEntrega(detalle.getDemoraEntrega());
                 paExistente.setCostoUnitario(detalle.getPrecioUnitProveedorArticulo());
                 paExistente.setCostoPedido(detalle.getCostoPedido());
-                paExistente.setEsPredeterminado(detalle.isEsPredeterminado());
+                //paExistente.setEsPredeterminado(detalle.isEsPredeterminado());
 
                 // La guardamos en la lista final para no borrarla posteriormente
                 listaFinal.add(paExistente);
@@ -181,7 +173,7 @@ public class ProveedorService {
                 nuevo.setCostoUnitario(detalle.getPrecioUnitProveedorArticulo());
                 nuevo.setCostoPedido(detalle.getCostoPedido());
                 nuevo.setCostoPedido(detalle.getCostoPedido());
-                nuevo.setEsPredeterminado(detalle.isEsPredeterminado());
+               nuevo.setEsPredeterminado(false);
 
                 listaFinal.add(nuevo);
             }
@@ -228,7 +220,8 @@ public class ProveedorService {
             pa.setCostoUnitario(paReq.getPrecioUnitProveedorArticulo());
             pa.setCostoPedido(paReq.getCostoPedido());
            // pa.setCostoPedido(paReq.getCostoPedido());
-            pa.setEsPredeterminado(paReq.isEsPredeterminado());
+            pa.setEsPredeterminado(false);
+            pa.setNivelDeServicio(paReq.getNivelDeServicio());
 
             lista.add(pa);
         }
@@ -352,6 +345,7 @@ public class ProveedorService {
             dto.setLoteOptimo(pa.getLoteOptimo());
             dto.setCostoMantenimiento((int) pa.getCostoMantenimiento()); // si es double y el DTO lo espera como int
             dto.setEsPredeterminado(pa.isEsPredeterminado());
+            dto.setNivelDeServicio(pa.getNivelDeServicio());
 
 
             dtoList.add(dto);
