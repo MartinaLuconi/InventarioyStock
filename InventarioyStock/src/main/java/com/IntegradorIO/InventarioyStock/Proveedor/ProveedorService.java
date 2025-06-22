@@ -207,6 +207,20 @@ public class ProveedorService {
         existente.setProveedorArticulos(listaFinal);
 
         // 9) Finalmente salvar el proveedor con sus cambios
+
+
+
+        // Recalcular para cada asociación modificada o nueva
+        for (ProveedorArticulo pa : listaFinal) {
+            ModeloInventario modelo = pa.getArticulo().getModeloInventario();
+            if (modelo == ModeloInventario.LOTE_FIJO) {
+                calculoService.recalcularYActualizar(pa.getArticulo());
+            } else if (modelo == ModeloInventario.TIEMPO_FIJO) {
+                calculoServiceP.recalcularYActualizar(pa.getArticulo());
+            }
+        }
+
+
         return proveedorRepository.save(existente);
     }
 
