@@ -286,7 +286,7 @@ public class ArticuloService  {
 
     //listar productos a reponer
 
-    public List<DTOTablaArticulos> listarArticulosReponer () throws Exception{
+   /* public List<DTOTablaArticulos> listarArticulosReponer () throws Exception{
         List<Articulo> articulosReponerL = new ArrayList<>();
         List<DTOTablaArticulos> articulosReponerDTO = new ArrayList<>();
 
@@ -337,7 +337,52 @@ public class ArticuloService  {
         }
 
         return articulosReponerDTO;
-    }
+    }*/
+   public List<DTOTablaArticulos> listarArticulosReponer() {
+       List<DTOTablaArticulos> articulosReponerDTO = new ArrayList<>();
+       List<Articulo> todosLosArticulos = articuloRepository.obtenerArticulos();
+
+       // 1. Identificar artículos que están en OC pendientes o enviadas
+       Set<Integer> articulosEnOCActiva = new HashSet<>();
+
+       List<OrdenCompra> ocList = ordenCompraRepository.findAll();
+       for (OrdenCompra oc : ocList) {
+           EstadoOrdencCompra estado = oc.getEstadoOrdenCompra().getNombreEstado();
+           if (estado.equals(EstadoOrdencCompra.PENDIENTE) || estado.equals(EstadoOrdencCompra.ENVIADA)) {
+               for (OrdenCompraArticulo oca : oc.getListaOrdenCompraArticulo()) {
+                   articulosEnOCActiva.add(oca.getArticulo().getCodigoArticulo());
+               }
+           }
+       }
+
+       // 2. Filtrar los artículos que cumplen ambas condiciones
+       for (Articulo a : todosLosArticulos) {
+           int stockActual = a.getStockActualArticulo();
+           int puntoPedido = a.getPuntoPedido();
+           int codigo = a.getCodigoArticulo();
+
+           if (!articulosEnOCActiva.contains(codigo) &&
+                   a.getFechaHoraBajaArticulo() == null &&
+                   stockActual < puntoPedido) {
+
+               // Cambiar estado si querés
+               a.setEstadoArticulo(EstadoArticulo.A_REPONER);
+               articuloRepository.save(a);
+
+               // Armar DTO
+               DTOTablaArticulos dto = new DTOTablaArticulos(a);
+               dto.setCodigoArticulo(codigo);
+               dto.setNombreArticulo(a.getNombreArticulo());
+               dto.setDescripcion(a.getDescripcion());
+               dto.setFechaHoraBajaArticulo(a.getFechaHoraBajaArticulo());
+
+               articulosReponerDTO.add(dto);
+           }
+       }
+
+       return articulosReponerDTO;
+   }
+
 
 // Para calcular el (CGI) (ROP) y StockSeguridad para un artículo y su proveedor Modeelo LOTE_FIJO
 
