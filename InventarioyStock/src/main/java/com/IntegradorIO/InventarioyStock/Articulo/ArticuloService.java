@@ -177,12 +177,6 @@ public class ArticuloService  {
             if (articuloOptional.isPresent()) {
                 Articulo articulo = articuloOptional.get();
 
-                // Verificar órdenes de compra pendientes o enviadas
-               /* boolean tieneOrdenPendienteOEnviada = estadoOrdenCompraRepository
-                        .existsByArticuloAndNombreEstadoIn(articulo, List.of(EstadoOrdencCompra.PENDIENTE, EstadoOrdencCompra.ENVIADA));
-                if (tieneOrdenPendienteOEnviada) {
-                    throw new Exception("No se puede dar de baja el artículo porque tiene órdenes de compra pendientes o enviadas.");
-                }*/
 
                 //TIENE UNA OC PENDIENTE O ENVIADA
                 List<OrdenCompra> ocList = ordenCompraRepository.findAll();
@@ -255,25 +249,7 @@ public class ArticuloService  {
     }
 
     //cambiar proveedor a predeterminado desde articulo
-   /* public void cambiarProveedorPredeterminado( DTOProveedoresPorArticulo dtoProveedor){
-        //busco al proveedor que voy a modificar
-        Optional<Proveedor> p = proveedorRepository.findById(dtoProveedor.getCodProveedor());
-        Articulo articulo =  articuloRepository.obtenerArticulo(dtoProveedor.getCodigoArticulo());
-        //veo si es predeterminado
-        List<ProveedorArticulo> paList = proveedorArticuloRepository.findByArticulo(articulo); //lee intermedia
 
-        for (ProveedorArticulo pa : paList){
-
-            if (p.get().getCodigoProveedor()==dtoProveedor.getCodProveedor()) {
-                pa.setEsPredeterminado(true);
-            }else {
-                    pa.setEsPredeterminado(false);
-                }
-            proveedorArticuloRepository.save(pa);
-            }
-
-        }
-*/
     public void cambiarProveedorPredeterminado(DTOProveedoresPorArticulo dto) {
         Articulo articulo = articuloRepository.obtenerArticulo(dto.getCodigoArticulo());
         List<ProveedorArticulo> relaciones = proveedorArticuloRepository.findByArticulo(articulo);
@@ -287,39 +263,6 @@ public class ArticuloService  {
     }
 
 
-
-
-
-    //listar productos faltantes
-
-    /*public List<DTOTablaArticulos> listarArticulosFaltantes () throws Exception{
-        List<Articulo> articulosFaltantes = new ArrayList<>();
-        List<DTOTablaArticulos> articulosFaltantesDTO = new ArrayList<>();
-        //busco todos los articulos
-        List<Articulo> aList =articuloRepository.obtenerArticulos();
-        for (Articulo a : aList){
-           int stockActual = a.getStockActualArticulo();
-           int stockSerguridad = a.getStockSeguridadArticulo();
-           if (stockActual < stockSerguridad ){
-               articulosFaltantes.add(a);
-           }
-        }
-        //Caso de que no hay articulos faltantes
-        if (articulosFaltantes.isEmpty()){
-            throw new Exception("No hay artículos faltantes");
-        } else {
-            for (Articulo a : articulosFaltantes) {
-                DTOTablaArticulos dto = new DTOTablaArticulos(a);
-                dto.setCodigoArticulo(a.getCodigoArticulo());
-                dto.setNombreArticulo(a.getNombreArticulo());
-                dto.setDescripcion(a.getDescripcion());
-                dto.setFechaHoraBajaArticulo(a.getFechaHoraBajaArticulo());
-                articulosFaltantesDTO.add(dto);
-            }
-        }
-        return articulosFaltantesDTO;
-
-    }*/
     public List<DTOTablaArticulos> listarArticulosFaltantes() {
         List<DTOTablaArticulos> articulosFaltantesDTO = new ArrayList<>();
 
@@ -352,17 +295,35 @@ public class ArticuloService  {
 
         //armo lista de articulos a reponer
         for (Articulo a: aList) {
-            //leer el stock actual
-            int stockA = a.getStockActualArticulo();
-            //lee el punto de pedido
-            int pp = a.getPuntoPedido();
-            //si el stock es menor al punto de pedido --> por debajo del PP
-            if (stockA<=pp){
-                articulosReponerL.add(a);
+            List<OrdenCompra> ocList = ordenCompraRepository.findAll();
+            for (OrdenCompra oc : ocList){//por cada oc
+                for ( OrdenCompraArticulo oca :oc.getListaOrdenCompraArticulo()){ //veo q se relacione con el articulo
+                    //veo si se relaciona con el articulo q voy a dar de baja
+                    int codArtOCA = oca.getArticulo().getCodigoArticulo();
+                    if (a.getCodigoArticulo()==codArtOCA){ //si coincide, lee el estado de la oc
+                        if(oc.getEstadoOrdenCompra().getNombreEstado() != EstadoOrdencCompra.PENDIENTE
+                                && oc.getEstadoOrdenCompra().getNombreEstado() != EstadoOrdencCompra.ENVIADA){
+
+                            //leer el stock actual
+                            int stockA = a.getStockActualArticulo();
+                            //lee el punto de pedido
+                            int pp = a.getPuntoPedido();
+                            //si el stock es menor al punto de pedido --> por debajo del PP
+                            if (stockA<=pp){
+                                articulosReponerL.add(a);
+                            }
+
+
+                        }
+                    }
+                }
             }
 
 
         }
+
+
+
 
         //armo tabla con lista. Esto tmb pordría ir en el if anterior
         for (Articulo a : articulosReponerL) {
