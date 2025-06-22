@@ -11,6 +11,7 @@ import com.IntegradorIO.InventarioyStock.EstrategiaDeRevisiónContinua.CalculosE
 import com.IntegradorIO.InventarioyStock.OrdenCompra.OrdenCompra;
 import com.IntegradorIO.InventarioyStock.OrdenCompra.OrdenCompraRepository;
 import com.IntegradorIO.InventarioyStock.OrdenCompraArticulo.OrdenCompraArticulo;
+import com.IntegradorIO.InventarioyStock.OrdenCompraArticulo.OrdenCompraArticuloRepository;
 import com.IntegradorIO.InventarioyStock.Proveedor.Proveedor;
 import com.IntegradorIO.InventarioyStock.Proveedor.ProveedorRepository;
 import com.IntegradorIO.InventarioyStock.Proveedor.ProveedorService;
@@ -48,6 +49,9 @@ public class ArticuloService  {
 
     @Autowired
     private ProveedorRepository proveedorRepository;
+
+   
+
 
     //lista los articulos
     public List<DTOTablaArticulos> obtenerArticulos() throws Exception {
@@ -356,6 +360,8 @@ public class ArticuloService  {
             if (stockA<=pp){
                 articulosReponerL.add(a);
             }
+
+
         }
 
         //armo tabla con lista. Esto tmb pordría ir en el if anterior
