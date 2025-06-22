@@ -215,7 +215,7 @@ public class ProveedorService {
      * Alta de proveedor con asociación mínima.
      * @throws IllegalArgumentException si no viene ninguna asociación.
      */
-    public Proveedor guardarConAsociaciones(DTONuevoProveedor req) {
+    /*public Proveedor guardarConAsociaciones(DTONuevoProveedor req) {
         if (req.getAsociaciones() == null || req.getAsociaciones().isEmpty()) {
             throw new IllegalArgumentException("Debe proporcionar al menos una asociación con artículo");
         }
@@ -254,7 +254,7 @@ public class ProveedorService {
 
 
         return guardado;
-    }
+    }*/
 
     /**
      * Baja lógica de proveedor con validaciones:
