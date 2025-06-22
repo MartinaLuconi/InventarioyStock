@@ -89,11 +89,11 @@ public class ProveedorService {
                 pa.setEsPredeterminado(false);
                 pa.setFechaDesdePA(new Timestamp(System.currentTimeMillis()));
                 pa.setFechaHastaPA(null);
-                pa.setLoteOptimo(detalle.getLoteOptimo());
+                //pa.setLoteOptimo(detalle.getLoteOptimo());
                 pa.setCostoMantenimiento(detalle.getCostoMantenimiento());
                 pa.setNivelDeServicio(detalle.getNivelDeServicio());
                 pa.setPeriodoRevision(detalle.getPeriodoRevision());
-                pa.setInventarioMaximo(detalle.getInventarioMaximo());
+                //pa.setInventarioMaximo(detalle.getInventarioMaximo());
                 proveedorArticuloList.add(pa);
 
 
@@ -162,9 +162,9 @@ public class ProveedorService {
                 paExistente.setCostoPedido(detalle.getCostoPedido());
                 paExistente.setCostoMantenimiento(detalle.getCostoMantenimiento());
                 paExistente.setPeriodoRevision(detalle.getPeriodoRevision());
-                paExistente.setLoteOptimo(detalle.getLoteOptimo());
+                //paExistente.setLoteOptimo(detalle.getLoteOptimo());
                 paExistente.setNivelDeServicio(detalle.getNivelDeServicio());
-                paExistente.setInventarioMaximo(detalle.getInventarioMaximo());
+                //paExistente.setInventarioMaximo(detalle.getInventarioMaximo());
                 //paExistente.setEsPredeterminado(detalle.isEsPredeterminado());
 
                 // La guardamos en la lista final para no borrarla posteriormente
@@ -182,10 +182,10 @@ public class ProveedorService {
                 nuevo.setCostoUnitario(detalle.getPrecioUnitProveedorArticulo());
                 nuevo.setCostoPedido(detalle.getCostoPedido());
                 nuevo.setNivelDeServicio(detalle.getNivelDeServicio());
-                nuevo.setLoteOptimo(detalle.getLoteOptimo());
+                //nuevo.setLoteOptimo(detalle.getLoteOptimo());
                 nuevo.setPeriodoRevision(detalle.getPeriodoRevision());
                 nuevo.setCostoMantenimiento(detalle.getCostoMantenimiento());
-                nuevo.setInventarioMaximo(detalle.getInventarioMaximo());
+               // nuevo.setInventarioMaximo(detalle.getInventarioMaximo());
                 nuevo.setEsPredeterminado(false);
 
                 listaFinal.add(nuevo);
@@ -238,8 +238,8 @@ public class ProveedorService {
             pa.setCostoMantenimiento(pa.getCostoMantenimiento());
             pa.setNivelDeServicio(paReq.getNivelDeServicio());
             pa.setPeriodoRevision(paReq.getPeriodoRevision());
-            pa.setLoteOptimo(paReq.getLoteOptimo());
-            pa.setInventarioMaximo(pa.getInventarioMaximo());
+            //pa.setLoteOptimo(paReq.getLoteOptimo());
+           // pa.setInventarioMaximo(pa.getInventarioMaximo());
 
             lista.add(pa);
         }
@@ -278,36 +278,10 @@ public class ProveedorService {
            ( HttpStatus.CONFLICT,
                     "No se puede dar de baja: proveedor predeterminado en algún artículo");
         }
-        //1) Verificar predeterminado
-       /* ProveedorArticulo pred = proveedorArticuloRepository
-       List<ProveedorArticulo> pred = proveedorArticuloRepository
-                .findByProveedorCodigoProveedorAndEsPredeterminadoTrue(codigoProveedor);*/
-
-        //if (pred != null) {
-       /* List<ProveedorArticulo> paList = proveedor.getProveedorArticulos();
-        for (ProveedorArticulo pa : paList){
-            if (pa.isEsPredeterminado()){ //verifica q no sea predeterminado
-                // if (!pred.isEmpty()) {
-                throw new IllegalStateException(
-                        "No se puede dar de baja: proveedor predeterminado en un artículo"
-                );
-            }
-        } */
 
 
         // 2) Verificar órdenes activas (PENDIENTE o CONFIRMADO)
-       /* boolean tieneOrdenesActivas = ordenCompraRepository
-                .existsByProveedorCodigoProveedorAndEstadoOrdenCompraIn(
-                        codigoProveedor,
-                        List.of(EstadoOrdencCompra.PENDIENTE, EstadoOrdencCompra.CONFIRMADO)
-                );
 
-
-        if (tieneOrdenesActivas) {
-            throw new IllegalStateException(
-                    "No se puede dar de baja: existen Órdenes de Compra pendientes o confirmadas"
-            );
-        }*/
 
         List<OrdenCompra> ocList = ordenCompraRepository.obtenerOrdenesCompra();
         List<OrdenCompra> ocPendientesConfirmadas=new ArrayList<>();
