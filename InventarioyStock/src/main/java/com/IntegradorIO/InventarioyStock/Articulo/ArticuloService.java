@@ -122,7 +122,7 @@ public class ArticuloService  {
                 articulo.setDemandaAnual(dtoNuevoArticulo.getDemandaAnual());
                 articulo.setDesviacionEstandar(dtoNuevoArticulo.getDesviacionEstandar());
                 articulo.setCostoAlmacenamiento(dtoNuevoArticulo.getCostoAlmacenamiento());
-                articulo.setEstadoArticulo(EstadoArticulo.A_REPONER);
+                articulo.setEstadoArticulo(EstadoArticulo.DISPONIBLE);
             articuloRepository.save(articulo);
 
             return articulo;
@@ -147,7 +147,7 @@ public class ArticuloService  {
             articulo.setDemandaAnual(articuloModificado.getDemandaAnual());
             articulo.setDesviacionEstandar(articuloModificado.getDesviacionEstandar());
             articulo.setCostoAlmacenamiento(articuloModificado.getCostoAlmacenamiento());
-            articulo.setEstadoArticulo(EstadoArticulo.A_REPONER);
+           // articulo.setEstadoArticulo(EstadoArticulo.A_REPONER);
 
             // Selecciona el servicio según el modelo de inventario y reclaacula los valores necesarios antes de guardar
             if (articulo.getModeloInventario() == ModeloInventario.TIEMPO_FIJO) {
@@ -275,6 +275,8 @@ public class ArticuloService  {
                 dto.setDescripcion(a.getDescripcion());
                 dto.setFechaHoraBajaArticulo(a.getFechaHoraBajaArticulo());
                 articulosFaltantesDTO.add(dto);
+                a.setEstadoArticulo(EstadoArticulo.FALTANTE); // Cambia el estado a A_REPONER
+                articuloRepository.save(a); // Guarda el cambio de estado
             }
         }
 
@@ -327,6 +329,8 @@ public class ArticuloService  {
                 dto.setDescripcion(a.getDescripcion());
                 dto.setFechaHoraBajaArticulo(a.getFechaHoraBajaArticulo());
                 articulosReponerDTO.add(dto);
+                a.setEstadoArticulo(EstadoArticulo.A_REPONER); // Cambia el estado a A_REPONER
+                articuloRepository.save(a); // Guarda el cambio de estado
             }
 
 

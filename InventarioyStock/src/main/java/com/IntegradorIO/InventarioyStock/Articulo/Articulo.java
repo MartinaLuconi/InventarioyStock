@@ -7,10 +7,7 @@ import java.sql.Timestamp;
 
 @Entity
 
-@jakarta.persistence.EntityListeners({
-        com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionPeriodica.ArticuloListenerP.class,
-        com.IntegradorIO.InventarioyStock.EstrategiaDeRevisiónContinua.ArticuloListener.class
-})
+
 
 @Getter
 @Setter

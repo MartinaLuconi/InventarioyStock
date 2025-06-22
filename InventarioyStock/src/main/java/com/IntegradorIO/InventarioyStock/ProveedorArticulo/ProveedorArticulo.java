@@ -13,10 +13,7 @@ import java.sql.Timestamp;
 @Setter
 
 
-@jakarta.persistence.EntityListeners({
-        com.IntegradorIO.InventarioyStock.EstrategiaDeRevisionPeriodica.ProveedorArticuloListenerP.class,
-        com.IntegradorIO.InventarioyStock.EstrategiaDeRevisiónContinua.ProveedorArticuloListener.class
-})
+
 
 public class ProveedorArticulo {
     @Id

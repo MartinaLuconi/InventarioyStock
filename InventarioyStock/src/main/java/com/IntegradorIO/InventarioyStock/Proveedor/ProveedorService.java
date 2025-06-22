@@ -96,7 +96,7 @@ public class ProveedorService {
                 pa.setInventarioMaximo(detalle.getInventarioMaximo());
                 proveedorArticuloList.add(pa);
 
-                // Selecciona el servicio según el modelo de inventario y reclaacula los valores necesarios antes de guardar
+                // Selecciona el servicio según el modelo de inventario y reclacula los valores necesarios antes de guardar
                 ModeloInventario modelo = art.getModeloInventario();
                 if (modelo == ModeloInventario.LOTE_FIJO) {
                     // Calcular y asignar valores específicos para la estrategia de revisión continua
