@@ -366,6 +366,7 @@ public class ProveedorService {
             dto.setCostoMantenimiento((int) pa.getCostoMantenimiento()); // si es double y el DTO lo espera como int
             dto.setEsPredeterminado(pa.isEsPredeterminado());
             dto.setNivelDeServicio(pa.getNivelDeServicio());
+            dto.setInventarioMaximo(pa.getInventarioMaximo());
 
 
             dtoList.add(dto);
