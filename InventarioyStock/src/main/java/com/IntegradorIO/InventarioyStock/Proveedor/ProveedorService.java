@@ -367,6 +367,7 @@ public class ProveedorService {
             dto.setEsPredeterminado(pa.isEsPredeterminado());
             dto.setNivelDeServicio(pa.getNivelDeServicio());
             dto.setInventarioMaximo(pa.getInventarioMaximo());
+            dto.setNombreArticulo(articulo.getNombreArticulo());
 
 
             dtoList.add(dto);

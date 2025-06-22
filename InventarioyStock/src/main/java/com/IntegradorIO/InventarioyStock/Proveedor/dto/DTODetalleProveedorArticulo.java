@@ -9,6 +9,7 @@ import lombok.Setter;
 @Data
 public class DTODetalleProveedorArticulo {
     private Integer codigoArticulo;
+    private String nombreArticulo;
     private int demoraEntrega;
     private float precioUnitProveedorArticulo;
     private float costoPedido;
