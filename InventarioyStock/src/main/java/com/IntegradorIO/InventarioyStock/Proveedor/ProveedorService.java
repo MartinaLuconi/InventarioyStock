@@ -13,7 +13,9 @@ import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticulo;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloRepository;
 import com.IntegradorIO.InventarioyStock.ProveedorArticulo.ProveedorArticuloService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -274,7 +276,8 @@ public class ProveedorService {
                 .anyMatch(ProveedorArticulo::isEsPredeterminado);
 
         if (esPredeterminadoEnAlguno) {
-            throw new IllegalStateException(
+            throw new ResponseStatusException
+           ( HttpStatus.CONFLICT,
                     "No se puede dar de baja: proveedor predeterminado en algún artículo");
         }
         //1) Verificar predeterminado
@@ -321,7 +324,8 @@ public class ProveedorService {
         }
 
         if (!ocPendientesConfirmadas.isEmpty()){
-            throw new IllegalStateException(
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
                     "No se puede dar de baja: existen Órdenes de Compra pendientes o confirmadas"
             );
         }
