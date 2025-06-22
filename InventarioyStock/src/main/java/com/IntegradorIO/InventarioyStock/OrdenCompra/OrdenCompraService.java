@@ -163,7 +163,9 @@ public class OrdenCompraService {
         //Verificar que no exista una OC pendiente
         List<OrdenCompra> ocList = ordenCompraRepository.obtenerOrdenesCompra();
         for (OrdenCompra oca: ocList){
-            if (oca.getEstadoOrdenCompra().getNombreEstado()==EstadoOrdencCompra.PENDIENTE) {//veo que este pendiente
+            if (oca.getEstadoOrdenCompra().getNombreEstado()==EstadoOrdencCompra.PENDIENTE
+                    || oca.getEstadoOrdenCompra().getNombreEstado()==EstadoOrdencCompra.ENVIADA
+            ) {//veo que este pendiente o enviada
                 //si la orden esta pendiete, veo a que proveedor se la hace
                int codProv= oca.getProveedor().getCodigoProveedor();
                 if (codProv==dtoOC.getCodProveedor()){ // si coincide el proveedor con el del dto
