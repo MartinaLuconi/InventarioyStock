@@ -117,7 +117,7 @@ public class ArticuloService  {
                 articulo.setStockActualArticulo(dtoNuevoArticulo.getStockReal());
                 articulo.setFechaHoraBajaArticulo(null);
                 articulo.setStockSeguridadArticulo(dtoNuevoArticulo.getStockSeguridad());
-                articulo.setPuntoPedido(dtoNuevoArticulo.getPuntoPedido());
+               // articulo.setPuntoPedido(dtoNuevoArticulo.getPuntoPedido());
                 articulo.setModeloInventario(dtoNuevoArticulo.getModeloElegido());
                 articulo.setDemandaAnual(dtoNuevoArticulo.getDemandaAnual());
                 articulo.setDesviacionEstandar(dtoNuevoArticulo.getDesviacionEstandar());
@@ -142,7 +142,7 @@ public class ArticuloService  {
             articulo.setDescripcion(articuloModificado.getDescripcion());
             articulo.setStockActualArticulo(articuloModificado.getStockReal());
             articulo.setStockSeguridadArticulo(articuloModificado.getStockSeguridad());
-            articulo.setPuntoPedido(articuloModificado.getPuntoPedido());
+            //articulo.setPuntoPedido(articuloModificado.getPuntoPedido());
             articulo.setModeloInventario(articuloModificado.getModeloElegido());
             articulo.setDemandaAnual(articuloModificado.getDemandaAnual());
             articulo.setDesviacionEstandar(articuloModificado.getDesviacionEstandar());

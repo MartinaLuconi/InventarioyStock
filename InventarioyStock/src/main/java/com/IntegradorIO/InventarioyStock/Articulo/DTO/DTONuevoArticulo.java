@@ -20,7 +20,7 @@ public class DTONuevoArticulo {
     private  String descripcion;
     private int stockReal;
     private int stockSeguridad;
-    private int puntoPedido;
+   // private int puntoPedido;
     private Timestamp fechaHoraBajaArticulo;
     private double costoAlmacenamiento;
     @Enumerated(EnumType.STRING)
