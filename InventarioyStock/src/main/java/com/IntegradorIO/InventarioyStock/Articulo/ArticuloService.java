@@ -21,10 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -290,49 +287,49 @@ public class ArticuloService  {
     public List<DTOTablaArticulos> listarArticulosReponer () throws Exception{
         List<Articulo> articulosReponerL = new ArrayList<>();
         List<DTOTablaArticulos> articulosReponerDTO = new ArrayList<>();
+
+        //lista de codigos para evitar repeticiones
+        Set<Integer> codigosAgregados = new HashSet<>();
+
         //busco todos los articulos
         List<Articulo> aList =articuloRepository.obtenerArticulos();
 
-        //armo lista de articulos a reponer
-        for (Articulo a: aList) {
-            List<OrdenCompra> ocList = ordenCompraRepository.findAll();
-            for (OrdenCompra oc : ocList){//por cada oc
-                for ( OrdenCompraArticulo oca :oc.getListaOrdenCompraArticulo()){ //veo q se relacione con el articulo
-                    //veo si se relaciona con el articulo q voy a dar de baja
-                    int codArtOCA = oca.getArticulo().getCodigoArticulo();
-                    if (a.getCodigoArticulo()==codArtOCA){ //si coincide, lee el estado de la oc
-                        if(oc.getEstadoOrdenCompra().getNombreEstado() != EstadoOrdencCompra.PENDIENTE
-                                && oc.getEstadoOrdenCompra().getNombreEstado() != EstadoOrdencCompra.ENVIADA){
+        //VERIFICA QUE PERTENEZCA A OC PENDIENTE O ENVIADA
+        List<OrdenCompra> ocList = ordenCompraRepository.findAll();
+        for (OrdenCompra oc : ocList) {//por cada oc
+            for (OrdenCompraArticulo oca : oc.getListaOrdenCompraArticulo()) { //veo q se relacione con el articulo
 
-                            //leer el stock actual
-                            int stockA = a.getStockActualArticulo();
-                            //lee el punto de pedido
-                            int pp = a.getPuntoPedido();
-                            //si el stock es menor al punto de pedido --> por debajo del PP
-                            if (stockA<=pp){
-                                articulosReponerL.add(a);
-                            }
+                    if (oc.getEstadoOrdenCompra().getNombreEstado() != EstadoOrdencCompra.PENDIENTE
+                            && oc.getEstadoOrdenCompra().getNombreEstado() != EstadoOrdencCompra.ENVIADA) {
+                        //para que no se repitan veo q no este en la lista de codigos existentes
 
-
+                        int codExistente = oca.getArticulo().getCodigoArticulo();
+                        if (!codigosAgregados.contains(codExistente)) {
+                            articulosReponerL.add(oca.getArticulo());
+                            codigosAgregados.add(codExistente);
                         }
                     }
-                }
+
+            }
+        }
+        //armo lista de articulos a reponer
+        for (Articulo a: articulosReponerL) {
+
+            //leer el stock actual
+            int stockA = a.getStockActualArticulo();
+            //lee el punto de pedido
+            int pp = a.getPuntoPedido();
+            //si el stock es menor al punto de pedido --> por debajo del PP
+            if (stockA<=pp){
+                DTOTablaArticulos dto = new DTOTablaArticulos(a);
+                dto.setCodigoArticulo(a.getCodigoArticulo());
+                dto.setNombreArticulo(a.getNombreArticulo());
+                dto.setDescripcion(a.getDescripcion());
+                dto.setFechaHoraBajaArticulo(a.getFechaHoraBajaArticulo());
+                articulosReponerDTO.add(dto);
             }
 
 
-        }
-
-
-
-
-        //armo tabla con lista. Esto tmb pordría ir en el if anterior
-        for (Articulo a : articulosReponerL) {
-            DTOTablaArticulos dto = new DTOTablaArticulos(a);
-            dto.setCodigoArticulo(a.getCodigoArticulo());
-            dto.setNombreArticulo(a.getNombreArticulo());
-            dto.setDescripcion(a.getDescripcion());
-            dto.setFechaHoraBajaArticulo(a.getFechaHoraBajaArticulo());
-            articulosReponerDTO.add(dto);
         }
 
         return articulosReponerDTO;
