@@ -96,6 +96,8 @@ public class ProveedorService {
                 pa.setInventarioMaximo(detalle.getInventarioMaximo());
                 proveedorArticuloList.add(pa);
 
+
+                proveedorArticuloRepository.save(pa);
                 // Selecciona el servicio según el modelo de inventario y reclacula los valores necesarios antes de guardar
                 ModeloInventario modelo = art.getModeloInventario();
                 if (modelo == ModeloInventario.LOTE_FIJO) {
@@ -103,16 +105,12 @@ public class ProveedorService {
                     calculoService.recalcularYActualizar(pa.getArticulo());
                 } else if (modelo == ModeloInventario.TIEMPO_FIJO) {
                     // Calcular y asignar valores específicos para la estrategia de revisión periódica
-                    calculoServiceP.recalcularYActualizar(pa);
+                    calculoServiceP.recalcularYActualizar(pa.getArticulo());
                 }
-
-
-
-                proveedorArticuloRepository.save(pa);
-
 
             }
             entidad.setProveedorArticulos(proveedorArticuloList);
+
             proveedorRepository.save(entidad);
 
 
