@@ -16,8 +16,8 @@ public class CalculosEstrRevisionContinua {
                 + demandaAnual * costoUnitario;
     }
 
-    public static int calcularEOQ(int demandaAnual, double costoPedido, double costoAlmacenamiento) {
-        return (int) Math.round(Math.sqrt((2 * demandaAnual * costoPedido) / costoAlmacenamiento));
+    public static int calcularEOQ(int demandaAnual, double costoPedido, double costoMantenimiento) {
+        return (int) Math.round(Math.sqrt((2 * demandaAnual * costoPedido) / costoMantenimiento));
     }
 
     public static int calcularStockSeguridad(double Z, double desviacionEstandar, int L) {
