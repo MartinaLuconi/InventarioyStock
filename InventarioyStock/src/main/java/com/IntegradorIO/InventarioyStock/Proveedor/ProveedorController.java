@@ -79,7 +79,7 @@ public class ProveedorController {
 
 
 
-    //Uso el DTO por lo que espera el front 
+    //Uso el DTO por lo que espera el front, para modificar
     @GetMapping("/{codigoProveedor}/articulos")
 
     public ResponseEntity<List<DTODetalleProveedorArticulo>> obtenerArticulosPorProveedor(
